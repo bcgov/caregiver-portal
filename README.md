@@ -5,7 +5,7 @@ SDPR caregiver registry
 
 The git repository has been initialized with the required files per [BC DEVHUB](https://developer.gov.bc.ca/docs/default/component/bc-developer-guide/use-github-in-bcgov/required-pages-for-github-repository/)
 
-For those contributing to the project, the work items / project overview is described in [azure](https://dev.azure.com/bc-icm/Caregiver%20Registry/_wiki/wikis/Caregiver-Registry.wiki/791/General-Information)
+For those contributing to the project, the work items / overview are described in [azure](https://dev.azure.com/bc-icm/Caregiver%20Registry/_wiki/wikis/Caregiver-Registry.wiki/791/General-Information)
 
 
 ## Contributing

@@ -1,0 +1,7 @@
+First pass helm chart:
+
+deploy react app / service
+
+Note:
+Requires forwarding port to view:
+oc port-forward svc/react-app-service 8080:80
