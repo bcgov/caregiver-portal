@@ -10,9 +10,8 @@ RUN npm i -g serve
 
 COPY . .
 
-#RUN npm run build
+RUN npm run build
 
-EXPOSE 5173
+EXPOSE 8080
 
-#CMD [ "serve", "-s", "dist", "-l", "8080" ]
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD [ "serve", "-s", "dist", "-l", "8080" ]
