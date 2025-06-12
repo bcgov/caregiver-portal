@@ -1,3 +1,10 @@
+
+
+# Overview
+
+The Caregiver Registry online service allows people to apply to become caregivers for children and youth in government care. It provides forms to collect personal and household information, supports identity verification, and gathers required documents. The system sends applications to ministry staff for review and tracks the steps involved in screening and assessment.
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
