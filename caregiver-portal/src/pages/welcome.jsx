@@ -21,6 +21,7 @@ export default function Welcome() {
 
         </div>
         <div className="hg-hero-image">
+       
           
         </div>
       </section>
