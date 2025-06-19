@@ -1,0 +1,35 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: caregiver-github-trigger-binding
+  namespace: f6e00d-tools
+spec:
+  params:
+    - name: imageRegistry
+      value: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools'
+    - name: imageRegistryUser
+      value: image-registry-username
+    - name: imageRegistryPass
+      value: image-registry-password
+    - name: imageUrl
+      value: vite-app
+    - name: imageTag
+      value: latest
+    - name: repoUrl
+      value: 'https://github.com/bcgov/caregiver-portal.git'
+    - name: branchName
+      value: $(body.ref)
+    - name: helmRelease
+      value: caregiver-portal
+    - name: helmDir
+      value: ./portal-helm
+    - name: helmValues
+      value: values.yaml
+    - name: dockerfile
+      value: ./Dockerfile
+    - name: pathToContext
+      value: ./caregiver-portal/
+    - name: buildahImage
+      value: 'quay.io/buildah/stable:v1.39.3'
+    - name: helmImage
+      value: 'docker.io/lachlanevenson/k8s-helm:v3.7.0'
