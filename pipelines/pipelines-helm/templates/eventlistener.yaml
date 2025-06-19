@@ -1,0 +1,30 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: caregiver-build-push-image-trigger
+  namespace: f6e00d-tools
+spec:
+  namespaceSelector: {}
+  resources: {}
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: TriggerBinding
+          ref: caregiver-github-trigger-binding
+      interceptors:
+        - params:
+            - name: secretRef
+              value:
+                secretKey: github-webhook-secret
+                secretName: github-webhook-secret
+            - name: eventTypes
+              value:
+                - pull_request
+                - push
+          ref:
+            kind: ClusterInterceptor
+            name: github
+      name: caregiver-github-listener
+      template:
+        ref: caregiver-github-trigger
+
