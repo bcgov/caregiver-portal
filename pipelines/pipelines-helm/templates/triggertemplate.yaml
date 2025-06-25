@@ -73,6 +73,9 @@ spec:
         workspaces:
           - name: shared-data
             volumeClaimTemplate:
+              metadata:
+                annotations:
+                  tekton.dev/deleteAfterRun: "true"
               spec:
                 accessModes:
                   - ReadWriteOnce
