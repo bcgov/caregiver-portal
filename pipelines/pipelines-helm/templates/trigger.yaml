@@ -12,6 +12,8 @@ spec:
           value:
             - key: branchName
               expression: "body.ref.split('/')[2]"
+        - name: filter
+          value: "body.ref.split('/')[2] == 'main'"
     - ref:
         name: github
         kind: ClusterInterceptor
