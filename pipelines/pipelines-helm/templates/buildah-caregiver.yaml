@@ -49,19 +49,7 @@ spec:
       image: $(params.BUILDAH_IMAGE)
       script: |
         #!/usr/bin/env bash
-        echo beginning login
-        echo "== buildah info =="
-        buildah info
-
-        echo "== checking CA files =="
-        ls -l /etc/containers/certs.d/image-registry.openshift-image-registry.svc:5000
-
-        pwd
-
         buildah login -u $IMAGE_REGISTRY_USER -p $IMAGE_REGISTRY_PASS $(params.IMAGE_REGISTRY) 
-        echo $?
-        echo $(params.STORAGE_DRIVER)
-
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud \
           --no-cache -f ./caregiver-portal/Dockerfile -t $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest --isolation chroot ./caregiver-portal/ 
         buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest  $IMAGE_NAME  

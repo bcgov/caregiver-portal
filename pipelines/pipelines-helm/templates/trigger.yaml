@@ -1,0 +1,32 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: caregiver-github-trigger
+  namespace: f6e00d-tools
+spec:
+  interceptors:
+    - ref:
+        name: cel
+      params:
+        - name: overlays
+          value:
+            - key: branchName
+              expression: "body.ref.split('/')[2]"
+        - name: filter
+          value: "body.ref.split('/')[2] == 'main'"
+    - ref:
+        name: github
+        kind: ClusterInterceptor
+      params:
+        - name: eventTypes
+          value:
+            - pull_request
+            - push
+        - name: secretRef
+          value:
+            secretName: github-webhook-secret
+            secretKey: webhook-token
+  bindings:
+    - ref: caregiver-github-trigger-binding
+  template:
+    ref: caregiver-github-trigger
