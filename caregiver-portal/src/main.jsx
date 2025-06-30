@@ -1,15 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
-import OidcAuthProvider from "./auth/OidcAuthProvider.jsx";
+import { AuthProvider } from './auth/useAuth';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <OidcAuthProvider>
+    <AuthProvider>
         <App />
-      </OidcAuthProvider>
-    </BrowserRouter>
+        </AuthProvider>
   </React.StrictMode>
 );
