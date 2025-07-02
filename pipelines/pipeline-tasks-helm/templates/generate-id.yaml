@@ -1,7 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: caregiver-generate-id
+  name: generate-id
+  namespace: {{.Release.Namespace}}
 spec:
   workspaces:
     - name: source

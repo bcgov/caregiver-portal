@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger
 metadata:
-  name: caregiver-github-trigger
+  name: "{{ .Values.general.name }}-github-trigger"
   namespace: f6e00d-tools
 spec:
   interceptors:
@@ -27,6 +27,6 @@ spec:
             secretName: github-webhook-secret
             secretKey: webhook-token
   bindings:
-    - ref: caregiver-github-trigger-binding
+    - ref: "{{ .Values.general.name }}-github-trigger-binding"
   template:
-    ref: caregiver-github-trigger
+    ref: "{{ .Values.general.name }}-github-trigger"

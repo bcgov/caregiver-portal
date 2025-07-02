@@ -1,8 +1,8 @@
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
-  name: caregiver-buildah
-  namespace: f6e00d-tools
+  name: buildah
+  namespace: {{.Release.Namespace}}
 spec:
   params:
     - name: IMAGE

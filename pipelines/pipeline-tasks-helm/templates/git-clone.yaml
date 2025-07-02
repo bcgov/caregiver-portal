@@ -1,14 +1,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: caregiver-git-clone
+  name: git-clone
+  namespace: {{.Release.Namespace}}
   labels:
     app.kubernetes.io/version: "0.4"
-  annotations:
-    tekton.dev/pipelines.minVersion: "0.21.0"
-    tekton.dev/categories: Git
-    tekton.dev/tags: git
-    tekton.dev/displayName: "t-git clone"
 spec:
   description: >-
     These Tasks are Git tasks to work with repositories used by other tasks

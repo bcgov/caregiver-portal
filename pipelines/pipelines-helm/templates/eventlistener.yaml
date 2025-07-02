@@ -1,11 +1,11 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: caregiver-build-push-image-trigger
-  namespace: f6e00d-tools
+  name: "{{ .Values.general.name }}-build-push-image-trigger"
+  namespace: {{.Release.Namespace}}
   annotations:
     meta.helm.sh/release-name: pipelines
-    meta.helm.sh/release-namespace: f6e00d-tools
+    meta.helm.sh/release-namespace: {{.Release.Namespace}}
   labels:
     app.kubernetes.io/managed-by: Helm
 spec:
@@ -13,6 +13,6 @@ spec:
   namespaceSelector: {}
   resources: {}
   triggers:
-    - name: caregiver-github-listener
-      triggerRef: caregiver-github-trigger
+    - name: github-listener
+      triggerRef: github-trigger
       

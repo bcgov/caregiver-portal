@@ -1,7 +1,8 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: caregiver-helm-deploy
+  name: helm-deploy
+  namespace: {{.Release.Namespace}}
   labels:
     app.kubernetes.io/version: '0.2'
 spec:
