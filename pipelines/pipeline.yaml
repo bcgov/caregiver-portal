@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: caregiver
+  name: caregiver  # note must match name prefix of tasks/ trigger
   namespace: f6e00d-tools
 spec:
   params:

@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger
 metadata:
   name: "{{ .Values.general.name }}-github-trigger"
-  namespace: f6e00d-tools
+  namespace: {{.Release.Namespace}}
 spec:
   interceptors:
     - ref:
@@ -24,7 +24,7 @@ spec:
             - push
         - name: secretRef
           value:
-            secretName: github-webhook-secret
+            secretName: "{{ .Values.general.name }}-github-webhook-secret"
             secretKey: webhook-token
   bindings:
     - ref: "{{ .Values.general.name }}-github-trigger-binding"

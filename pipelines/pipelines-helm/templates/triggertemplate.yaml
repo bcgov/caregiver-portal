@@ -1,8 +1,8 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: caregiver-github-trigger
-  namespace: f6e00d-tools
+  name: "{{ .Values.general.name }}-github-trigger"
+  namespace: {{.Release.Namespace}}
 spec:
   params:
     - default: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools'
@@ -11,23 +11,23 @@ spec:
       name: imageRegistryUser
     - default: image-registry-password
       name: imageRegistryPass
-    - default: vite-app
+    - default: '{{ .Values.general.imageurl }}'
       name: imageUrl
-    - default: latest
+    - default: '{{ .Values.general.imagetag }}'
       name: imageTag
-    - default: 'https://github.com/bcgov/caregiver-portal.git'
+    - default: '{{ .Values.general.repourl }}'
       name: repoUrl
     - default: main
       name: branchName
-    - default: caregiver-portal
+    - default: '{{ .Values.general.helmrelease }}'
       name: helmRelease
-    - default: ./portal-helm
+    - default: '{{ .Values.general.helmdir }}'
       name: helmDir
     - default: values.yaml
       name: helmValues
     - default: ./Dockerfile
       name: dockerfile
-    - default: ./caregiver-portal/
+    - default: '{{ .Values.general.contextpath }}'
       name: pathToContext
     - default: 'quay.io/buildah/stable:v1.39.3'
       name: buildahImage
@@ -69,7 +69,7 @@ spec:
           - name: helmImage
             value: $(tt.params.helmImage)
         pipelineRef:
-          name: caregiver
+          name: '{{ .Values.general.name }}'
         workspaces:
           - name: shared-data
             volumeClaimTemplate:

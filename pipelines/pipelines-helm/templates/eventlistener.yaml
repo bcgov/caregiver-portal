@@ -4,7 +4,6 @@ metadata:
   name: "{{ .Values.general.name }}-build-push-image-trigger"
   namespace: {{.Release.Namespace}}
   annotations:
-    meta.helm.sh/release-name: pipelines
     meta.helm.sh/release-namespace: {{.Release.Namespace}}
   labels:
     app.kubernetes.io/managed-by: Helm
@@ -13,6 +12,6 @@ spec:
   namespaceSelector: {}
   resources: {}
   triggers:
-    - name: github-listener
-      triggerRef: github-trigger
+    - name: "{{ .Values.general.name }}-github-trigger"
+      triggerRef: "{{ .Values.general.name }}-github-trigger"
       

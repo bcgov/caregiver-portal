@@ -1,0 +1,8 @@
+general:
+  name: caregiver
+  repourl: https://github.com/bcgov/caregiver-portal.git
+  imagetag: latest
+  contextpath: ./caregiver-portal/
+  imageurl: vite-app
+  helmrelease: caregiver-portal
+  helmdir: ./portal-helm
