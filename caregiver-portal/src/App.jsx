@@ -1,12 +1,9 @@
 // App.jsx 
 import "@bcgov/bc-sans/css/BC_Sans.css"
-import { FaArrowLeft, FaBell } from "react-icons/fa";
-import { Footer } from "@bcgov/design-system-react-components";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import LoginPage from './pages/login';
-import { LoginButton } from "./components/LoginButton";
 import Button from "./components/Button";
 import Dashboard from "./pages/dashboard";
 import { AuthCallback } from './components/AuthCallback';

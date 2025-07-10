@@ -49,7 +49,7 @@ export const AuthCallback = () => {
 
       try {
         // Exchange code for tokens via your backend
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8090'}/auth/callback`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/auth/callback`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
