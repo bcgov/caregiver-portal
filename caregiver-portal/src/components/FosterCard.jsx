@@ -13,7 +13,6 @@ const FosterCard = ({ variant = 'login', children, ...props }) => {
 
     const handleClick = () => {
         if(variant === 'login') {
-            alert("log in!");
             login();
         } else if (variant === 'startapplication') {
             startApplication();
