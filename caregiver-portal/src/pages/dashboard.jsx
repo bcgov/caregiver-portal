@@ -1,4 +1,6 @@
 import React from 'react';
+import "../App.css";
+import Button from '../components/Button';
 import { useAuth } from '../auth/useAuth';
 
 const Dashboard = () => {
@@ -61,20 +63,13 @@ const Dashboard = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl">Dashboard</h1>
+        <h1>Dashboard</h1>
         <div className="flex gap-4">
-          <button
-            onClick={auth.logout}
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Logout
-          </button>
-          <button
+          <Button
             onClick={handleCreateApplication}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
+            variant="primary">
             Create New Application
-          </button>
+          </Button>
         </div>
       </div>
 

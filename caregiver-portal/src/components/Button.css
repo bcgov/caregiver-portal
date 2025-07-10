@@ -1,0 +1,39 @@
+.btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    width: 100%;
+    font-size: medium;
+  }
+  
+  .btn-primary {
+    background-color: #013366;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0059c1;
+  }
+  
+  .btn-secondary {
+    background-color:white;
+    font-weight: normal;
+    color:  #013366;
+    border: 1px solid  #013366;
+  }
+  
+  .btn-tertiary {
+    background-color: transparent;
+    color: #0070f3;
+    border: 2px solid #0070f3;
+  }
+
+  .btn-nav {
+    background-color: transparent;
+    color: white;
+    font-weight: normal;
+    border: 1px solid white;
+  }
