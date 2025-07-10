@@ -1,6 +1,6 @@
 import React from 'react';
 import "../App.css";
-import Button from '../components/Button';
+import FosterCard from '../components/FosterCard';
 import { useAuth } from '../auth/useAuth';
 
 const Dashboard = () => {
@@ -63,22 +63,10 @@ const Dashboard = () => {
   return (
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
-        <h1>Dashboard</h1>
-        <div className="flex gap-4">
-          <Button
-            onClick={handleCreateApplication}
-            variant="primary">
-            Create New Application
-          </Button>
-        </div>
+        <h1>Welcome, {user.name}</h1>
+        <FosterCard variant="startapplication"/>
       </div>
 
-      <div className="bg-gray-100 p-6 rounded">
-        <h2 className="text-lg mb-2">User Information</h2>
-        <p><strong>Name:</strong> {user.name}</p>
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>ID:</strong> {user.id}</p>
-      </div>
     </div>
   );
 };
