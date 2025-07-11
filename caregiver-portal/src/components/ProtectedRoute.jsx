@@ -1,6 +1,6 @@
 // components/ProtectedRoute.jsx
 import { useAuth } from '../auth/useAuth';
-import { LoginButton } from './LoginButton';
+import Button from './Button';
 
 export const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -17,7 +17,7 @@ export const ProtectedRoute = ({ children }) => {
       return (
         <div className="text-center mt-8">
           <h2 className="text-xl mb-4">Please log in to access this page</h2>
-          <LoginButton />
+
         </div>
       );
     }

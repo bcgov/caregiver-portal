@@ -3,11 +3,48 @@ body {
   font-family: 'BCSans', sans-serif;
 }
 
+
+
 .main {
   background-color: blue;
 }
 
-button {
+.main-content {
+  margin: 0;
+}
+
+.page {
+  margin: 1px;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Adjust as needed, e.g., 12px */  
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+}
+
+xbutton {
   all: unset;
   cursor: pointer;
   position: relative;
@@ -30,7 +67,7 @@ button {
   perspective: 1000px;
 }
 
-button::before {
+xbutton::before {
   content: "";
   position: absolute;
   top: -50%;

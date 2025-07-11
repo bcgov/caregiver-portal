@@ -1,12 +1,10 @@
 // App.jsx 
 import "@bcgov/bc-sans/css/BC_Sans.css"
-import { FaArrowLeft, FaBell } from "react-icons/fa";
-import { Footer } from "@bcgov/design-system-react-components";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import LoginPage from './pages/login';
-import { LoginButton } from "./components/LoginButton";
+import Button from "./components/Button";
 import Dashboard from "./pages/dashboard";
 import { AuthCallback } from './components/AuthCallback';
 import { useAuth } from './auth/useAuth'; // adjust path as needed
@@ -19,24 +17,28 @@ export default function App() {
   return (
     <Router>
     <header className="top-nav">
+      <title>B.C. Caregiver Portal</title>
       <h1 className="app-title">
         Caregiver <span className="highlight">Portal</span>
       </h1>
       <div className="nav-right">
-          <LoginButton />
+        {auth.user ?
+                 <Button
+                    onClick={auth.logout}
+                    variant="nav"
+                  >
+                    Logout
+                  </Button>
+              :
+                <Button 
+                  onClick={auth.login}
+                variant="nav">Log In</Button>
+        }
       </div>
     </header>
 
     <div className="gold-underline" />
 
-    <div className="sub-nav">
-      <FaArrowLeft className="back-arrow" />
-      <div className="divider" />
-      <nav className="breadcrumbs">
-        <a href="#">Home</a>
-        <span>›</span>
-      </nav>
-    </div>
 
     <main className="main-content">
       <Routes>
@@ -57,7 +59,7 @@ export default function App() {
       </Routes>
     </main>
 
-    <Footer />
+
   </Router>
 );
 }
