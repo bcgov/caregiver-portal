@@ -1,7 +1,7 @@
 // src/pages/login.jsx
 import { useAuth } from "../auth/useAuth";
 import "../App.css";
-import Button from "../components/Button";
+import FosterCard from "../components/FosterCard";
 
 export default function Home() {
   const { user, logout, login, loading } = useAuth();
@@ -39,18 +39,7 @@ export default function Home() {
         <div className="page">
           <h1>Welcome to the <br/>B.C. Caregiver Portal</h1>
           <p>This is a one- or two-sentence summary of what people do in the portal...</p>
-          <div className="card">
-            <h2>Apply to be a Foster Caregiver</h2>
-            <p>
-              Foster caregiving is about opening your home and sharing your love, nurturing and caring for children and youth in B.C. who
-              are under the age of 19 and who temporarily cannot live with their own families.
-            </p>
-            <div className="buttonGroup">
-              <Button variant="secondary">Learn more</Button>
-              <br/><br/>
-              <Button variant="primary" onClick={login}>Start application</Button>
-            </div>
-          </div>
+          <FosterCard variant="login"/>
         </div>
       )}
     </div>

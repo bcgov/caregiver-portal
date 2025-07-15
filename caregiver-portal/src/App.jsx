@@ -8,6 +8,8 @@ import Button from "./components/Button";
 import Dashboard from "./pages/dashboard";
 import { AuthCallback } from './components/AuthCallback';
 import { useAuth } from './auth/useAuth'; // adjust path as needed
+import BCLogo from "./assets/BCID_V_RGB_rev.svg";
+import HamburgerMenu from "./components/HamburgerMenu";
 
 
 export default function App() {
@@ -19,16 +21,14 @@ export default function App() {
     <header className="top-nav">
       <title>B.C. Caregiver Portal</title>
       <h1 className="app-title">
+        <img src={BCLogo} alt="BC Government Logo" style={{width: '65px', height: 'auto'}}></img>
         Caregiver <span className="highlight">Portal</span>
       </h1>
       <div className="nav-right">
+
+
         {auth.user ?
-                 <Button
-                    onClick={auth.logout}
-                    variant="nav"
-                  >
-                    Logout
-                  </Button>
+                <HamburgerMenu/>
               :
                 <Button 
                   onClick={auth.login}
