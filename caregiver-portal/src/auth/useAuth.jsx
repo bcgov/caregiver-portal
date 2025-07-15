@@ -1,4 +1,4 @@
-// hooks/useAuth.js
+// auth/useAuth.js
 import { useState, useEffect, createContext, useContext } from 'react';
 
 const AuthContext = createContext();
@@ -72,6 +72,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     const authUrl = `${BCSC_AUTHORITY}/protocol/openid-connect/auth?${params}`;
+    console.log('authURL:', authUrl)
     window.location.href = authUrl;
   };
 

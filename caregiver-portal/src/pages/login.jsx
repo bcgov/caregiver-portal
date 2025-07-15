@@ -1,7 +1,6 @@
 // src/pages/login.jsx
 import { useAuth } from "../auth/useAuth";
 import "../App.css";
-import Button from "../components/Button";
 import FosterCard from "../components/FosterCard";
 
 export default function Home() {
