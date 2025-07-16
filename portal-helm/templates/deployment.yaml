@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: react-app
-          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/vite-app:latest'
+          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:latest'
           ports:
             - containerPort: 8080
               protocol: TCP
