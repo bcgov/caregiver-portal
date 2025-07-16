@@ -13,10 +13,9 @@ spec:
             - key: branchName
               expression: "body.ref.split('/')[2]"
         - name: filter
-          value: >
-            body.ref.split('/')[2] == 'main' &&
-            body.head_commit.modified.exists(file,
-              file.startsWith('./caregiver-portal') || file.startsWith('./portal-helm')
+          value: |
+            body.ref.split('/')[2] == 'main' && body.head_commit.modified.exists(file,
+              file.startsWith('caregiver-portal') || file.startsWith('portal-helm')
             )
     - ref:
         name: github
