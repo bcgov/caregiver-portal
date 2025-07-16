@@ -1,8 +1,8 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger
 metadata:
-  name: caregiver-github-trigger
-  namespace: f6e00d-tools
+  name: "{{ .Values.general.name }}-github-trigger"
+  namespace: {{.Release.Namespace}}
 spec:
   interceptors:
     - ref:
@@ -13,7 +13,11 @@ spec:
             - key: branchName
               expression: "body.ref.split('/')[2]"
         - name: filter
-          value: "body.ref.split('/')[2] == 'main'"
+          value: >
+            body.ref.split('/')[2] == 'main' &&
+            body.head_commit.modified.exists(file,
+              file.startsWith('./caregiver-portal') || file.startsWith('./portal-helm')
+            )
     - ref:
         name: github
         kind: ClusterInterceptor
@@ -24,9 +28,9 @@ spec:
             - push
         - name: secretRef
           value:
-            secretName: github-webhook-secret
+            secretName: "{{ .Values.general.name }}-github-webhook-secret"
             secretKey: webhook-token
   bindings:
-    - ref: caregiver-github-trigger-binding
+    - ref: "{{ .Values.general.name }}-github-trigger-binding"
   template:
-    ref: caregiver-github-trigger
+    ref: "{{ .Values.general.name }}-github-trigger"
