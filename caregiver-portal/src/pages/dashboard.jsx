@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import "../App.css";
 import FosterCard from '../components/FosterCard';
 import { useAuth } from '../auth/useAuth';
@@ -8,24 +8,40 @@ const Dashboard = () => {
   const auth = useAuth();
   const [currentApplication, setCurrentApplication] = useState(null);
   const [applicationLoading, setApplicationLoading] = useState(false);
+  const [draftApplicationsLoading, setDraftApplicationsLoading] = useState(false);
+
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8090';
 
   if (auth.loading) {
     return <div>Loading user information...</div>;
   }
 
-  const user = auth.user;
-  const profile = user?.profile;
+  useEffect(() => {
+    if(!auth.loading && auth.user) {
+      loadDraftApplications();
+    }
+  }, [auth.loading, auth.user]);
 
-  const formatAddress = (address) => {
-    if (!address || typeof address !== 'object') return 'No address provided';
-    const parts = [];
-    if (address.street_address) parts.push(address.street_address);
-    if (address.locality) parts.push(address.locality);
-    if (address.region) parts.push(address.region);
-    if (address.postal_code) parts.push(address.postal_code);
-    if (address.country) parts.push(address.country);
-    return parts.length > 0 ? parts.join(', ') : 'Address information not available';
+  const user = auth.user;
+
+  const loadDraftApplications = async () => {
+    try {
+      setDraftApplicationsLoading(true);
+
+      const response = await fetch(`${API_BASE}/application`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+
+    } catch (err) {
+      console.error("Loading draft applications error");
+    } finally {
+      setDraftApplicationsLoading(false);
+    }
   };
 
   const handleCreateApplication = async () => {
