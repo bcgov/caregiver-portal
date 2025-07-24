@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: caregiver
+  name: portal
   namespace: f6e00d-tools
 spec:
   params:
@@ -44,7 +44,7 @@ spec:
       name: buildahImage
       type: string
   tasks:
-    - name: caregiver-fetch-repository
+    - name: git-clone
       params:
         - name: url
           value: $(params.repoUrl)
@@ -54,25 +54,25 @@ spec:
           value: $(params.branchName)
       taskRef:
         kind: Task
-        name: caregiver-git-clone
+        name: git-clone
       workspaces:
         - name: output
           workspace: shared-data
-    - name: caregiver-generate-id
+    - name: generate-id
       runAfter:
-        - caregiver-fetch-repository
+        - git-clone
       taskRef:
         kind: Task
-        name: caregiver-generate-id
+        name: generate-id
       workspaces:
         - name: source
           workspace: shared-data
-    - name: caregiver-buildah-build-push
+    - name: buildah
       params:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(tasks.caregiver-generate-id.results.short-commit)
+          value: $(tasks.generate-id.results.short-commit)
         - name: IMAGE_REGISTRY
           value: $(params.imageRegistry)
         - name: IMAGE_REGISTRY_USER
@@ -86,14 +86,14 @@ spec:
         - name: BUILDAH_IMAGE
           value: $(params.buildahImage)
       runAfter:
-        - caregiver-generate-id
+        - generate-id
       taskRef:
         kind: Task
-        name: caregiver-buildah
+        name: buildah-vite
       workspaces:
         - name: source
           workspace: shared-data
-    - name: caregiver-helm-deploy
+    - name: helm-deploy
       params:
         - name: HELM_DIR
           value: $(params.helmDir)
@@ -106,12 +106,12 @@ spec:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(tasks.caregiver-generate-id.results.short-commit)
+          value: $(tasks.generate-id.results.short-commit)
       runAfter:
-        - caregiver-buildah-build-push
+        - buildah
       taskRef:
         kind: Task
-        name: caregiver-helm-deploy
+        name: helm-deploy
       workspaces:
         - name: source
           workspace: shared-data

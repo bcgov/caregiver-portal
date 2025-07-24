@@ -1,0 +1,10 @@
+general:
+  name: portal
+  repourl: https://github.com/bcgov/caregiver-portal.git
+  imagetag: latest
+  contextpath: ./caregiver-portal/
+  imageurl: portal
+  helmrelease: portal
+  helmdir: ./portal-helm/
+
+

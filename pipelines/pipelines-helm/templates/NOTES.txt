@@ -1,1 +1,0 @@
-Ensure pipeline.yaml is deployed and the webhook secret is created

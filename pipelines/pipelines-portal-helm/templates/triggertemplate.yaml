@@ -1,7 +1,11 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: caregiver-github-trigger
+  annotations:
+    meta.helm.sh/release-name: portal-p
+    meta.helm.sh/release-namespace: f6e00d-tools
+  resourceVersion: '4670580188'
+  name: portal-github-trigger
   namespace: f6e00d-tools
 spec:
   params:
@@ -11,7 +15,7 @@ spec:
       name: imageRegistryUser
     - default: image-registry-password
       name: imageRegistryPass
-    - default: vite-app
+    - default: portal
       name: imageUrl
     - default: latest
       name: imageTag
@@ -19,9 +23,9 @@ spec:
       name: repoUrl
     - default: main
       name: branchName
-    - default: caregiver-portal
+    - default: portal
       name: helmRelease
-    - default: ./portal-helm
+    - default: ./portal-helm/
       name: helmDir
     - default: values.yaml
       name: helmValues
@@ -69,13 +73,13 @@ spec:
           - name: helmImage
             value: $(tt.params.helmImage)
         pipelineRef:
-          name: caregiver
+          name: portal
         workspaces:
           - name: shared-data
             volumeClaimTemplate:
               metadata:
                 annotations:
-                  tekton.dev/deleteAfterRun: "true"
+                  tekton.dev/deleteAfterRun: 'true'
               spec:
                 accessModes:
                   - ReadWriteOnce
