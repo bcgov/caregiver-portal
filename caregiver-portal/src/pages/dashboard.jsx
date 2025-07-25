@@ -58,7 +58,10 @@ const Dashboard = () => {
         },
         body: JSON.stringify({
           formId: 'CF0001',
-          formData: {},
+          formParameters: {
+            "formId": "CF0001",
+            "language": "en"
+          },
         }),
       });
 
