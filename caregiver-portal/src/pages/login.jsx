@@ -19,7 +19,6 @@ export default function Home() {
       {user ? (
         <div>
           <h1>Welcome back, {user.name}!</h1>
-          <p>Email: {user.email}</p>
           <div className="mt-4 space-x-4">
             <a
               href="/dashboard"

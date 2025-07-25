@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import "../App.css";
 import FosterCard from '../components/FosterCard';
+import Button from '../components/Button';
 import { useAuth } from '../auth/useAuth';
 import Application from '../components/Application';
 
@@ -8,39 +9,70 @@ const Dashboard = () => {
   const auth = useAuth();
   const [currentApplication, setCurrentApplication] = useState(null);
   const [applicationLoading, setApplicationLoading] = useState(false);
+  const [draftApplicationsLoading, setDraftApplicationsLoading] = useState(false);
+  const [draftApplications, setDraftApplications] = useState([]);
+
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8090';
 
   if (auth.loading) {
     return <div>Loading user information...</div>;
   }
 
-  const user = auth.user;
-  const profile = user?.profile;
+  useEffect(() => {
+    if(!auth.loading && auth.user) {
+      loadDraftApplications();
+    }
+  }, [auth.loading, auth.user]);
 
-  const formatAddress = (address) => {
-    if (!address || typeof address !== 'object') return 'No address provided';
-    const parts = [];
-    if (address.street_address) parts.push(address.street_address);
-    if (address.locality) parts.push(address.locality);
-    if (address.region) parts.push(address.region);
-    if (address.postal_code) parts.push(address.postal_code);
-    if (address.country) parts.push(address.country);
-    return parts.length > 0 ? parts.join(', ') : 'Address information not available';
+  const user = auth.user;
+
+  const loadDraftApplications = async () => {
+    try {
+      setDraftApplicationsLoading(true);
+
+      const response = await fetch(`${API_BASE}/application`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Draft applications loaded:', data);
+      
+      // Update the state with the loaded applications
+      setDraftApplications(data);
+
+
+    } catch (err) {
+      console.error("Loading draft applications error");
+      setDraftApplications([]); // Set empty array on error
+    } finally {
+      setDraftApplicationsLoading(false);
+    }
   };
 
   const handleCreateApplication = async () => {
     try {
       setApplicationLoading(true);
 
-      const response = await fetch(`${API_BASE}/applications`, {
+      const response = await fetch(`${API_BASE}/application`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          applicationType: 'caregiver',
-          formData: {},
+          formId: 'CF0001',
+          formParameters: {
+            "formId": "CF0001",
+            "language": "en"
+          },
         }),
       });
 
@@ -52,19 +84,23 @@ const Dashboard = () => {
           console.warn('No JSON in error response');
         }
         console.error('Error creating application:', errorData);
-        alert('Failed to create application');
+        //alert('Failed to create application');
         return;
       }
 
       const data = await response.json();
-      console.log('Application created:', data.application);
+      console.log('Application created:', data.formAccessToken);
+      console.log('Full response data:', data); // Check the entire response
+      console.log('Form access token:', data.formAccessToken);
+      console.log('About to set currentApplication with token:', data.formAccessToken);
 
-      //alert(`Application ${data.application.id} created`);
+
       // set the current application ID to load it in the iframe
-      setCurrentApplication(data.application.id);
+       setCurrentApplication(data.formAccessToken);
+       console.log('currentApplication has been set');
     } catch (err) {
       console.error('Request failed:', err);
-      alert('Something went wrong');
+      //alert('Something went wrong');
     } finally {
       setApplicationLoading(false);
     }
@@ -74,27 +110,63 @@ const Dashboard = () => {
     setCurrentApplication(null);
   };
 
-  if (currentApplication) {
-    return ( 
-      <Application
-        applicationId = {currentApplication}
-        onClose = {handleCloseApplication}
-      />
-    );
-  }
 
   return (
-    <div className="p-8">
+    <div className="card-container">
       <div className="flex justify-between items-center mb-6">
-        <h1>Welcome, {user.name}</h1>
+
+        {!currentApplication && (
+          <h1>Welcome, {user.name}</h1>
+        )}
+        
+        {!currentApplication && ( // only show create button when not viewing an application
         <FosterCard 
           variant="startapplication" 
           onStartApplication={handleCreateApplication}
           loading={applicationLoading}
           />
+        )}
+
+
+        {currentApplication && (
+          <Button
+            onClick={handleCloseApplication}
+            variant="Back to Dashboard"
+            >
+            Back to Dashboard
+          </Button>
+        )}
       </div>
 
+            {/* Conditionally render dashboard content or application */}
+            {currentApplication ? (
+        <div className="mt-4">
+          <Application
+            formAccessToken={currentApplication}
+            onClose={handleCloseApplication}
+          />
+        </div>
+      ) : (
+        <div>
+          {/* Dashboard content */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Draft applications, other dashboard widgets, etc. */}
+            {draftApplicationsLoading ? (
+              <div>Loading applications...</div>
+            ) : (
+              draftApplications.map((app) => (
+                <FosterCard 
+                variant="inprogress" 
+                onStartApplication={handleCreateApplication}
+                loading={applicationLoading}
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
+
   );
 };
 

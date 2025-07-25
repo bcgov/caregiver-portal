@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 
-const Application = ({ applicationId, onClose }) => {
+const Application = ({ formAccessToken, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,26 +12,11 @@ const Application = ({ applicationId, onClose }) => {
           setLoading(true);
           setError(null);
           
-          // Replace with your actual middleware endpoint
-          const response = await fetch(`/api/applications/${applicationId}/start`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          if (!response.ok) {
-            throw new Error(`Failed to load application: ${response.status}`);
-          }
-    
-          const data = await response.json();
+          const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
+          const url = `${formServiceUrl}/new?id=${formAccessToken}`;
+
+          setIframeUrl(url);
           
-          // Assuming the middleware returns an object with a url property
-          if (data.url) {
-            setIframeUrl(data.url);
-          } else {
-            throw new Error('No URL returned from middleware');
-          }
         } catch (err) {
           setError(err.message);
         } finally {
@@ -40,10 +25,10 @@ const Application = ({ applicationId, onClose }) => {
       };
 
       useEffect(() => {
-        if (applicationId) {
+        if (formAccessToken) {
           loadApplication();
         }
-      }, [applicationId]);
+      }, [formAccessToken]);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
@@ -100,26 +85,7 @@ const Application = ({ applicationId, onClose }) => {
         <div className="h-screen flex flex-col bg-gray-100">
           {/* Header */}
           <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900">
-              Application {applicationId}
-            </h1>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleRetry}
-                className="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 transition-colors"
-                title="Refresh"
-              >
-                <RefreshCw className="w-4 h-4" />
-              </button>
-              {onClose && (
-                <button
-                  onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700 px-3 py-1 rounded-md hover:bg-gray-100 transition-colors"
-                >
-                  Close
-                </button>
-              )}
-            </div>
+  
           </div>
     
           {/* iFrame Container */}
@@ -137,9 +103,9 @@ const Application = ({ applicationId, onClose }) => {
               <iframe
                 src={iframeUrl}
                 className="w-full h-full border-0"
-                title={`Application ${applicationId}`}
+                title={`Caregiver Application`}
                 onLoad={handleIframeLoad}
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
                 // Add additional security attributes as needed
               />
             )}
