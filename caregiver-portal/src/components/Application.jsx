@@ -13,7 +13,7 @@ const Application = ({ formAccessToken, onClose }) => {
           setError(null);
           
           const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-          const url = `${formServiceUrl}/form?token=${formAccessToken}`;
+          const url = `${formServiceUrl}/new?id=${formAccessToken}`;
 
           setIframeUrl(url);
           
@@ -85,26 +85,7 @@ const Application = ({ formAccessToken, onClose }) => {
         <div className="h-screen flex flex-col bg-gray-100">
           {/* Header */}
           <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900">
-              Application:
-            </h1>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={handleRetry}
-                className="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 transition-colors"
-                title="Refresh"
-              >
-                <RefreshCw className="w-4 h-4" />
-              </button>
-              {onClose && (
-                <button
-                  onClick={onClose}
-                  className="text-gray-500 hover:text-gray-700 px-3 py-1 rounded-md hover:bg-gray-100 transition-colors"
-                >
-                  Close
-                </button>
-              )}
-            </div>
+  
           </div>
     
           {/* iFrame Container */}
@@ -124,7 +105,7 @@ const Application = ({ formAccessToken, onClose }) => {
                 className="w-full h-full border-0"
                 title={`Caregiver Application`}
                 onLoad={handleIframeLoad}
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
                 // Add additional security attributes as needed
               />
             )}
