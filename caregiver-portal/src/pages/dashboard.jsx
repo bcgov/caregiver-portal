@@ -38,9 +38,20 @@ const Dashboard = () => {
         },
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Draft applications loaded:', data);
+      
+      // Update the state with the loaded applications
+      setDraftApplications(data);
+
 
     } catch (err) {
       console.error("Loading draft applications error");
+      setDraftApplications([]); // Set empty array on error
     } finally {
       setDraftApplicationsLoading(false);
     }
@@ -101,9 +112,13 @@ const Dashboard = () => {
 
 
   return (
-    <div className="p-8">
+    <div className="card-container">
       <div className="flex justify-between items-center mb-6">
-        <h1>Welcome, {user.name}</h1>
+
+        {!currentApplication && (
+          <h1>Welcome, {user.name}</h1>
+        )}
+        
         {!currentApplication && ( // only show create button when not viewing an application
         <FosterCard 
           variant="startapplication" 
@@ -111,6 +126,8 @@ const Dashboard = () => {
           loading={applicationLoading}
           />
         )}
+
+
         {currentApplication && (
           <Button
             onClick={handleCloseApplication}
@@ -131,18 +148,18 @@ const Dashboard = () => {
         </div>
       ) : (
         <div>
-          {/* Your existing dashboard content */}
+          {/* Dashboard content */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Draft applications, other dashboard widgets, etc. */}
             {draftApplicationsLoading ? (
               <div>Loading applications...</div>
             ) : (
               draftApplications.map((app) => (
-                <div key={app.applicationId} className="bg-white p-4 rounded-lg shadow">
-                  <h3>Application {app.applicationId}</h3>
-                  <p>Status: {app.status}</p>
-                  {/* Add click handler to resume application if needed */}
-                </div>
+                <FosterCard 
+                variant="inprogress" 
+                onStartApplication={handleCreateApplication}
+                loading={applicationLoading}
+                />
               ))
             )}
           </div>

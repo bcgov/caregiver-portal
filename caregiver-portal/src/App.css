@@ -19,12 +19,32 @@ body {
   text-align: center;
 }
 
+.cardcontainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px; /* Increases spacing between all cards */
+  /* or use separate values: */
+  row-gap: 32px; /* Vertical spacing */
+  column-gap: 24px; /* Horizontal spacing */
+}
+
 .card {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 1.75rem;
+  margin-bottom: 24px;
 }
+
+.inprogress-card {
+  background-color: #013366;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.75rem;
+  margin-bottom: 24px;
+}
+
 
 .button-group {
   display: flex;
@@ -434,7 +454,7 @@ iframe {
   position: fixed !important;
   left: 0 !important;
   width: 100vw !important;
-  height: 50vh !important;
+  height: 80vh !important;
   border: none !important;
   z-index: 9999 !important;
 }
