@@ -6,5 +6,6 @@ general:
   imageurl: portal
   helmrelease: portal
   helmdir: ./portal-helm/
-
+  deploymentname: react-app
+  deploymentnamespace: f6e00d-dev
 
