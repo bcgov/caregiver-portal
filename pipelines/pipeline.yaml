@@ -43,6 +43,12 @@ spec:
     - description: Version of Buildah to run.
       name: buildahImage
       type: string
+    - description: The deployment name to reroll after the Helm deploy.
+      name: deploymentName
+      type: string
+    - description: The namespace in which the deployments exist.
+      name: namespace
+      type: string
   tasks:
     - name: git-clone
       params:
@@ -115,6 +121,17 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
+    - name: reroll-deployment
+      runAfter:
+        - helm-deploy
+      taskRef:
+        kind: Task
+        name: reroll-deployment
+      params:
+        - name: deploymentName
+          value: $(params.deploymentName)
+        - name: namespace
+          value: $(params.namespace)
   workspaces:
     - description: |
         This workspace will receive the cloned git repo and be passed
