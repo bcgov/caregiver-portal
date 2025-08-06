@@ -1,11 +1,11 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: react-app-service
+  name: caregiver-portal-service
   namespace: {{.Release.Namespace}}
 spec:
   selector:
-    app: react-app
+    app: caregiver-portal
   ports:
     - name: https
       protocol: TCP
