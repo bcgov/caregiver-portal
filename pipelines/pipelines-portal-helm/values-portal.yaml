@@ -6,6 +6,6 @@ general:
   imageurl: portal
   helmrelease: portal
   helmdir: ./portal-helm/
-  deploymentname: react-app
+  deploymentname: caregiver-portal
   deploymentnamespace: f6e00d-dev
 
