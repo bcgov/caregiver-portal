@@ -193,6 +193,23 @@ button:active {
   font-size: 0.8rem;
   color: #ccc;
 }
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.radio-group label {
+  font-weight: normal;
+  margin-bottom: 6px;
+}
+
+legend {
+  padding: 0;
+  margin-bottom: 8px;
+  border: none;
+}
  
 .gold-underline {
   height: 4px;
@@ -457,4 +474,60 @@ iframe {
   height: 80vh !important;
   border: none !important;
   z-index: 9999 !important;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.required {
+  color: red;
+  margin-left: 4px;
+}
+
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.helper-text {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+button {
+  background-color: #002b5c; /* Dark navy */
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #004080;
 }
