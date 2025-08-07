@@ -29,8 +29,10 @@ const HamburgerMenu = () => {
         switch(item){
             case ("logout"):
                 logout();
+                break;
             default:
                 setIsOpen(false); // Close menu after selection
+                break;
         }
         
     };

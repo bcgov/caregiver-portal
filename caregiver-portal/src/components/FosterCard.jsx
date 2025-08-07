@@ -3,7 +3,7 @@ import Button from './Button';
 import PropTypes from 'prop-types';
 import { useAuth } from "../auth/useAuth";
 
-const FosterCard = ({ variant = 'login', children, onStartApplication, loading = false, ...props }) => {
+const FosterCard = ({ variant = 'login', onStartApplication, loading = false, ...props }) => {
     const { login } = useAuth();
 
 
