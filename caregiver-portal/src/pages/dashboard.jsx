@@ -4,15 +4,40 @@ import FosterCard from '../components/FosterCard';
 import Button from '../components/Button';
 import { useAuth } from '../auth/useAuth';
 import Application from '../components/Application';
+import Household from '../components/Household';
 
 const Dashboard = () => {
   const auth = useAuth();
-  const [currentApplication, setCurrentApplication] = useState(null);
+
+  const [currentApplication, setCurrentApplication] = useState(() => {
+    const saved = sessionStorage.getItem('currentApplication');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [applicationLoading, setApplicationLoading] = useState(false);
+
+
+  const [showHousehold, setShowHousehold] = useState(() => {
+    const saved = sessionStorage.getItem('showHousehold');
+    return saved === 'true';
+  });
+
   const [draftApplicationsLoading, setDraftApplicationsLoading] = useState(false);
   const [draftApplications, setDraftApplications] = useState([]);
 
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8090';
+
+  // persist current application and household state in sessionStorage
+  useEffect(() => {
+    if (currentApplication) {
+      sessionStorage.setItem('currentApplication', JSON.stringify(currentApplication));
+    } else {
+      sessionStorage.removeItem('currentApplication');
+    }
+    }, [currentApplication]);
+    
+    sessionStorage.setItem('showHousehold', showHousehold);
+
 
   if (auth.loading) {
     return <div>Loading user information...</div>;
@@ -108,6 +133,12 @@ const Dashboard = () => {
 
   const handleCloseApplication = () => {
     setCurrentApplication(null);
+    setShowHousehold(false);
+    loadDraftApplications()
+  };
+
+  const handleHousehold = () => {
+    setShowHousehold(true);
   };
 
 
@@ -131,21 +162,38 @@ const Dashboard = () => {
         {currentApplication && (
           <Button
             onClick={handleCloseApplication}
-            variant="Back to Dashboard"
+            variant="secondary"
             >
             Back to Dashboard
+          </Button>
+        )}
+        {currentApplication && !showHousehold &&(
+          <Button
+            onClick={handleHousehold}
+            variant="primary"
+            >
+            Describe Household
           </Button>
         )}
       </div>
 
             {/* Conditionally render dashboard content or application */}
-            {currentApplication ? (
+      {currentApplication ? (
+
+        showHousehold ? (
+
+          <Household/>
+
+        ) : (
+        
         <div className="mt-4">
           <Application
             formAccessToken={currentApplication}
             onClose={handleCloseApplication}
           />
         </div>
+        )
+
       ) : (
         <div>
           {/* Dashboard content */}
