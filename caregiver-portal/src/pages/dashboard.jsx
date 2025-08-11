@@ -134,6 +134,7 @@ const Dashboard = () => {
   const handleCloseApplication = () => {
     setCurrentApplication(null);
     setShowHousehold(false);
+    loadDraftApplications()
   };
 
   const handleHousehold = () => {
