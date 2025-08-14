@@ -7,6 +7,7 @@
     transition: background 0.2s ease;
     width: 100%;
     font-size: medium;
+    margin: 0.5rem 0;
   }
   
   .btn-primary {
@@ -23,6 +24,13 @@
     font-weight: normal;
     color:  #013366;
     border: 1px solid  #013366;
+  }
+
+  .btn-disabled {
+    background-color:transparent;
+    font-weight: normal;
+    color:  #CCCCCC;
+    border: 1px solid  #CCCCCC;
   }
 
   .btn-inprogress {

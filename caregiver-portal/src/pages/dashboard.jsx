@@ -182,7 +182,7 @@ const Dashboard = () => {
 
         showHousehold ? (
 
-          <Household/>
+          <Household onClose={handleCloseApplication} currentApplication={currentApplication} />
 
         ) : (
         
