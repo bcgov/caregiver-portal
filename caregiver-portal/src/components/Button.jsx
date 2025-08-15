@@ -15,7 +15,7 @@ const Button = ({ variant = 'primary', children, ...props }) => {
   
 
 Button.propTypes = {
-  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'nav', 'disabled']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'tertiary', 'nav', 'disabled', 'section-header']),
   children: PropTypes.node.isRequired,
 };
 

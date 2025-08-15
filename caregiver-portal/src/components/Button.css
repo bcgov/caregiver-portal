@@ -52,3 +52,18 @@
     font-weight: normal;
     border: 1px solid white;
   }
+
+  .btn-section-header {
+    background-color:transparent;
+    font-weight: normal;
+    color:  #2D2d2D;
+    width: 200px;
+    text-align: right;
+    padding: 0px;
+  }
+
+  .btn-section-header:hover {
+    background-color:transparent;
+  }
+
+  
