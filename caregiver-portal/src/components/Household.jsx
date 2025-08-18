@@ -52,8 +52,8 @@ const Household = ({ onClose, currentApplication }) => {
         }
       }
 
-      //if (field === 'email' && value) {
-      //  if 
+      //if (field === 'email' && value) { // TO DO: ADD EMAIL VALIDATION
+  
       //}
       setPartner(prev => ({ ...prev, [field]: value }));
     };
