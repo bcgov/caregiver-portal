@@ -38,6 +38,7 @@ const Household = ({ onClose, currentApplication }) => {
         };
 
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
+    const [partnerEmailValidationError, setPartnerEmailValidationError] = useState('');
 
     const updatePartner = (field, value) => {
       // if updating the date of birth, validate that the spouse is an adult
@@ -50,6 +51,10 @@ const Household = ({ onClose, currentApplication }) => {
           setPartnerAgeValidationError('');
         }
       }
+
+      //if (field === 'email' && value) {
+      //  if 
+      //}
       setPartner(prev => ({ ...prev, [field]: value }));
     };
 
@@ -227,7 +232,6 @@ const Household = ({ onClose, currentApplication }) => {
         body: JSON.stringify({
           applicationId: currentApplication,
           householdMemberId: partnerData.householdMemberId,
-          memberType: 'Primary Non-Applicant',
           relationshipToPrimary: 'Spouse',
           firstName: partnerData.firstName,
           lastName: partnerData.lastName,
@@ -280,6 +284,12 @@ const Household = ({ onClose, currentApplication }) => {
       return age;
     }
 
+    const validateEmail = (email) => {
+      if(!email) return false;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email.trim());
+    }
+
     const saveHouseholdMemberDraft = async (memberData) => {
       console.log('Saving household member draft:', memberData);
       const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -295,7 +305,6 @@ const Household = ({ onClose, currentApplication }) => {
               body: JSON.stringify({
                 applicationId: currentApplication,
                 householdMemberId: memberData.householdMemberId,
-                memberType: 'Non-Caregiver Adult', // will be Child/Youth if under 19
                 relationshipToPrimary: memberData.relationship,
                 firstName: memberData.firstName,
                 lastName: memberData.lastName,
@@ -476,6 +485,9 @@ const Household = ({ onClose, currentApplication }) => {
                       onChange={(e) => updatePartner('email', e.target.value)}
                       className="form-control"
                     />
+                    <label htmlFor="partner-dob" className="form-control-validation-label">
+                      {partnerEmailValidationError}
+                    </label>
                   </div>
                   </div>
           </div>
