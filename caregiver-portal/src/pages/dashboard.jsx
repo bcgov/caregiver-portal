@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../App.css";
 import FosterCard from '../components/FosterCard';
 import Button from '../components/Button';
@@ -8,35 +9,36 @@ import Household from '../components/Household';
 
 const Dashboard = () => {
   const auth = useAuth();
-
-  const [currentApplication, setCurrentApplication] = useState(() => {
-    const saved = sessionStorage.getItem('currentApplication');
-    return saved ? JSON.parse(saved) : null;
-  });
+  const navigate = useNavigate();
 
   const [applicationLoading, setApplicationLoading] = useState(false);
-
-
-  const [showHousehold, setShowHousehold] = useState(() => {
-    const saved = sessionStorage.getItem('showHousehold');
-    return saved === 'true';
-  });
-
   const [draftApplicationsLoading, setDraftApplicationsLoading] = useState(false);
   const [draftApplications, setDraftApplications] = useState([]);
+  const [hasExistingApplication, setHasExistingApplication] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8090';
+  //const [currentApplication, setCurrentApplication] = useState(() => {
+  //  const saved = sessionStorage.getItem('currentApplication');
+  //  return saved ? JSON.parse(saved) : null;
+  //});
+
+  //const [showHousehold, setShowHousehold] = useState(() => {
+  //  const saved = sessionStorage.getItem('showHousehold');
+  //  return saved === 'true';
+  //});
+
+
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   // persist current application and household state in sessionStorage
-  useEffect(() => {
-    if (currentApplication) {
-      sessionStorage.setItem('currentApplication', JSON.stringify(currentApplication));
-    } else {
-      sessionStorage.removeItem('currentApplication');
-    }
-    }, [currentApplication]);
-    
-    sessionStorage.setItem('showHousehold', showHousehold);
+  //useEffect(() => {
+  //  if (currentApplication) {
+  //    sessionStorage.setItem('currentApplication', JSON.stringify(currentApplication));
+  //  } else {
+  //    sessionStorage.removeItem('currentApplication');
+  //  }
+  //  }, [currentApplication]);
+  //  
+  //  sessionStorage.setItem('showHousehold', showHousehold);
 
 
   if (auth.loading) {
@@ -69,8 +71,18 @@ const Dashboard = () => {
   
       const data = await response.json();
       console.log('Draft applications loaded:', data);
+
+      
+      const hasSampleApplication = data.some(application => 
+        application.type === "Sample"
+      )
+
+      console.log('Did we find a Sample type?', hasSampleApplication);
+
+      setHasExistingApplication(hasSampleApplication);
       
       // Update the state with the loaded applications
+      
       setDraftApplications(data);
 
 
@@ -121,7 +133,12 @@ const Dashboard = () => {
 
 
       // set the current application ID to load it in the iframe
-       setCurrentApplication(data.formAccessToken);
+       //setCurrentApplication(data.formAccessToken);
+
+      if(data.formAccessToken) {
+        navigate(`/application/${data.formAccessToken}`);
+      }
+
        console.log('currentApplication has been set');
     } catch (err) {
       console.error('Request failed:', err);
@@ -130,6 +147,10 @@ const Dashboard = () => {
       setApplicationLoading(false);
     }
   };
+
+  const handleOpenApplication = (applicationId) => {
+    navigate(`/application/${applicationId}`)
+  }
 
   const handleCloseApplication = () => {
     setCurrentApplication(null);
@@ -141,80 +162,36 @@ const Dashboard = () => {
     setShowHousehold(true);
   };
 
+  const handleSummary = () => {
+    setShowSummary(true);
+  }
+
 
   return (
     <div className="card-container">
-      <div className="flex justify-between items-center mb-6">
+      <h1>Welcome, {user.name}</h1>
 
-        {!currentApplication && (
-          <h1>Welcome, {user.name}</h1>
-        )}
-        
-        {!currentApplication && ( // only show create button when not viewing an application
-        <FosterCard 
-          variant="startapplication" 
-          onStartApplication={handleCreateApplication}
-          loading={applicationLoading}
-          />
-        )}
-
-
-        {currentApplication && (
-          <Button
-            onClick={handleCloseApplication}
-            variant="secondary"
-            >
-            Back to Dashboard
-          </Button>
-        )}
-        {currentApplication && !showHousehold &&(
-          <Button
-            onClick={handleHousehold}
-            variant="primary"
-            >
-            Describe Household
-          </Button>
-        )}
-      </div>
-
-            {/* Conditionally render dashboard content or application */}
-      {currentApplication ? (
-
-        showHousehold ? (
-
-          <Household onClose={handleCloseApplication} currentApplication={currentApplication} />
-
-        ) : (
-        
-        <div className="mt-4">
-          <Application
-            formAccessToken={currentApplication}
-            onClose={handleCloseApplication}
-          />
-        </div>
-        )
-
-      ) : (
-        <div>
-          {/* Dashboard content */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Draft applications, other dashboard widgets, etc. */}
-            {draftApplicationsLoading ? (
-              <div>Loading applications...</div>
-            ) : (
-              draftApplications.map((app) => (
-                <FosterCard 
-                variant="inprogress" 
-                onStartApplication={handleCreateApplication}
-                loading={applicationLoading}
-                />
-              ))
-            )}
+      { !hasExistingApplication && (
+      <FosterCard 
+        variant="startapplication" 
+        onStartApplication={handleCreateApplication}
+        loading={applicationLoading}
+        />
+      )
+      }  
+      
+      <div className="draft-applications">        
+        {draftApplications.map((app) => (
+          <div key={app.id} onClick={() => handleOpenApplication(app.id)}>
+            <FosterCard 
+            variant="inprogress" 
+            onStartApplication={handleCreateApplication}
+            loading={applicationLoading}
+            />
+          </div>
+          ))}
           </div>
         </div>
-      )}
-    </div>
-
   );
 };
 

@@ -568,7 +568,7 @@ button:hover {
 }
 
 .form-control-label {
-  font-weight: 400;
+  font-weight: 700;
   color: #474543;
   margin-bottom: 6px;
 }
@@ -621,3 +621,29 @@ select:invalid {
   border: solid 1px red;
 }
 
+.application-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 2rem;
+}
+
+.step-indicator {
+  display: flex;
+  gap: 1rem;
+}
+
+.step {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.step.active {
+  background: #1976d2;
+  color: white;
+}
