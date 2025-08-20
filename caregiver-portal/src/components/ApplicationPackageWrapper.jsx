@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ApplicationPackage from './application-package';
+import ApplicationPackage from './ApplicationPackage';
 
 const ApplicationPackageWrapper = () => {
   const { applicationId } = useParams();
