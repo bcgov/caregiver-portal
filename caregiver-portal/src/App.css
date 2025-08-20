@@ -3,7 +3,10 @@ body {
   font-family: 'BCSans', sans-serif;
 }
 
-
+.bc-logo {
+  width: 65px;
+  height: auto;
+}
 
 .main {
   background-color: blue;

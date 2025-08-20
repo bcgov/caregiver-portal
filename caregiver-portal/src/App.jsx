@@ -1,53 +1,31 @@
 // App.jsx 
-import "@bcgov/bc-sans/css/BC_Sans.css"
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import "@bcgov/bc-sans/css/BC_Sans.css"
 
+// Components
 import { ProtectedRoute } from './components/ProtectedRoute';
-import LoginPage from './pages/login';
-import Button from "./components/Button";
-import Dashboard from "./pages/dashboard";
-import Household from "./pages/household-member";
 import { AuthCallback } from './components/AuthCallback';
-import { useAuth } from './auth/useAuth'; // adjust path as needed
-import BCLogo from "./assets/BCID_V_RGB_rev.svg";
-import HamburgerMenu from "./components/HamburgerMenu";
+import Header from './components/Header';
+
+// Pages
+
+import LoginPage from './pages/Login';
+import Dashboard from "./pages/Dashboard";
+import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 
-
-export default function App() {
-
-  const auth = useAuth();
+const App = () => {
 
   return (
     <Router>
-    <header className="top-nav">
-      <title>B.C. Caregiver Portal</title>
-      <h1 className="app-title">
-        <img src={BCLogo} alt="BC Government Logo" style={{width: '65px', height: 'auto'}}></img>
-        Caregiver <span className="highlight">Portal</span>
-      </h1>
-      <div className="nav-right">
-
-
-        {auth.user ?
-                <HamburgerMenu/>
-              :
-                <Button 
-                  onClick={auth.login}
-                variant="nav">Log In</Button>
-        }
-      </div>
-    </header>
-
-    <div className="gold-underline" />
-
-
+    <Header />
     <main className="main-content">
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/household" element={<Household />} />
+        <Route path="/household" element={<HouseholdLanding />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* Protected routes */}
@@ -56,8 +34,8 @@ export default function App() {
 
       </Routes>
     </main>
+    </Router>
+    );
+  };
 
-
-  </Router>
-);
-}
+export default App;

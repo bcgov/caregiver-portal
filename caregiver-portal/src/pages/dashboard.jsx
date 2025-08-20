@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/useAuth';
-import { useApplications } from '../hooks/useApplications';
-import { useCreateApplication } from '../hooks/useCreateApplication';
+import { useApplications } from '../hooks/UseApplications';
+import { useCreateApplication } from '../hooks/UseCreateApplication';
 import FosterCard from '../components/FosterCard';
 
 const Dashboard = () => {
@@ -35,6 +35,8 @@ const Dashboard = () => {
     <div className="card-container">
       <h1>Welcome, {auth.user.name}</h1>
 
+      {isLoading && <div>Loading applications...</div>}
+
       {!hasExistingSampleApp && (
         <FosterCard 
           variant="startapplication" 
@@ -46,7 +48,7 @@ const Dashboard = () => {
       <div className="draft-applications">
         {applications.map((app) => (
           <div key={app.id} onClick={() => handleOpenApplication(app.id)}>
-            <FosterCard 
+            <FosterCard
               variant="inprogress" 
               onStartApplication={createApplication}
               loading={isCreating}
