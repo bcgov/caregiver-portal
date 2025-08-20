@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/UseApplications';
 import { useCreateApplication } from '../hooks/UseCreateApplication';
 import FosterCard from '../components/FosterCard';

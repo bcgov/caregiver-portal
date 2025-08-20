@@ -1,4 +1,4 @@
-// auth/useAuth.js
+// hooks/useAuth.js
 import { useState, useEffect, createContext, useContext } from 'react';
 
 const AuthContext = createContext();
@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8090';
 
   // Check authentication status on app load
   useEffect(() => {

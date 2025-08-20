@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from './Button';
 import PropTypes from 'prop-types';
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const FosterCard = ({ variant = 'login', onStartApplication, loading = false, ...props }) => {
     const { login } = useAuth();

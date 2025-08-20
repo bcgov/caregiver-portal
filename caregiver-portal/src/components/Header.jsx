@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import Button from './Button';
 import HamburgerMenu from './HamburgerMenu';
 import BCLogo from '../assets/BCID_V_RGB_rev.svg';
