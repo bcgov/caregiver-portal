@@ -6,10 +6,12 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import LoginPage from './pages/login';
 import Button from "./components/Button";
 import Dashboard from "./pages/dashboard";
+import Household from "./pages/household-member";
 import { AuthCallback } from './components/AuthCallback';
 import { useAuth } from './auth/useAuth'; // adjust path as needed
 import BCLogo from "./assets/BCID_V_RGB_rev.svg";
 import HamburgerMenu from "./components/HamburgerMenu";
+import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 
 
 export default function App() {
@@ -45,17 +47,13 @@ export default function App() {
         {/* Public routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/household" element={<Household />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* Protected routes */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
+        <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
+
       </Routes>
     </main>
 

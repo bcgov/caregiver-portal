@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import Button from'./Button';
 
-const Application = ({ formAccessToken, onClose }) => {
+const Application = ({ formAccessToken, onNext, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+    const [formCompleted, setFormCompleted] = useState(false);
 
     const loadApplication = async () => {
         try {
@@ -38,6 +40,12 @@ const Application = ({ formAccessToken, onClose }) => {
         setIsIframeLoaded(false);
         loadApplication();
       };
+
+      const handleContinue = () => {
+        if(onNext) {
+          onNext();
+        }
+      }
     
       if (loading) {
         return (
@@ -85,11 +93,24 @@ const Application = ({ formAccessToken, onClose }) => {
         <div className="h-screen flex flex-col bg-gray-100">
           {/* Header */}
           <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-  
+            <h2 className="text-lg font-semibold">Caregiver Application Form</h2>
+            <div className="flex gap-2">
+              {formCompleted && onNext && (
+                <Button variant="primary" onClick={handleContinue}>
+                  Continue to Household Information
+                </Button>
+              )}
+              {onClose && (
+                <Button variant="secondary" onClick={onClose}>
+                  Save & Exit
+                </Button>
+              )}
+            </div>
           </div>
     
           {/* iFrame Container */}
           <div className="flex-1 relative">
+
             {!isIframeLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white">
                 <div className="text-center">

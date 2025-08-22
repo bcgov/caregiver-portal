@@ -470,7 +470,7 @@ legend {
 iframe {
   position: fixed !important;
   left: 0 !important;
-  width: 100vw !important;
+  width: 100%;
   height: 70vh !important;
   border: none !important;
   z-index: 9999 !important;
@@ -530,4 +530,120 @@ button {
 
 button:hover {
   background-color: #004080;
+}
+
+.section-header-title {
+  text-align: left;
+}
+
+.section-description{
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 300;
+  color: #525252;
+  background-color: #EDF5FF;
+  border-left: solid 6px #0043CE;
+  padding: 12px 24px;
+}
+
+.household-member-form{
+  border: solid 1px #ccc;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.member-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 24px;
+  align-items: center;
+  margin-bottom: 12px;
+  background-color: #d8d8d8;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.form-group {
+  padding: 6px 24px;
+}
+
+.form-control-label {
+  font-weight: 700;
+  color: #474543;
+  margin-bottom: 6px;
+}
+
+.form-control-validation-label {
+  font-weight: 400;
+  color: red;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.form-control {
+  margin-bottom: 12px;
+}
+
+.form-control-date {
+  margin-bottom: 6px;
+  padding: 8px;
+  font-family: 'BCSans', sans-serif;
+}
+
+
+.helper-text{
+  margin-bottom: 12px;
+}
+
+h3 {
+  margin: 8px 0px;
+  width:100%;
+}
+
+select {
+  border: solid 1px #d8d8d8;
+  background-color: #fff;
+  padding: 8px;
+  color: #9f9f9f;
+}
+
+select:hover {
+  border: solid 1px #353433;
+  color: #2D2d2D;
+}
+
+select:focus {
+  border: solid 1px #0043CE;
+  color: #2D2d2D;
+}
+
+select:invalid {
+  border: solid 1px red;
+}
+
+.application-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 2rem;
+}
+
+.step-indicator {
+  display: flex;
+  gap: 1rem;
+}
+
+.step {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.step.active {
+  background: #1976d2;
+  color: white;
 }
