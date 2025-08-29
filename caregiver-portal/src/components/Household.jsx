@@ -27,6 +27,8 @@ const Household = ({ onClose, currentApplication }) => {
     const [householdMembers, setHouseholdMembers] = useState([]);
     
     
+    //console.log("Current Application ID in Household:", currentApplication);
+
     const addHouseholdMember = () => {
             const newMember = {
                 firstName: '',
@@ -142,7 +144,7 @@ const Household = ({ onClose, currentApplication }) => {
           }
 
           const nonSpouseMembers = householdData.filter(member =>
-            member.relationshipToPrimary !== 'Spouse'
+            member.relationshipToPrimary !== 'Spouse' && member.relationshipToPrimary !== 'Self'
           );
 
           if(nonSpouseMembers.length > 0) {
