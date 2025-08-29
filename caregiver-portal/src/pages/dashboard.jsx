@@ -51,7 +51,6 @@ const Dashboard = () => {
       <div className="draft-applications">
         {applications.map((app) => (
           <div key={app.applicationId}>
-            <p>{app.type}</p>
             <FosterCard
               variant="inprogress" 
               onClick={() => handleOpenApplication(app.applicationId)}
