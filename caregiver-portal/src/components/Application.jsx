@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import Button from'./Button';
 
-const Application = ({ formAccessToken, onNext, onClose }) => {
+const Application = ({ applicationId, onNext, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -11,11 +11,14 @@ const Application = ({ formAccessToken, onNext, onClose }) => {
 
     const loadApplication = async () => {
         try {
+          console.log(`Trying to loadApplication`);
           setLoading(true);
           setError(null);
           
           const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-          const url = `${formServiceUrl}/new?id=${formAccessToken}`;
+          const url = `${formServiceUrl}/new?id=${applicationId}`;
+
+          console.log(`iFrame URL: ${url}`);
 
           setIframeUrl(url);
           
@@ -27,10 +30,11 @@ const Application = ({ formAccessToken, onNext, onClose }) => {
       };
 
       useEffect(() => {
-        if (formAccessToken) {
+        console.log(`ApplicationID: ${applicationId}`);
+        if (applicationId) {
           loadApplication();
         }
-      }, [formAccessToken]);
+      }, [applicationId]);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);

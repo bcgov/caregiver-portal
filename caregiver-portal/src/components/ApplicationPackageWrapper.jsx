@@ -10,9 +10,11 @@ const ApplicationPackageWrapper = () => {
     navigate('/dashboard');
   };
 
+  //console.log("Rendering ApplicationPackageWrapper with applicationId:", applicationId);
+
   return (
     <ApplicationPackage 
-      formAccessToken={applicationId}
+      applicationId={applicationId}
       onClose={handleClose}
     />
   );
