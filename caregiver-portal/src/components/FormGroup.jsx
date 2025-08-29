@@ -137,6 +137,7 @@ const FormGroup = ({
                 </div>
             </div>
         );
+    }
     // component implementation
     return (
         <div className={`form-group-section ${className}`}>
@@ -170,5 +171,4 @@ const FormGroup = ({
     );
 };
 
-
-};
+export default FormGroup;
