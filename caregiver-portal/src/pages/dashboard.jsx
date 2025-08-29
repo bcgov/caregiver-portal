@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/UseApplications';
 import { useCreateApplication } from '../hooks/UseCreateApplication';
 import FosterCard from '../components/FosterCard';
+import AccessCard from '../components/AccessCard';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -35,22 +36,25 @@ const Dashboard = () => {
     <div className="card-container">
       <h1>Welcome, {auth.user.name}</h1>
 
+      <AccessCard />
+
       {isLoading && <div>Loading applications...</div>}
 
       {!hasExistingSampleApp && (
         <FosterCard 
           variant="startapplication" 
-          onStartApplication={createApplication}
+          onClick={createApplication}
           loading={isCreating}
         />
       )}
 
       <div className="draft-applications">
         {applications.map((app) => (
-          <div key={app.id} onClick={() => handleOpenApplication(app.id)}>
+          <div key={app.applicationId}>
+            <p>{app.type}</p>
             <FosterCard
               variant="inprogress" 
-              onStartApplication={createApplication}
+              onClick={() => handleOpenApplication(app.applicationId)}
               loading={isCreating}
             />
           </div>
