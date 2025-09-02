@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './Button';
-import { isJsxOpeningElement } from 'typescript';
 
 const Modal = ({
     isOpen,
