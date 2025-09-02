@@ -10,8 +10,8 @@ import Header from './components/Header';
 
 // Pages
 
-import LoginPage from './pages/Login';
-import Dashboard from "./pages/Dashboard";
+import LoginPage from './pages/login';
+import Dashboard from "./pages/dashboard";
 import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 

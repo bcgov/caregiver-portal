@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useApplications } from '../hooks/UseApplications';
-import { useCreateApplication } from '../hooks/UseCreateApplication';
+import { useApplications } from '../hooks/useApplications';
+import { useCreateApplication } from '../hooks/useCreateApplication';
 import FosterCard from '../components/FosterCard';
 import AccessCard from '../components/AccessCard';
 
