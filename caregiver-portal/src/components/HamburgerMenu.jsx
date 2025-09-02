@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);

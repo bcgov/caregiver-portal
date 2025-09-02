@@ -1,11 +1,11 @@
 // src/pages/household-member.jsx
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Button from "../components/Button";
 
-export default function Household() {
+export default function HouseholdLanding() {
   const { user, logout, login, loading } = useAuth();
   const navigate = useNavigate();
 

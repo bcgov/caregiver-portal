@@ -1,21 +1,16 @@
 import React from 'react';
 import Button from './Button';
 import PropTypes from 'prop-types';
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
-const FosterCard = ({ variant = 'login', onStartApplication, loading = false, ...props }) => {
+const FosterCard = ({ variant = 'login', onClick, loading = false, ...props }) => {
     const { login } = useAuth();
-
-
-    const startApplication = () => {
-        alert("start application!");
-    }
 
     const handleClick = () => {
         if(variant === 'login') {
             login();
-        } else if (variant === 'startapplication') {
-            onStartApplication();
+        } else {
+            onClick();
         }
     };
 

@@ -1,5 +1,5 @@
 // src/pages/login.jsx
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";

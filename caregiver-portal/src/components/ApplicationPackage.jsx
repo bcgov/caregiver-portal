@@ -1,10 +1,11 @@
 import React, {useState, useEffect } from 'react';
 import Application from './Application';
 import Household from './Household';
+import HouseholdSummary from './HouseholdSummary';
 import ApplicationStatus from './ApplicationStatus';
 import Button from './Button';
 
-const ApplicationPackage = ({ formAccessToken, onClose }) => {      // to do, make initial step a parameter
+const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make initial step a parameter
     const [currentStep, setCurrentStep] = useState('application');
     // possible steps: 'application', 'household', 'submission', 'review'
 
@@ -44,21 +45,21 @@ const ApplicationPackage = ({ formAccessToken, onClose }) => {      // to do, ma
         <div className="application-content">
             {currentStep === 'application' && (
                 <Application
-                    formAccessToken={formAccessToken}
+                    applicationId={applicationId}
                     onNext={() => handleStepChange('household')}
                 />
             )}
 
             {currentStep === 'household' && (
                 <Household
-                    currentApplication={formAccessToken}
+                    currentApplication={applicationId}
                     onNext={() => handleStepChange('submission')}
                     onBack={() => handleStepChange('application')}
                 />
             )}
 
             {currentStep === 'submission' && (
-                <div>Under construction</div>
+                <HouseholdSummary applicationId={applicationId}></HouseholdSummary>
             )}
 
         </div>

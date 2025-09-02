@@ -3,11 +3,16 @@ body {
   font-family: 'BCSans', sans-serif;
 }
 
-
+.bc-logo {
+  width: 65px;
+  height: auto;
+}
 
 .main {
   background-color: blue;
 }
+
+
 
 .main-content {
   margin: 0;
@@ -646,4 +651,114 @@ select:invalid {
 .step.active {
   background: #1976d2;
   color: white;
+}
+
+.householdSummaryItem {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+}
+
+.topLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 10px;
+}
+
+.bottomLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.nameLabel {
+  font-weight: 600;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform:capitalize;
+}
+
+.pill {
+  font-size: 12px;
+  color: #374151;
+  background: #f3f4f6;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  text-transform: lowercase;
+}
+
+.alert {
+  display: inline-grid;
+  place-items: center;
+  background:#fde68a; 
+  color: white;
+  border-radius: 50%;
+
+}
+
+.completed {
+  display: inline-grid;
+  place-items: center;
+  background:green; 
+  color: white;
+  border-radius: 50%;
+
+}
+
+.chevronRight {
+  color: #555;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-small { max-width: 400px; width: 90%; }
+.modal-medium { max-width: 600px; width: 90%; }
+.modal-large { max-width: 800px; width: 90%; }
+.modal-fullscreen { width: 95%; height: 95%; max-width: none; max-height: none; }
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  width: 100000px;
+}
+
+.modal-body {
+  padding: 1.5rem;
 }

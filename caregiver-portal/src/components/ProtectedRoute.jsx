@@ -1,5 +1,5 @@
 // components/ProtectedRoute.jsx
-import { useAuth } from '../auth/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import Button from './Button';
 
 export const ProtectedRoute = ({ children }) => {
