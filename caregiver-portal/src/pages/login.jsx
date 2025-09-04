@@ -2,8 +2,10 @@
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
-import FosterCard from "../components/FosterCard";
+import "../DesignTokens.css";
+import Button from "../components/Button";
+import FosterApplicationStart from "../components/FosterApplicationStart";
+
 
 export default function Home() {
   const { user, logout, login, loading } = useAuth();
@@ -40,11 +42,12 @@ export default function Home() {
   
   return (
     <div className="page">
-        <div className="page">
-          <h1>Welcome to the <br/>B.C. Caregiver Portal</h1>
-          <p>This is a one- or two-sentence summary of what people do in the portal...</p>
-          <FosterCard variant="login"/>
+        <div className="welcome-frame">
+          <h1 className="page-title">Welcome to the <br/>B.C. Caregiver Portal</h1>
+          <p class="page-content">Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
+          <Button onClick={login} variant="primary">Log in</Button>
         </div>
+        <FosterApplicationStart onClick={login}/>
     </div>
   );
 }

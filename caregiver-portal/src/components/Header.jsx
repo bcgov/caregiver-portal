@@ -10,10 +10,12 @@ const Header = () => {
     return (
       <>
         <header className="top-nav">
-          <h1 className="app-title">
+          <nav className="nav-left">
             <img src={BCLogo} alt="BC Government Logo" className="bc-logo" />
-            Caregiver <span className="highlight">Portal</span>
-          </h1>
+            <div className="app-title">
+              Caregiver <span className="highlight">Portal</span>
+            </div>
+          </nav>
           <nav className="nav-right">
             {auth.user ? (
               <HamburgerMenu />
