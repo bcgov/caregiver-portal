@@ -7,13 +7,14 @@ import "@bcgov/bc-sans/css/BC_Sans.css"
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
 import Header from './components/Header';
-
+import "./DesignTokens.css";
 // Pages
 
 import LoginPage from './pages/Login';
 import Dashboard from "./pages/Dashboard";
 import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
+import FosterApplicationProcess from './pages/FosterApplicationProcess';
 
 const App = () => {
 
@@ -30,6 +31,7 @@ const App = () => {
 
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
+        <Route path="/foster-application/:applicationId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 
       </Routes>

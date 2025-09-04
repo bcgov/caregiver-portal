@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/UseApplications';
 import { useCreateApplication } from '../hooks/UseCreateApplication';
+import FosterApplicationStart from '../components/FosterApplicationStart';
 import FosterCard from '../components/FosterCard';
 import AccessCard from '../components/AccessCard';
 
@@ -13,7 +14,10 @@ const Dashboard = () => {
   const { applications, isLoading, hasExistingSampleApp, loadApplications } = useApplications();
 
   const handleNavigateToApplication = useCallback((token) => {
-    navigate(`/application/${token}`);
+
+    console.log("Navigating to application with token:", token);
+
+    navigate(`/foster-application/${token}`);
   }, [navigate]);
 
   const { createApplication, isCreating } = useCreateApplication(handleNavigateToApplication);
@@ -32,21 +36,17 @@ const Dashboard = () => {
     return <div>Loading user information...</div>;
   }
 
+  // {!hasExistingSampleApp && (
+  // )}
   return (
     <div className="card-container">
-      <h1>Welcome, {auth.user.name}</h1>
-
-      <AccessCard />
-
+      
       {isLoading && <div>Loading applications...</div>}
 
-      {!hasExistingSampleApp && (
-        <FosterCard 
-          variant="startapplication" 
-          onClick={createApplication}
-          loading={isCreating}
-        />
-      )}
+      
+
+        <FosterApplicationStart onClick={createApplication} />
+      
 
       <div className="draft-applications">
         {applications.map((app) => (

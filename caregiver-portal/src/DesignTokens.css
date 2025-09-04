@@ -1,0 +1,316 @@
+@import "@bcgov/design-tokens/css/variables.css";
+
+body {
+    margin: 0;
+    font-family: 'BCSans', sans-serif;
+  }
+
+
+/** Header Styles **/
+
+.bc-logo {
+    width: 69px;
+    height: 66px;
+    aspect-ratio: 23/22;
+    background: url(../assets/BCID_V_RGB_rev.svg) -14px -6.166px / 120.29% 118.683% no-repeat;
+  }
+  
+.top-nav {
+    border-bottom: 3px solid #FCBA19;
+    background: #013366;
+    display: flex;
+    height: 66px;
+    padding: 0 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: stretch;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0rem;
+}
+   
+
+.app-title {
+    color: #FFF;
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.highlight {
+    color: #FCBA19;
+}
+   
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+   
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.hamburger-container {
+    display: flex;
+    padding: 4px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--typography-color-primaryInvert, #FFF);
+  }
+  
+  .hamburger-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 24px;
+    height: 24px;
+    aspect-ratio: 1/1;
+    background: transparent;
+    border: none;
+    padding: 0px;
+    color: white;
+    cursor: pointer;
+
+  }
+  
+  .hamburger-button:hover {
+    opacity: 1;
+  }
+  
+  .hamburger-button.active .hamburger-line:first-child {
+    opacity: 0;
+  }
+  
+  .hamburger-button.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  
+
+/** Page Styles **/
+
+.page {
+    align-self: stretch;
+    color: var(--typography-color-primary, #2D2D2D);
+
+    /* regular/body */
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+}
+
+.page-content {
+    padding: 0px;
+    margin: 0px;
+}
+
+.main-content{
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.welcome-frame {
+
+    display: flex;
+    width: 412px;
+    padding: 24px 16px 40px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    background: var(--theme-gold-10, #FEF8E8);
+  }
+
+
+
+  .page-title {
+    color: var(--typography-color-primary, #2D2D2D);
+
+    /* bold/H1 */
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 125%; /* 40px */
+    padding: 0px;
+    margin: 0px;
+  }
+
+  .caption {
+    align-self: stretch;
+    color: var(--typography-color-primary, #2D2D2D);
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 125%;
+    margin-top: 8px; /* 22.5px */
+  }
+
+  .image-frame {
+    display: flex;
+    width: 412px;
+    padding: 16px 0 16px 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0px 16px;
+    gap: 10px;
+    align-self: stretch;
+  }
+
+  .hero-image {
+    width: 365px;
+    height: 219px;
+    aspect-ratio: 5/3;
+  }
+
+  .page-heading {
+    color: var(--typography-color-primary, #2D2D2D);
+
+    /* semi-bold/H2 */
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%; /* 32px */
+    padding: 0px;
+    margin: 0px 0px 16px 0px;
+  }
+
+    .gold-underline-large {
+        width: 36px;
+        height: 4px;
+        background: var(--theme-gold-40, #FCBA19);
+        border-radius: 2px;
+        border: none;
+        margin: 32px 0px 0px 0px;
+        padding: 0px;
+    }
+
+.buttonIcon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0; 
+}
+
+.buttonGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+}
+
+.application-frame {
+  display: flex;
+  
+  padding: 16px 0 16px 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0px 16px;
+  gap: 10px;
+  align-self: stretch;
+}
+
+.application-package{
+  display: flex;
+  padding: 16px 0;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.application-step {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  align-items: flex-start;
+  column-gap: 12px;
+}
+
+.application-step-left {
+  position: relative;
+  width: 36px;
+  height: auto;
+  flex: 0 0 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+}
+.application-step-indicator {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.application-step-later {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.application-timeline-rail {
+  width: 4px;
+  flex: 1 0 0;
+  background: var(--theme-gray-40, #E0DEDC);
+}
+
+.application-step-content {
+  display: flex;
+  padding: 0px 0 21px 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  flex: 1 0 0;
+}
+
+.application-step-label {
+  align-self: stretch;
+  color: var(--typography-color-secondary, #474543);
+  font-family: "BC Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 27px; /* 168.75% */
+  padding: 0px;
+  margin: 0px;
+}
+
+.application-step-title {
+  align-self: stretch;
+  color: var(--typography-color-primary, #2D2D2D);
+  font-family: "BC Sans", Helvetica, Arial, sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 27px; /* 135% */
+  padding: 0px;
+  margin: 0px;
+}
+.application-step-description {
+  align-self: stretch;
+  color: var(--typography-color-secondary, #474543);
+
+  /* regular/body */
+  font-family: "BC Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+  padding: 0px;
+  margin: 0px;
+  margin-top: 16px;
+}

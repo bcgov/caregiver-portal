@@ -1,14 +1,17 @@
 .btn {
-    padding: 0.75rem 1.5rem;
-    font-weight: 500;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    width: 100%;
-    font-size: medium;
-    margin: 0.5rem 0;
-    align-items: center;
+  display: flex;
+  height: 40px;
+  padding: var(--layout-margin-small, 8px) var(--layout-margin-medium, 16px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--layout-margin-small, 8px);
+  border-radius: var(--layout-borderRadius-medium, 4px);
+  background: var(--surface-color-primary-button-default, #013366);
+  border: none;
+  font-weight: 400;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 27px;
   }
   
   .btn-primary {
@@ -23,8 +26,8 @@
   .btn-secondary {
     background-color:transparent;
     font-weight: normal;
-    color:  #013366;
-    border: 1px solid  #013366;
+    color:  var(--typography-color-primary, #2D2d2D);
+    border: 1px solid  transparent;
   }
 
   .btn-disabled {

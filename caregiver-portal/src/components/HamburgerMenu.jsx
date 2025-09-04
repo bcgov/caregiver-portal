@@ -1,4 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
+import { Menu } from 'lucide-react';
 import { useAuth } from "../hooks/useAuth";
 
 const HamburgerMenu = () => {
@@ -44,9 +45,7 @@ const HamburgerMenu = () => {
              onClick={toggleMenu}
              aria-label="Toggle menu"
              >
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
-            <span className="hamburger-line"></span>
+                <Menu />
             </button>
 
             {/* Dropdown Menu */}

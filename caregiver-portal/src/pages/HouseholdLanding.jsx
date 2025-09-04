@@ -2,7 +2,7 @@
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../App.css";
+import "../DesignTokens.css";
 import Button from "../components/Button";
 
 export default function HouseholdLanding() {
