@@ -47,6 +47,7 @@ spec:
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud --no-cache \
           --build-arg VITE_API_URL=$VITE_API_URL \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
+          --build-arg VITE_KILN_URL=$VITE_KILN_URL \
           --build-arg VITE_BCSC_AUTHORITY=$VITE_BCSC_AUTHORITY \
           -f $(params.DOCKERFILE) -t $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest \
           --isolation chroot $(params.CONTEXT)
@@ -76,6 +77,11 @@ spec:
           valueFrom:
             secretKeyRef:
               key: VITE_BCSC_AUTHORITY
+              name: vite-secrets
+        - name: VITE_KILN_URL
+          valueFrom:
+            secretKeyRef:
+              key: VITE_KILN_URL
               name: vite-secrets
     - name: trivy-scan
       image: docker.io/aquasec/trivy
