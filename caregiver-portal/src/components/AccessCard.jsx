@@ -3,17 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { useAccessCode } from '../hooks/useAccessCode';
 
-const AccessCard = ({}) => {
+const AccessCard = () => {
     const [accessCode, setAccessCode] = React.useState('');
     const [message, setMessage] = React.useState('');
-    const { associateAccessCode, isLoading, error } = useAccessCode();
-    const navigate = useNavigate();
-    
+    const { associateAccessCode, isLoading } = useAccessCode();
 
     const handleClick = async(e) => {
 
         e.preventDefault();
-        console.log("Access code entered:", accessCode);
+
         if (!accessCode.trim()) {
             setMessage('Please enter a valid access code.');
             return;

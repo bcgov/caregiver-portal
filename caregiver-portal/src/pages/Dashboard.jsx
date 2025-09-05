@@ -4,14 +4,14 @@ import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
 import { useCreateApplication } from '../hooks/useCreateApplication';
 import FosterApplicationStart from '../components/FosterApplicationStart';
-import FosterCard from '../components/FosterCard';
+import TaskCard from '../components/TaskCard';
 import AccessCard from '../components/AccessCard';
 
 const Dashboard = () => {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const { applications, isLoading, hasExistingSampleApp, loadApplications } = useApplications();
+  const { applications, isLoading, hasFosterApp, loadApplications } = useApplications();
 
   const handleNavigateToApplication = useCallback((token) => {
 
@@ -39,26 +39,32 @@ const Dashboard = () => {
   // {!hasExistingSampleApp && (
   // )}
   return (
-    <div className="card-container">
-      
-      {isLoading && <div>Loading applications...</div>}
 
+    <div className="dashboard-container">
       
-
-        <FosterApplicationStart onClick={createApplication} />
-      
-
-      <div className="draft-applications">
-        {applications.map((app) => (
-          <div key={app.applicationId}>
-            <FosterCard
-              variant="inprogress" 
-              onClick={() => handleOpenApplication(app.applicationId)}
-              loading={isCreating}
-            />
-          </div>
-        ))}
+        {isLoading && <div>Loading applications...</div>}
+      {applications.length > 0 ? (
+        <div className="application-frame">
+          <hr className="gold-underline-large" />
+          <h2 className="page-heading">My tasks</h2>
+          <div className="draft-applications">
+            {applications.map((app) => (
+              <div key={app.applicationId}>
+                {app.type === "Foster Caregiver" && (
+                <TaskCard applicationId={app.applicationId} />
+                )}
+            </div>
+            ))}
       </div>
+        </div>
+        ) 
+      : (
+
+        !hasFosterApp && (
+          <FosterApplicationStart onClick={createApplication} />
+        )
+      )
+      }  
     </div>
   );
 };

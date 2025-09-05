@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import Button from'./Button';
+import Breadcrumb from './Breadcrumb';
 
 const Application = ({ applicationId, onNext, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
@@ -8,6 +10,12 @@ const Application = ({ applicationId, onNext, onClose }) => {
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const [formCompleted, setFormCompleted] = useState(false);
+
+    const navigate = useNavigate();
+  
+    const handleBackClick = (item) => {
+      navigate(item.path);
+    };
 
     const loadApplication = async () => {
         try {
@@ -53,7 +61,7 @@ const Application = ({ applicationId, onNext, onClose }) => {
     
       if (loading) {
         return (
-          <div className="flex items-center justify-center h-screen bg-gray-50">
+          <div className="application-frame">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
               <p className="text-gray-600">Loading application...</p>
@@ -95,22 +103,6 @@ const Application = ({ applicationId, onNext, onClose }) => {
     
       return (
         <div className="h-screen flex flex-col bg-gray-100">
-          {/* Header */}
-          <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Caregiver Application Form</h2>
-            <div className="flex gap-2">
-              {formCompleted && onNext && (
-                <Button variant="primary" onClick={handleContinue}>
-                  Continue to Household Information
-                </Button>
-              )}
-              {onClose && (
-                <Button variant="secondary" onClick={onClose}>
-                  Save & Exit
-                </Button>
-              )}
-            </div>
-          </div>
     
           {/* iFrame Container */}
           <div className="flex-1 relative">

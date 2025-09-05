@@ -1,10 +1,9 @@
 import React from "react";
 import { ArrowRight, CircleAlert, CircleCheck, CircleArrowRight, ChevronRight } from "lucide-react";
 import Button from "./Button";
-import AccessCodeModal from "./AccessCodeModal";
-import { useInviteHouseholdMember } from "../hooks/useInviteHouseholdMember";
 
-const ApplicationStep = ({step, index}) => {
+
+const ApplicationProcessStep = ({step, index, onContinue}) => {
 
     return (
 
@@ -43,8 +42,8 @@ const ApplicationStep = ({step, index}) => {
                 <p className="application-step-label">Step {index + 1}</p>
                 <h2 className="application-step-title">{`${step.label}`}</h2>
                 <p className="application-step-description">{step.description}</p>
-                {index === 0 && (
-                <Button onClick={() => {}} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
+                {index === 1 && (
+                <Button onClick={() => onContinue()} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
                 )}
             </div>
 
@@ -55,4 +54,4 @@ const ApplicationStep = ({step, index}) => {
 
 };
 
-export default ApplicationStep;
+export default ApplicationProcessStep;

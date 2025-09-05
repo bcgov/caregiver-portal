@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
   export const useApplications = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [applications, setApplications] = useState([]);
-    const [hasExistingSampleApp, setHasExistingSampleApp] = useState(false);
+    const [hasFosterApp, setHasExistingFosterApp] = useState(false);
     const [error, setError] = useState(null);
 
     const loadApplications = useCallback(async () => {
@@ -24,10 +24,10 @@ import { useState, useCallback } from 'react';
         }
 
         const data = await response.json();
-        const hasSample = data.some(app => app.type === "Sample");
+        const hasFosterApp = data.some(app => app.type === "Foster Caregiver");
 
         setApplications(data);
-        setHasExistingSampleApp(hasSample);
+        setHasExistingFosterApp(hasFosterApp);
       } catch (err) {
         setError(err.message);
         setApplications([]);
@@ -39,7 +39,7 @@ import { useState, useCallback } from 'react';
     return {
       applications,
       isLoading,
-      hasExistingSampleApp,
+      hasFosterApp,
       error,
       loadApplications
     };

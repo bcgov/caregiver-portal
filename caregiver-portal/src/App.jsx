@@ -15,6 +15,9 @@ import Dashboard from "./pages/Dashboard";
 import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
+import FosterApplicationPackage from './pages/FosterApplicationPackage';
+import ProfileForm from './pages/ProfileForm';
+
 
 const App = () => {
 
@@ -32,6 +35,8 @@ const App = () => {
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
         <Route path="/foster-application/:applicationId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 
       </Routes>
