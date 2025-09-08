@@ -18,10 +18,23 @@ const ConfirmationModal = ({
     onConfirm();
   };
 
+  const handleClose = () => {
+    // Force restore scrolling when modal closes
+    document.body.style.overflow = 'unset';
+    onClose();
+  };
+
+  // Cleanup on unmount - force restore scrolling
+  React.useEffect(() => {
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);  
+
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title={title}
       showCloseButton={true}
       closeOnOverlayClick={!isLoading}
@@ -33,7 +46,7 @@ const ConfirmationModal = ({
         <div className="confirmation-actions">
           <Button 
             variant="secondary" 
-            onClick={onClose}
+            onClick={handleConfirm}
             disabled={isLoading}
           >
             {cancelText}

@@ -13,9 +13,12 @@ const FosterApplicationProcess = () => {
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
   const { cancelApplication, isDeleting, error, clearError } = useCancelApplication((applicationId) => {
-      console.log(`Application ${applicationId} cancelled successfully`);
-      // Navigate
+    // Force restore scrolling before navigation
+    document.body.style.overflow = 'unset';
+    // Small delay to ensure DOM updates
+    setTimeout(() => {
       navigate('/dashboard');
+    }, 10);
     });
 
   // TODO: Figure out what step we're on...
