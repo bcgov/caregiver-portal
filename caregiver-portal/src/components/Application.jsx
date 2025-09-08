@@ -1,46 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
-import Button from'./Button';
-import Breadcrumb from './Breadcrumb';
+import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 
 const Application = ({ applicationId, onNext, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
-    const [formCompleted, setFormCompleted] = useState(false);
 
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
+    // TODO: Handle onNext to move to next step in application process
+
+    // TODO: Handle accessToken expiry and refresh
   
-    const handleBackClick = (item) => {
-      navigate(item.path);
-    };
+    // Fetch form access token and set iframe URL
+
+    const { getFormAccessToken } = useGetFormAccessToken(applicationId, (formAccessToken) => {
+      console.log('Received formAccessToken:', formAccessToken); 
+      const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
+      const url = `${formServiceUrl}/new?id=${formAccessToken}`;
+      console.log('Setting iframe URL:', url);     
+      setIframeUrl(url);
+      setLoading(false);
+    });
 
     const loadApplication = async () => {
         try {
-          console.log(`Trying to loadApplication`);
           setLoading(true);
           setError(null);
-          
-          const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-          const url = `${formServiceUrl}/new?id=${applicationId}`;
-
-          console.log(`iFrame URL: ${url}`);
-
-          setIframeUrl(url);
-          
+          await getFormAccessToken(); 
         } catch (err) {
           setError(err.message);
-        } finally {
           setLoading(false);
-        }
+        } 
       };
 
       useEffect(() => {
         console.log(`ApplicationID: ${applicationId}`);
         if (applicationId) {
-          loadApplication();
+          setLoading(true);
+          setError(null);
+          getFormAccessToken().catch(err => {
+            setError(err.message);
+            setLoading(false);  
+          });
         }
       }, [applicationId]);
     
@@ -52,12 +56,6 @@ const Application = ({ applicationId, onNext, onClose }) => {
         setIsIframeLoaded(false);
         loadApplication();
       };
-
-      const handleContinue = () => {
-        if(onNext) {
-          onNext();
-        }
-      }
     
       if (loading) {
         return (

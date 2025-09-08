@@ -6,12 +6,12 @@ import Button from "./Button";
 const ApplicationPackageStep = ({step, index, onContinue}) => {
 
     return (
-        <button className="application-package-step" key={step.key} onClick={onContinue}>
+        <button className="application-package-step" key={index} onClick={onContinue}>
             <span className="application-package-left">
                 <CircleAlert className="application-package-icon-alert" />
                 <span className="application-package-label">{step.label}</span>
             </span>
-            <ChevronRight class="application-package-chevron" />
+            <ChevronRight className="application-package-chevron" />
         </button>
     );
     

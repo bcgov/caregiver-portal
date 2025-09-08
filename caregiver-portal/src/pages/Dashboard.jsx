@@ -13,18 +13,13 @@ const Dashboard = () => {
 
   const { applications, isLoading, hasFosterApp, loadApplications } = useApplications();
 
-  const handleNavigateToApplication = useCallback((token) => {
+  const handleNavigateToApplication = useCallback((applicationId) => {
 
-    console.log("Navigating to application with token:", token);
 
-    navigate(`/foster-application/${token}`);
+    navigate(`/foster-application/${applicationId}`);
   }, [navigate]);
 
-  const { createApplication, isCreating } = useCreateApplication(handleNavigateToApplication);
-
-  const handleOpenApplication = useCallback((applicationId) => {
-    navigate(`/application/${applicationId}`);
-  }, [navigate]);
+  const { createApplication } = useCreateApplication(handleNavigateToApplication);
 
   useEffect(() => {
     if (!auth.loading && auth.user) {
@@ -36,8 +31,7 @@ const Dashboard = () => {
     return <div>Loading user information...</div>;
   }
 
-  // {!hasExistingSampleApp && (
-  // )}
+
   return (
 
     <div className="dashboard-container">
