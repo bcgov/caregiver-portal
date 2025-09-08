@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import Application from './Application';
 import Household from './Household';
 import HouseholdSummary from './HouseholdSummary';
-import ApplicationStatus from './ApplicationStatus';
 import Button from './Button';
 
 const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make initial step a parameter
