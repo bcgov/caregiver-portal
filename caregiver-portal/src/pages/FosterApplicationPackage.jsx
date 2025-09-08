@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import "../DesignTokens.css";
 import ApplicationPackageStep from '../components/ApplicationPackageStep';
 import Breadcrumb from '../components/Breadcrumb';
@@ -20,7 +19,6 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        alert("Continuing to: " + item.path);
         navigate(item.path);
       }
       
@@ -38,7 +36,7 @@ const FosterApplicationPackage = () => {
           <div className="application-package">
             {applicationPackageItems.map((step, index) => (
 
-               <ApplicationPackageStep key={step.key} step={step} index={index} onClick={() => {handleContinue(step)}}/>
+               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}}/>
             
             ))}
         </div>

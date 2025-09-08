@@ -11,7 +11,6 @@ const Modal = ({
     showCloseButton = true,
     closeOnOverlayClick = true,
     size = 'medium',
-    ...props
 }) => {
     if(!isOpen) return null;
 
@@ -36,7 +35,7 @@ const Modal = ({
             document.removeEventListener('keydown', handleEscapeKey);
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen]);
+    }, [isOpen, handleEscapeKey]);
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick}>
