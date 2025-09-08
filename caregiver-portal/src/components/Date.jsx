@@ -13,7 +13,7 @@ function date19YearsAgo(today = new Date()) {
   d.setFullYear(d.getFullYear() - 19);
   return d;
 }
-
+/*
 function isAtLeast19(isoDate, today = new Date()) {
   if (!isoDate) return false;
   const b = new Date(isoDate + "T00:00:00");
@@ -22,9 +22,12 @@ function isAtLeast19(isoDate, today = new Date()) {
   if (m < 0 || (m === 0 && today.getDate() < b.getDate())) age--;
   return age >= 19;
 }
+*/
 
-const DateField = ({variant = 'past', children, ...props }) => {
-  const [error, setError] = useState(null);
+const DateField = ({variant = 'past', ...props }) => {
+  // TODO: Validate date input and show error message if invalid
+
+  const [error /*, setError*/] = useState(null);
 
   const {min, max} = useMemo(() => {
     switch(variant) {
