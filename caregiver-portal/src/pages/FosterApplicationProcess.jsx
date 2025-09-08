@@ -5,12 +5,16 @@ import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
 import { Trash } from 'lucide-react';
 import Button from '../components/Button';
-
-
+import { useCancelApplication } from '../hooks/useCancelApplication';
 
 const FosterApplicationProcess = () => {
   const { applicationId } = useParams();
   const navigate = useNavigate();
+  const { cancelApplication, isDeleting, error, clearError } = useCancelApplication((applicationId) => {
+      console.log(`Application ${applicationId} cancelled successfully`);
+      // Navigate
+      navigate('/dashboard');
+    });
 
   // TODO: Figure out what step we're on...
 
@@ -25,6 +29,15 @@ const FosterApplicationProcess = () => {
   const handleContinue = () => {
     navigate(`/foster-application/application-package/${applicationId}`);
   };
+  
+  const handleCancel = async (applicationId) => {
+    alert(applicationId);
+    try { 
+      await cancelApplication(applicationId);
+    } catch (err) {
+      console.error('Failed to cancel:', err);
+    }
+  }
   
   const steps = [
     {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.' },
@@ -47,7 +60,11 @@ return (
             ))}
         </div>
         <div className="application-package-footer">
-                <Button variant="danger"><Trash size="16" />Cancel application</Button>
+                <Button variant="danger"
+                  onClick={() => handleCancel(applicationId)}
+                  disabled={isDeleting}
+                  ><Trash size="16" />Cancel application</Button>
+          {error && <div className="error">{error}</div>}
         </div>
       </div>
   );
