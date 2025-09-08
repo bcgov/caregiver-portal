@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
+import { Trash } from 'lucide-react';
+import Button from '../components/Button';
+
 
 
 const FosterApplicationProcess = () => {
@@ -42,6 +45,9 @@ return (
                <ApplicationProcessStep step={step} index={index} onContinue={handleContinue} />
             </div>
             ))}
+        </div>
+        <div className="application-package-footer">
+                <Button variant="danger"><Trash size="16" />Cancel application</Button>
         </div>
       </div>
   );
