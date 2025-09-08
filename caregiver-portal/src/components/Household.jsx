@@ -648,6 +648,7 @@ const Household = ({ currentApplication }) => {
         
         <div style={{color: 'red', padding: '10px', background: '#fee'}}>
         {saveStatus}
+        {lastSaved}
         </div>
 
               <Button type="button" variant={hasValidHousehold ? 'primary' : 'disabled' } onClick={saveHousehold}>  

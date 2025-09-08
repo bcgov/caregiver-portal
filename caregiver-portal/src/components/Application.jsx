@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 
-const Application = ({ applicationId, onNext, onClose }) => {
+const Application = ({ applicationId, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

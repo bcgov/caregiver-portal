@@ -12,7 +12,7 @@ const FosterApplicationProcess = () => {
   const { applicationId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
-  const { cancelApplication, isDeleting, error, clearError } = useCancelApplication((applicationId) => {
+  const { cancelApplication, isDeleting, error } = useCancelApplication(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
     // Small delay to ensure DOM updates

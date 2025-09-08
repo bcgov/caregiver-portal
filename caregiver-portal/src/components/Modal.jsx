@@ -12,7 +12,8 @@ const Modal = ({
     closeOnOverlayClick = true,
     size = 'medium',
 }) => {
-    if(!isOpen) return null;
+
+
 
     const handleOverlayClick = (e) => {
         if(closeOnOverlayClick && e.target === e.currentTarget) {
@@ -46,6 +47,8 @@ const Modal = ({
             document.body.style.overflow = 'unset';
         };
     }, [isOpen]);
+
+    if(!isOpen) return null;
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick}>
