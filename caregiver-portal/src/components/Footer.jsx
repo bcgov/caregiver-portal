@@ -23,7 +23,7 @@ const Footer = () => {
                 More Information
             </div>
             <div className="footer-links-row">
-                <a href="#">Caring for children and youth in B.C.</a>
+                <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth" target="blank">Caring for children and youth in B.C.</a>
             </div>
             </div>
 
