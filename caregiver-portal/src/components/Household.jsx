@@ -9,7 +9,7 @@ const Household = ({ currentApplication }) => {
     const [hasPartner, setHasPartner] = useState(null);
     // radio button indicates whether there are other  household members
     const [hasHousehold, setHasHousehold] = useState(null);
-    const [hasValidHousehold, setHasValidHousehold] = useState(false);
+    //const [hasValidHousehold, setHasValidHousehold] = useState(false);
 
     // used to indicate the state of saving
     const [saveStatus, setSaveStatus] = useState('saved'); // 'saving', 'saved', 'error'
@@ -37,7 +37,7 @@ const Household = ({ currentApplication }) => {
         };
 
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
-    const [partnerEmailValidationError, setPartnerEmailValidationError] = useState('');
+    const [partnerEmailValidationError/*, setPartnerEmailValidationError*/] = useState('');
 
     const updatePartner = (field, value) => {
       // if updating the date of birth, validate that the spouse is an adult
@@ -70,7 +70,7 @@ const Household = ({ currentApplication }) => {
 
     return () => clearTimeout(timer); // reset the clock.
 
-    }, [partner.firstName, partner.lastName, partner.dob, partner.email]);
+    }, [partner.firstName, partner.lastName, partner.dob, partner.email, autoSavePartner, hasPartner, partner]);
 
     // auto save household members when they have completed data
     useEffect(() => {
@@ -287,11 +287,11 @@ const Household = ({ currentApplication }) => {
       return age;
     }
 
-    const validateEmail = (email) => {
-      if(!email) return false;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email.trim());
-    }
+ //   const validateEmail = (email) => {
+ //     if(!email) return false;
+ //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ //     return emailRegex.test(email.trim());
+ //   }
 
     const saveHouseholdMemberDraft = async (memberData) => {
       console.log('Saving household member draft:', memberData);
@@ -390,9 +390,9 @@ const Household = ({ currentApplication }) => {
         ));
     };
 
-    const saveHousehold = () => {
-      alert("SAVING!");
-    };
+ //   const saveHousehold = () => {
+ //     alert("SAVING!");
+ //   };
 
     return (
         <div className="form-container">
