@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ApplicationPackage from './ApplicationPackage';
+import Breadcrumb from './Breadcrumb';
 
 const ApplicationPackageWrapper = () => {
   const { applicationId } = useParams();
@@ -13,10 +14,13 @@ const ApplicationPackageWrapper = () => {
   //console.log("Rendering ApplicationPackageWrapper with applicationId:", applicationId);
 
   return (
-    <ApplicationPackage 
-      applicationId={applicationId}
-      onClose={handleClose}
-    />
+    <div className="application-frame">
+      <Breadcrumb items={[{ label: 'Back', path: `/foster-application/${applicationId}` }]} onBackClick={() => navigate(`/foster-application/${applicationId}`)} />
+      <ApplicationPackage 
+        applicationId={applicationId}
+        onClose={handleClose}
+      />
+    </div>    
   );
 };
 

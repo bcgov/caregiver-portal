@@ -8,7 +8,7 @@ import FosterApplicationStart from "../components/FosterApplicationStart";
 
 
 export default function Home() {
-  const { user, logout, login, loading } = useAuth();
+  const { user, login, loading } = useAuth();
   const navigate = useNavigate();
 
   // redirect to dashboard if user is logged in

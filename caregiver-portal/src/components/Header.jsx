@@ -10,6 +10,7 @@ const Header = () => {
     return (
       <>
         <header className="top-nav">
+          <title>MCFD Caregiver Portal</title>
           <nav className="nav-left">
             <img src={BCLogo} alt="BC Government Logo" className="bc-logo" />
             <div className="app-title">

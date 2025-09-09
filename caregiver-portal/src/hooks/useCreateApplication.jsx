@@ -28,9 +28,11 @@ import { useState, useCallback } from 'react';
         }
 
         const data = await response.json();
+        console.log('Create application response:', data); // Add this        
 
-        if (data.formAccessToken && onSuccess) {
-          onSuccess(data.formAccessToken);
+        if (data.applicationId && onSuccess) {
+          console.log('Calling onSuccess with applicationId:', data.applicationId); // Add this
+          onSuccess(data.applicationId);
         }
       } catch (err) {
         setError(err.message);

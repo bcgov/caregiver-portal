@@ -7,13 +7,13 @@ import { useHousehold } from "../hooks/useHousehold";
 
 const HouseholdSummary = ({applicationId}) => {
 
-    const { household, isLoading, loadHousehold } = useHousehold({applicationId});
+    const { household, loadHousehold } = useHousehold({applicationId});
 
     //console.log("Application ID in HouseholdSummary:", applicationId);
 
     useEffect(() => {
           loadHousehold();
-      }, [applicationId]);
+      }, [applicationId, loadHousehold]);
 
     return (
         <div>

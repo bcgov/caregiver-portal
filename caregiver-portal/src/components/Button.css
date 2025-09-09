@@ -30,6 +30,18 @@
     border: 1px solid  transparent;
   }
 
+  .btn-danger {
+    background-color: transparent;
+    color: #B4231E;
+    border: 1px solid  #B4231E;
+    font-weight: 400;
+  }
+
+  .btn-danger:hover {
+    background-color:  #B4231E;
+    color: white;
+  }
+
   .btn-disabled {
     background-color:transparent;
     font-weight: normal;

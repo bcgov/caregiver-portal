@@ -1,8 +1,7 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import Application from './Application';
 import Household from './Household';
 import HouseholdSummary from './HouseholdSummary';
-import ApplicationStatus from './ApplicationStatus';
 import Button from './Button';
 
 const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make initial step a parameter
@@ -28,7 +27,7 @@ const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make
                 <Button onClick={onClose} variant="secondary">
                     Back to Dashboard
                 </Button>
-                {steps.map((step, index) => (
+                {steps.map((step) => (
                     <Button
                         key={step.key}
                         variant={`${currentStep === step.key ? 'disabled' : 'secondary'}`}

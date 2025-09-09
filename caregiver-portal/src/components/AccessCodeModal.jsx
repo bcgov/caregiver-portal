@@ -7,13 +7,14 @@ const AccessCodeModal = ({
     onClose,
     accessCode,
     memberName,
-    expiresAt,
+    //expiresAt,
     isLoading
 }) => {
-    const handleCopyCode = () => {
-        navigator.clipboard.writeText(accessCode);
-        // toast!
-    };
+
+    //const handleCopyCode = () => {
+    //    navigator.clipboard.writeText(accessCode);
+    //    // toast!
+    //};
 
     //const formatExpiryDate = 
 

@@ -6,6 +6,7 @@ import "@bcgov/bc-sans/css/BC_Sans.css"
 // Components
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
+import Footer from './components/Footer';
 import Header from './components/Header';
 import "./DesignTokens.css";
 // Pages
@@ -15,11 +16,14 @@ import Dashboard from "./pages/Dashboard";
 import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
+import FosterApplicationPackage from './pages/FosterApplicationPackage';
+import ProfileForm from './pages/ProfileForm';
 
 const App = () => {
 
   return (
     <Router>
+    <div className="page-wrapper">
     <Header />
     <main className="main-content">
       <Routes>
@@ -32,11 +36,16 @@ const App = () => {
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
         <Route path="/foster-application/:applicationId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 
       </Routes>
     </main>
+    <Footer></Footer>
+    </div>
     </Router>
+    
     );
   };
 

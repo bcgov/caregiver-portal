@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleAlert, CircleCheck, CircleArrowRight, ChevronRight } from "lucide-react";
+import { CircleAlert, CircleCheck, ChevronRight } from "lucide-react";
 import Button from "./Button";
 import AccessCodeModal from "./AccessCodeModal";
 import { useInviteHouseholdMember } from "../hooks/useInviteHouseholdMember";
@@ -7,7 +7,7 @@ import { useInviteHouseholdMember } from "../hooks/useInviteHouseholdMember";
 const HouseholdSummaryItem = ({member, applicationId}) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);    
     const [accessCodeData, setAccessCodeData] = React.useState(null);
-    const { inviteMember, isLoading, error } = useInviteHouseholdMember();
+    const { inviteMember, isLoading } = useInviteHouseholdMember();
 
     const handleInviteClick = async () => {
         try {
@@ -16,7 +16,7 @@ const HouseholdSummaryItem = ({member, applicationId}) => {
           setIsModalOpen(true);
         } catch (err) {
           console.error('Failed to generate access code:', err);
-          // You could show an error toast here
+          // TODO: You could show an error toast here
         }
       };
   

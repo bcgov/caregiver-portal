@@ -6,7 +6,7 @@ import "../DesignTokens.css";
 import Button from "../components/Button";
 
 export default function HouseholdLanding() {
-  const { user, logout, login, loading } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   // redirect to dashboard if user is logged in

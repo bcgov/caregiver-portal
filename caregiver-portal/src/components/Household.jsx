@@ -3,7 +3,7 @@ import { AlertCircle, Loader2, RefreshCw, Plus, Trash2, Trash } from 'lucide-rea
 import Button from './Button';
 import DateField from './Date'; // Assuming you have a Date component for date handling
 
-const Household = ({ onClose, currentApplication }) => {
+const Household = ({ currentApplication }) => {
 
     // the radio button indicates whether they have a partner/spouse
     const [hasPartner, setHasPartner] = useState(null);
@@ -25,9 +25,6 @@ const Household = ({ onClose, currentApplication }) => {
 
     // Additional household members is an array of non partner/spouse members
     const [householdMembers, setHouseholdMembers] = useState([]);
-    
-    
-    //console.log("Current Application ID in Household:", currentApplication);
 
     const addHouseholdMember = () => {
             const newMember = {
@@ -54,9 +51,10 @@ const Household = ({ onClose, currentApplication }) => {
         }
       }
 
-      //if (field === 'email' && value) { // TO DO: ADD EMAIL VALIDATION
+      //if (field === 'email' && value) { // TODO: ADD EMAIL VALIDATION
   
       //}
+      
       setPartner(prev => ({ ...prev, [field]: value }));
     };
 
@@ -65,6 +63,7 @@ const Household = ({ onClose, currentApplication }) => {
       const timer = setTimeout(() => {
         if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email) {
           console.log('Auto-saving partner data:', partner);
+          setLastSaved(new Date().toLocaleString());
           autoSavePartner();
       }
     }, 2000); // 2 seconds delay      
@@ -103,6 +102,7 @@ const Household = ({ onClose, currentApplication }) => {
       const timer = setTimeout(() => {
         if (householdMembers.length > 0) {
           saveCompletedMembers();
+          setLastSaved(new Date().toLocaleString());
         }
       }, 2000);
       return () => clearTimeout(timer);
@@ -218,6 +218,7 @@ const Household = ({ onClose, currentApplication }) => {
         setSaveStatus('saved');
         setLastSaved(new Date().toLocaleString());
       } catch (error) {
+        console.error('Failed to auto-save partner:', error);
         setSaveStatus('error');
       }
     }
@@ -316,9 +317,7 @@ const Household = ({ onClose, currentApplication }) => {
             });
 
       if(!response.ok) {
-        let errorData = {};
         console.log('Failed to save household member draft:', response.status, response.statusText);
-  
       }
 
       const savedMember = await response.json();
@@ -651,8 +650,7 @@ const Household = ({ onClose, currentApplication }) => {
         {saveStatus}
         </div>
 
-              <Button type="button" variant={hasValidHousehold ? 'primary' : 'disabled' } onClick={saveHousehold}>
-                
+              <Button type="button" variant={hasValidHousehold ? 'primary' : 'disabled' } onClick={saveHousehold}>  
                 Save Household
               </Button>
         </form>

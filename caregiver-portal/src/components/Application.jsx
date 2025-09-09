@@ -1,38 +1,50 @@
 import React, { useState, useEffect } from 'react';
+//import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
-import Button from'./Button';
+import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 
 const Application = ({ applicationId, onNext, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
-    const [formCompleted, setFormCompleted] = useState(false);
+
+    //const navigate = useNavigate();
+    // TODO: Handle onNext to move to next step in application process
+
+    // TODO: Handle accessToken expiry and refresh
+  
+    // Fetch form access token and set iframe URL
+
+    const { getFormAccessToken } = useGetFormAccessToken(applicationId, (formAccessToken) => {
+      console.log('Received formAccessToken:', formAccessToken); 
+      const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
+      const url = `${formServiceUrl}/new?id=${formAccessToken}`;
+      console.log('Setting iframe URL:', url);     
+      setIframeUrl(url);
+      setLoading(false);
+    });
 
     const loadApplication = async () => {
         try {
-          console.log(`Trying to loadApplication`);
           setLoading(true);
           setError(null);
-          
-          const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-          const url = `${formServiceUrl}/new?id=${applicationId}`;
-
-          console.log(`iFrame URL: ${url}`);
-
-          setIframeUrl(url);
-          
+          await getFormAccessToken(); 
         } catch (err) {
           setError(err.message);
-        } finally {
           setLoading(false);
-        }
+        } 
       };
 
       useEffect(() => {
         console.log(`ApplicationID: ${applicationId}`);
         if (applicationId) {
-          loadApplication();
+          setLoading(true);
+          setError(null);
+          getFormAccessToken().catch(err => {
+            setError(err.message);
+            setLoading(false);  
+          });
         }
       }, [applicationId]);
     
@@ -44,16 +56,10 @@ const Application = ({ applicationId, onNext, onClose }) => {
         setIsIframeLoaded(false);
         loadApplication();
       };
-
-      const handleContinue = () => {
-        if(onNext) {
-          onNext();
-        }
-      }
     
       if (loading) {
         return (
-          <div className="flex items-center justify-center h-screen bg-gray-50">
+          <div className="application-frame">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
               <p className="text-gray-600">Loading application...</p>
@@ -95,22 +101,6 @@ const Application = ({ applicationId, onNext, onClose }) => {
     
       return (
         <div className="h-screen flex flex-col bg-gray-100">
-          {/* Header */}
-          <div className="bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Caregiver Application Form</h2>
-            <div className="flex gap-2">
-              {formCompleted && onNext && (
-                <Button variant="primary" onClick={handleContinue}>
-                  Continue to Household Information
-                </Button>
-              )}
-              {onClose && (
-                <Button variant="secondary" onClick={onClose}>
-                  Save & Exit
-                </Button>
-              )}
-            </div>
-          </div>
     
           {/* iFrame Container */}
           <div className="flex-1 relative">
