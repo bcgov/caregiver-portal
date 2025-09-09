@@ -399,12 +399,9 @@ const Household = ({ currentApplication }) => {
 
         <form>
         <fieldset className="form-group">
-          <legend>
-            <label className="form-label">
-              Do you have a spouse or partner?<span className="required">*</span>
-            </label>
-          </legend>
-          <div className="radio-group">
+
+          <div className="radio-button-group">
+            <div className="radio-button-header">Do you have a spouse or partner?<span className="required">*</span></div>
             <label>
               <input
                 type="radio"
@@ -431,69 +428,62 @@ const Household = ({ currentApplication }) => {
               />
               No
             </label>
-          </div>
-          <div className="helper-text">Helper text goes here</div>
-        </fieldset>
+        </div>
+          
         {hasPartner && (
          <>
-                   <div className="household-section">
-
-            <div className="household-member-form">
-                <div className="member-header">
-                  <h3>Spouse/Partner</h3>
-                </div>          
-                <div className="form-group">
-                  <label htmlFor="partner-firstName" className="form-control-label">
-                    First Name<span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="partner-firstName"
-                    value={partner.firstName}
-                    onChange={(e) => updatePartner('firstName', e.target.value)}
-                    className="form-control"
+            <h3>My spouse/partner</h3>
+              <div className="form-group">
+                <label htmlFor="partner-firstName" className="form-control-label">
+                  First Name<span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="partner-firstName"
+                  value={partner.firstName}
+                  onChange={(e) => updatePartner('firstName', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-lastName" className="form-control-label">
+                  Last Name<span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="partner-lastName"
+                  value={partner.lastName}
+                  onChange={(e) => updatePartner('lastName', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-dob" className="form-control-label">
+                      Date of Birth<span className="required">*</span>
+                </label>
+                <DateField 
+                  id="partner-dob"
+                  variant='adult'
+                  value={partner.dob}
+                  required
+                  onChange={(e) => updatePartner('dob', e.target.value)}
                   />
-                  <label htmlFor="partner-lastName" className="form-control-label">
-                    Last Name<span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="partner-lastName"
-                    value={partner.lastName}
-                    onChange={(e) => updatePartner('lastName', e.target.value)}
-                    className="form-control"
-                  />
-                  <label htmlFor="partner-dob" className="form-control-label">
-                        Date of Birth<span className="required">*</span>
-                    </label>
-                        <DateField 
-                          id="partner-dob"
-                          variant='adult'
-                          value={partner.dob}
-                          required
-                          onChange={(e) => updatePartner('dob', e.target.value)}
-                          />
-                    <label htmlFor="partner-dob" className="form-control-validation-label">
-                      {partnerAgeValidationError}
-                    </label>
-                    <label htmlFor="partner-email" className="form-control-label">
-                      Email<span className="required">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="partner-email"
-                      value={partner.email}
-                      onChange={(e) => updatePartner('email', e.target.value)}
-                      className="form-control"
-                    />
-                    <label htmlFor="partner-dob" className="form-control-validation-label">
-                      {partnerEmailValidationError}
-                    </label>
-                  </div>
-                  </div>
-          </div>
+                <label htmlFor="partner-dob" className="form-control-validation-label">
+                  {partnerAgeValidationError}
+                </label>
+                <label htmlFor="partner-email" className="form-control-label">
+                  Email<span className="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="partner-email"
+                  value={partner.email}
+                  onChange={(e) => updatePartner('email', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-dob" className="form-control-validation-label">
+                  {partnerEmailValidationError}
+                </label>
+              </div>    
         </>
         )}
+        </fieldset>
 
           <fieldset className="form-group">
           <legend>
@@ -651,9 +641,6 @@ const Household = ({ currentApplication }) => {
         {lastSaved}
         </div>
 
-              <Button type="button" variant={hasValidHousehold ? 'primary' : 'disabled' } onClick={saveHousehold}>  
-                Save Household
-              </Button>
         </form>
       </div>
     );

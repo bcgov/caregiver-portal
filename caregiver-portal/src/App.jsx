@@ -18,6 +18,7 @@ import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
 import ProfileForm from './pages/ProfileForm';
+import HouseholdForm from './pages/HouseholdForm';
 
 const App = () => {
 
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/foster-application/:applicationId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/household-form/:applicationId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>        
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 
       </Routes>
