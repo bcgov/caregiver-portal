@@ -12,7 +12,8 @@ const Modal = ({
     closeOnOverlayClick = true,
     size = 'medium',
 }) => {
-    if(!isOpen) return null;
+
+
 
     const handleOverlayClick = (e) => {
         if(closeOnOverlayClick && e.target === e.currentTarget) {
@@ -30,12 +31,24 @@ const Modal = ({
         if(isOpen) {
             document.addEventListener('keydown', handleEscapeKey);
             document.body.style.overflow = 'hidden';
+  
+            return () => {
+                document.removeEventListener('keydown', handleEscapeKey);
+                document.body.style.overflow = 'unset';
+            };
+        } else {
+            // When modal closes, restore scrolling
+            document.body.style.overflow = 'unset';
         }
+  
+        // Cleanup function that always runs when component unmounts
         return () => {
             document.removeEventListener('keydown', handleEscapeKey);
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen, handleEscapeKey]);
+    }, [isOpen]);
+
+    if(!isOpen) return null;
 
     return (
         <div className="modal-overlay" onClick={handleOverlayClick}>
@@ -44,7 +57,7 @@ const Modal = ({
                     {title && <h2 className="modal-title">{title}</h2>}
                     {showCloseButton && (
                         <Button
-                            variant="primary"
+                            variant="secondary"
                             onClick={onClose}
                             aria-label="Close modal"
                         >x</Button>

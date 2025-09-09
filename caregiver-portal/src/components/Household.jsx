@@ -9,7 +9,7 @@ const Household = ({ currentApplication }) => {
     const [hasPartner, setHasPartner] = useState(null);
     // radio button indicates whether there are other  household members
     const [hasHousehold, setHasHousehold] = useState(null);
-    const [hasValidHousehold, setHasValidHousehold] = useState(false);
+    //const [hasValidHousehold, setHasValidHousehold] = useState(false);
 
     // used to indicate the state of saving
     const [saveStatus, setSaveStatus] = useState('saved'); // 'saving', 'saved', 'error'
@@ -37,7 +37,7 @@ const Household = ({ currentApplication }) => {
         };
 
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
-    const [partnerEmailValidationError, setPartnerEmailValidationError] = useState('');
+    const [partnerEmailValidationError/*, setPartnerEmailValidationError*/] = useState('');
 
     const updatePartner = (field, value) => {
       // if updating the date of birth, validate that the spouse is an adult
@@ -70,7 +70,7 @@ const Household = ({ currentApplication }) => {
 
     return () => clearTimeout(timer); // reset the clock.
 
-    }, [partner.firstName, partner.lastName, partner.dob, partner.email]);
+    }, [partner.firstName, partner.lastName, partner.dob, partner.email, autoSavePartner, hasPartner, partner]);
 
     // auto save household members when they have completed data
     useEffect(() => {
@@ -287,11 +287,11 @@ const Household = ({ currentApplication }) => {
       return age;
     }
 
-    const validateEmail = (email) => {
-      if(!email) return false;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email.trim());
-    }
+ //   const validateEmail = (email) => {
+ //     if(!email) return false;
+ //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+ //     return emailRegex.test(email.trim());
+ //   }
 
     const saveHouseholdMemberDraft = async (memberData) => {
       console.log('Saving household member draft:', memberData);
@@ -390,21 +390,18 @@ const Household = ({ currentApplication }) => {
         ));
     };
 
-    const saveHousehold = () => {
-      alert("SAVING!");
-    };
+ //   const saveHousehold = () => {
+ //     alert("SAVING!");
+ //   };
 
     return (
         <div className="form-container">
 
         <form>
         <fieldset className="form-group">
-          <legend>
-            <label className="form-label">
-              Do you have a spouse or partner?<span className="required">*</span>
-            </label>
-          </legend>
-          <div className="radio-group">
+
+          <div className="radio-button-group">
+            <div className="radio-button-header">Do you have a spouse or partner?<span className="required">*</span></div>
             <label>
               <input
                 type="radio"
@@ -431,69 +428,62 @@ const Household = ({ currentApplication }) => {
               />
               No
             </label>
-          </div>
-          <div className="helper-text">Helper text goes here</div>
-        </fieldset>
+        </div>
+          
         {hasPartner && (
          <>
-                   <div className="household-section">
-
-            <div className="household-member-form">
-                <div className="member-header">
-                  <h3>Spouse/Partner</h3>
-                </div>          
-                <div className="form-group">
-                  <label htmlFor="partner-firstName" className="form-control-label">
-                    First Name<span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="partner-firstName"
-                    value={partner.firstName}
-                    onChange={(e) => updatePartner('firstName', e.target.value)}
-                    className="form-control"
+            <h3>My spouse/partner</h3>
+              <div className="form-group">
+                <label htmlFor="partner-firstName" className="form-control-label">
+                  First Name<span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="partner-firstName"
+                  value={partner.firstName}
+                  onChange={(e) => updatePartner('firstName', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-lastName" className="form-control-label">
+                  Last Name<span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="partner-lastName"
+                  value={partner.lastName}
+                  onChange={(e) => updatePartner('lastName', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-dob" className="form-control-label">
+                      Date of Birth<span className="required">*</span>
+                </label>
+                <DateField 
+                  id="partner-dob"
+                  variant='adult'
+                  value={partner.dob}
+                  required
+                  onChange={(e) => updatePartner('dob', e.target.value)}
                   />
-                  <label htmlFor="partner-lastName" className="form-control-label">
-                    Last Name<span className="required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="partner-lastName"
-                    value={partner.lastName}
-                    onChange={(e) => updatePartner('lastName', e.target.value)}
-                    className="form-control"
-                  />
-                  <label htmlFor="partner-dob" className="form-control-label">
-                        Date of Birth<span className="required">*</span>
-                    </label>
-                        <DateField 
-                          id="partner-dob"
-                          variant='adult'
-                          value={partner.dob}
-                          required
-                          onChange={(e) => updatePartner('dob', e.target.value)}
-                          />
-                    <label htmlFor="partner-dob" className="form-control-validation-label">
-                      {partnerAgeValidationError}
-                    </label>
-                    <label htmlFor="partner-email" className="form-control-label">
-                      Email<span className="required">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="partner-email"
-                      value={partner.email}
-                      onChange={(e) => updatePartner('email', e.target.value)}
-                      className="form-control"
-                    />
-                    <label htmlFor="partner-dob" className="form-control-validation-label">
-                      {partnerEmailValidationError}
-                    </label>
-                  </div>
-                  </div>
-          </div>
+                <label htmlFor="partner-dob" className="form-control-validation-label">
+                  {partnerAgeValidationError}
+                </label>
+                <label htmlFor="partner-email" className="form-control-label">
+                  Email<span className="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="partner-email"
+                  value={partner.email}
+                  onChange={(e) => updatePartner('email', e.target.value)}
+                  className="form-control"
+                />
+                <label htmlFor="partner-dob" className="form-control-validation-label">
+                  {partnerEmailValidationError}
+                </label>
+              </div>    
         </>
         )}
+        </fieldset>
 
           <fieldset className="form-group">
           <legend>
@@ -648,11 +638,9 @@ const Household = ({ currentApplication }) => {
         
         <div style={{color: 'red', padding: '10px', background: '#fee'}}>
         {saveStatus}
+        {lastSaved}
         </div>
 
-              <Button type="button" variant={hasValidHousehold ? 'primary' : 'disabled' } onClick={saveHousehold}>  
-                Save Household
-              </Button>
         </form>
       </div>
     );

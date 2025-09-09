@@ -24,10 +24,13 @@ const FosterApplicationPackage = () => {
       
     const applicationPackageItems = [
 
-        {key: 'profile', label: 'Caregiver Profile Details', path: `/foster-application/application-package/profile-form/${applicationId}`, description: 'Provide details about your household, lifestyle, and experience.'},
-        {key: 'household', label: 'Household Details', description: 'All adults in the household must consent to background checks.'},
+        {key: 'profile', label: 'About me', path: `/foster-application/application-package/profile-form/${applicationId}`, description: 'Provide details about your household, lifestyle, and experience.'},
+        {key: 'household', label: 'My household and support network', path: `/foster-application/application-package/household-form/${applicationId}`, description: 'All adults in the household must consent to background checks.'},
+        {key: 'pastinvolvement', label: 'Past involvement with Child Welfare'},
+        {key: 'healthhistory', label: 'Health history'},
+        {key: 'placementconsiderations', label: 'Placement considerations'},
         {key: 'references', label: 'References', description: 'All adults in the household must consent to background checks.'},        
-        {key: 'consent', label: 'Consent', description: 'Complete required training sessions.'},    ]
+        {key: 'consent', label: 'Consent for prior contact check', description: 'Complete required training sessions.'},    ]
 
     return (
         <div className="application-frame">

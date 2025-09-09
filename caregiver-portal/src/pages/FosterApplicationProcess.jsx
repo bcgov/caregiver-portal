@@ -5,12 +5,21 @@ import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
 import { Trash } from 'lucide-react';
 import Button from '../components/Button';
-
-
+import ConfirmationModal from '../components/ConfirmationModal';
+import { useCancelApplication } from '../hooks/useCancelApplication';
 
 const FosterApplicationProcess = () => {
   const { applicationId } = useParams();
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
+  const { cancelApplication, isDeleting, error } = useCancelApplication(() => {
+    // Force restore scrolling before navigation
+    document.body.style.overflow = 'unset';
+    // Small delay to ensure DOM updates
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 10);
+    });
 
   // TODO: Figure out what step we're on...
 
@@ -25,7 +34,23 @@ const FosterApplicationProcess = () => {
   const handleContinue = () => {
     navigate(`/foster-application/application-package/${applicationId}`);
   };
+
+  const handleCancel = () => {
+    setShowDeleteModal(true);
+  }
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
   
+  const handleConfirmDelete = async () => {
+    try { 
+      await cancelApplication(applicationId);
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error('Failed to cancel:', err);
+    }
+  }  
   const steps = [
     {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.' },
     {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.' },
@@ -47,7 +72,23 @@ return (
             ))}
         </div>
         <div className="application-package-footer">
-                <Button variant="danger"><Trash size="16" />Cancel application</Button>
+                <Button variant="danger"
+                  onClick={() => handleCancel(applicationId)}
+                  disabled={isDeleting}
+                  ><Trash size="16" />Cancel application</Button>
+
+                  <ConfirmationModal
+                    isOpen={showDeleteModal}
+                    onClose={handleCancelDelete}
+                    onConfirm={handleConfirmDelete}
+                    title="Cancel Application"
+                    message="Are you sure you want to cancel your application? This action cannot be undone and all associated data will be permanently deleted."
+                    confirmText="Yes, Cancel Application"
+                    cancelText="Keep Application"
+                    confirmVariant="danger"
+                    isLoading={isDeleting}
+                    />
+                    {error && <div className="error-message">{error}</div>}
         </div>
       </div>
   );
