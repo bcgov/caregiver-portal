@@ -1,0 +1,90 @@
+import { useState } from 'react';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+export const useApplicationPackage = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const createApplicationPackage = async (packageData) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/application-package`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important for session auth
+        body: JSON.stringify(packageData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create application package: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getApplicationPackages = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      console.log('Fetching application packages');        
+      const url = `${API_BASE_URL}/application-package`;
+      console.log(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch application packages: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log(result);
+
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getApplicationForms = async (applicationPackageId) => {
+    console.log('Fetching forms for packageId:', applicationPackageId);
+    const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
+    console.log('Request URL:', url);
+    const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok){
+        throw new Error(`Failed to fetch application forms: ${response.status}`)
+      }
+      return await response.json();
+  };
+
+  return {
+    createApplicationPackage,
+    getApplicationPackages,
+    getApplicationForms,
+    loading,
+    error,
+  };
+};

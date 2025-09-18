@@ -9,7 +9,7 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplication } from '../hooks/useCancelApplication';
 
 const FosterApplicationProcess = () => {
-  const { applicationId } = useParams();
+  const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
   const { cancelApplication, isDeleting, error } = useCancelApplication(() => {
@@ -20,6 +20,8 @@ const FosterApplicationProcess = () => {
       navigate('/dashboard');
     }, 10);
     });
+
+  console.log(`Foster Application Process with: ${applicationPackageId} `);
 
   // TODO: Figure out what step we're on...
 
@@ -32,7 +34,7 @@ const FosterApplicationProcess = () => {
   };
 
   const handleContinue = () => {
-    navigate(`/foster-application/application-package/${applicationId}`);
+    navigate(`/foster-application/application-package/${applicationPackageId}`);
   };
 
   const handleCancel = () => {
@@ -45,7 +47,7 @@ const FosterApplicationProcess = () => {
   
   const handleConfirmDelete = async () => {
     try { 
-      await cancelApplication(applicationId);
+      await cancelApplication(applicationPackageId);
       setShowDeleteModal(false);
     } catch (err) {
       console.error('Failed to cancel:', err);
@@ -73,7 +75,7 @@ return (
         </div>
         <div className="application-package-footer">
                 <Button variant="danger"
-                  onClick={() => handleCancel(applicationId)}
+                  onClick={() => handleCancel(applicationPackageId)}
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
 
