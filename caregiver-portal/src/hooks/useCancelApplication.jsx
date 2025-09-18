@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-export const useCancelApplication = (onSuccess) => {
+export const useCancelApplicationPackage = (onSuccess) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState(null);
 

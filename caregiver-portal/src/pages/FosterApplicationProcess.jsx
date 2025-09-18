@@ -12,7 +12,7 @@ const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
-  const { cancelApplication, isDeleting, error } = useCancelApplicationPackage(() => {
+  const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
     // Small delay to ensure DOM updates
@@ -47,7 +47,7 @@ const FosterApplicationProcess = () => {
   
   const handleConfirmDelete = async () => {
     try { 
-      await cancelApplication(applicationPackageId);
+      await cancelApplicationPackage(applicationPackageId);
       setShowDeleteModal(false);
     } catch (err) {
       console.error('Failed to cancel:', err);
