@@ -6,19 +6,19 @@ export const useCancelApplication = (onSuccess) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState(null);
 
-    const cancelApplication = useCallback(async (applicationId) => {
+    const cancelApplicationPackage = useCallback(async (applicationPackageId) => {
         try {
             setIsDeleting(true);
             setError(null);
 
-            const response = await fetch(`${API_BASE_URL}/application/${applicationId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' }
             });
 
             if (!response.ok) {
-                let errorMessage = `Failed to cancel application`;
+                let errorMessage = `Failed to cancel application package`;
 
                 if (response.status === 400) {
                   errorMessage = 'Application cannot be cancelled (may already be submitted)';
@@ -34,7 +34,7 @@ export const useCancelApplication = (onSuccess) => {
             }
 
             if (onSuccess) {
-                onSuccess(applicationId);
+                onSuccess(applicationPackageId);
             }
 
         } catch (err) {
@@ -45,7 +45,7 @@ export const useCancelApplication = (onSuccess) => {
         }
     }, [onSuccess]);    
     return {
-        cancelApplication,
+        cancelApplicationPackage,
         isDeleting,
         error,
         clearError: () => setError(null)

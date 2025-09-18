@@ -6,13 +6,13 @@ import Breadcrumb from '../components/Breadcrumb';
 import { Trash } from 'lucide-react';
 import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
-import { useCancelApplication } from '../hooks/useCancelApplication';
+import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const navigate = useNavigate();
-  const { cancelApplication, isDeleting, error } = useCancelApplication(() => {
+  const { cancelApplication, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
     // Small delay to ensure DOM updates
