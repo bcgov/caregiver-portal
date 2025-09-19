@@ -16,6 +16,9 @@ const Application = ({ applicationId, onClose }) => {
   
     // Fetch form access token and set iframe URL
 
+    //console.log(`Application Form for: ${applicationId}`);
+    //console.log(`FormAccess Token is: ${formAccessToken}`)
+
     const { getFormAccessToken } = useGetFormAccessToken(applicationId, (formAccessToken) => {
       console.log('Received formAccessToken:', formAccessToken); 
       const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
@@ -46,7 +49,7 @@ const Application = ({ applicationId, onClose }) => {
             setLoading(false);  
           });
         }
-      }, [applicationId]);
+      }, [applicationId, getFormAccessToken]);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
