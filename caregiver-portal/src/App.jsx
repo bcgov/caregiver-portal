@@ -17,6 +17,7 @@ import HouseholdLanding from './pages/HouseholdLanding';
 import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
+import ApplicationForm from './pages/ApplicationForm';
 import ProfileForm from './pages/ProfileForm';
 import HouseholdForm from './pages/HouseholdForm';
 
@@ -36,8 +37,9 @@ const App = () => {
 
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
-        <Route path="/foster-application/:applicationId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
-        <Route path="/foster-application/application-package/:applicationId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/:applicationPackageId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationPackageId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationPackageId/application-form/:applicationId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/household-form/:applicationId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>        
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>

@@ -9,7 +9,7 @@ const ApplicationPackageStep = ({step, index, onContinue}) => {
         <button className="application-package-step" key={index} onClick={onContinue}>
             <span className="application-package-left">
                 <CircleAlert className="application-package-icon-alert" />
-                <span className="application-package-label">{step.label}</span>
+                <span className="application-package-label">{step.type}</span>
             </span>
             <ChevronRight className="application-package-chevron" />
         </button>

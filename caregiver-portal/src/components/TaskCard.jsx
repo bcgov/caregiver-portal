@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const TaskCard = ({applicationId}) => {
+const TaskCard = ({applicationPackageId}) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-      if (applicationId) {
-        navigate(`/foster-application/${applicationId}`);
+      if (applicationPackageId) {
+        navigate(`/foster-application/${applicationPackageId}`);
         }
     };
     

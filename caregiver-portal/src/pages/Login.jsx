@@ -44,7 +44,7 @@ export default function Home() {
     <div className="page">
         <div className="welcome-frame">
           <h1 className="page-title">Welcome to the <br/>B.C. Caregiver Portal</h1>
-          <p class="page-content">Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
+          <p className="page-content">Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
           <Button onClick={login} variant="primary">Log in</Button>
         </div>
         <FosterApplicationStart onClick={login}/>

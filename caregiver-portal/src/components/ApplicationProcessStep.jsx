@@ -14,7 +14,7 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
 
                     {/* Icon based on step status */}
                     
-                    {index === 1 ? (
+                    {index === 0 ? (
                     <div className="application-step-indicator">
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
@@ -43,8 +43,8 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
                 <p className="application-step-label">Step {index + 1}</p>
                 <h2 className="application-step-title">{`${step.label}`}</h2>
                 <p className="application-step-description">{step.description}</p>
-                {index === 1 && (
-                <Button onClick={() => onContinue()} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
+                {index === 0 && (
+                <Button onClick={() => onContinue()} variant="primary">Register for Info Session <ArrowRight className="buttonIcon" /></Button>
                 )}
             </div>
 
