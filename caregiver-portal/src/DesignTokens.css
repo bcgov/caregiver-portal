@@ -485,6 +485,37 @@ iframe {
   background: var(--theme-gold-60, #FBD389);
 }
 
+.task-card-status--requested {
+  border: 1px solid #28a745;
+  background: #d4edda;
+  color: #155724;
+}
+
+.task-card-status--submitted {
+  border: 1px solid #17a2b8;
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.task-card-status--in-progress {
+  /* Keep the existing gold styling */
+  border: 1px solid var(--theme-gold-100, #FCBA19);
+  background: var(--theme-gold-60, #FBD389);
+  color: #856404;
+}
+
+.task-card-status--loading {
+  border: 1px solid #6c757d;
+  background: #e2e3e5;
+  color: #495057;
+}
+
+.task-card-status--default {
+  border: 1px solid #6c757d;
+  background: #f8f9fa;
+  color: #495057;
+}
+
 .task-card-last-updated {
   color: var(--typography-color-primary, #2D2D2D);
   font-size: 14px;
