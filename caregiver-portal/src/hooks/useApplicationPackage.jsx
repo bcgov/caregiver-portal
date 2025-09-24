@@ -80,11 +80,41 @@ export const useApplicationPackage = () => {
       return await response.json();
   };
 
+  const submitApplicationPackage = async (applicationPackageId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await
+  fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit application package: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     createApplicationPackage,
     getApplicationPackages,
     getApplicationForms,
+    submitApplicationPackage,
     loading,
     error,
   };
+
 };
