@@ -72,7 +72,7 @@ const Dashboard = () => {
             {applicationPackages.map((app) => (
               <div key={app.applicationId}>
                 {app.subtype === "FCH" && (
-                <TaskCard applicationPackageId={app.applicationPackageId} />
+                <TaskCard applicationPackage={app} />
                 )}
             </div>
             ))}

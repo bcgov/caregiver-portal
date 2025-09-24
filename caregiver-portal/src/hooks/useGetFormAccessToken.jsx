@@ -12,7 +12,7 @@ import { useState, useCallback } from 'react';
           try {
             setError(null);
     
-            const response = await fetch(`${API_BASE_URL}/forms/token?applicationId=${applicationId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-forms/token?applicationId=${applicationId}`, {
               method: 'GET',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },

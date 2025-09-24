@@ -10,8 +10,9 @@ import Button from '../components/Button';
 const FosterApplicationPackage = () => {
   const { applicationPackageId } = useParams();
   const [forms, setForms] = React.useState([]);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms } = useApplicationPackage();
+  const { getApplicationForms, submitApplicationPackage } = useApplicationPackage();
 
     const breadcrumbItems = [
         { label: 'Back', path: `/foster-application/${applicationPackageId}` },
@@ -25,6 +26,19 @@ const FosterApplicationPackage = () => {
         //path: `/foster-application/application-package/${applicationPackageId}/application-form/${applicationFormId}`
         console.log(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
         navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
+      }
+
+      const handleSubmit = async () => {
+        setIsSubmitting(true);
+        try {
+          const result = await submitApplicationPackage(applicationPackageId);
+          console.log('Submission successful:', result);
+        } catch (error) {
+          console.error('Submit failed:', error);
+          alert('Failed to submit application. Please try again.');
+        } finally {
+          setIsSubmitting(false);
+        }
       }
   
       React.useEffect(() => {
@@ -70,7 +84,7 @@ const FosterApplicationPackage = () => {
             ))}
         </div>
         <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
-        <Button variant="disabled">Submit Application</Button>
+        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
       </div>
     )
 };

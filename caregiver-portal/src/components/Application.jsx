@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 //import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Loader2, RefreshCw } from 'lucide-react';
+import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 
 const Application = ({ applicationId, onClose }) => {
@@ -8,6 +8,7 @@ const Application = ({ applicationId, onClose }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+    const iframeRef = useRef(null);
 
     //const navigate = useNavigate();
     // TODO: Handle onNext to move to next step in application process
@@ -59,6 +60,37 @@ const Application = ({ applicationId, onClose }) => {
         setIsIframeLoaded(false);
         loadApplication();
       };
+
+      const handleSubmitForm = () => {
+        console.log("trying to submit");
+        if (iframeRef.current) {
+          console.log("current");
+          try {
+            // Try same-origin access first
+            const iframeDocument = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document;
+            const form = iframeDocument.querySelector('form');
+            if (form) {
+              form.submit();
+              console.log('Form submitted via direct DOM access');
+            } else {
+              console.log('No form found in iframe');
+            }
+          } catch (error) {
+        // If same-origin fails, use postMessage for cross-origin communication
+        console.log('Same-origin access failed, trying postMessage:', error);
+
+        // Send specific action to trigger the submit button
+        iframeRef.current.contentWindow.postMessage(
+          {
+            action: 'clickSubmitButton',
+            buttonLabel: 'Submit Application'
+          },
+          '*' // In production, use specific origin like 'https://localhost:8080'
+        );
+        console.log('Submit button click message sent to iframe');
+          }
+        }
+      };      
     
       if (loading) {
         return (
@@ -104,6 +136,22 @@ const Application = ({ applicationId, onClose }) => {
     
       return (
         <div className="h-screen flex flex-col bg-gray-100">
+
+                      {/* Submit Button Bar */}
+                      <div className="bg-white border-b border-gray-200 p-4 flex justify-end">
+              <button
+                onClick={handleSubmitForm}
+                disabled={!isIframeLoaded}
+                className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+                  isIframeLoaded
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <Send className="w-4 h-4" />
+                <span>Submit Form</span>
+              </button>
+            </div>
     
           {/* iFrame Container */}
           <div className="flex-1 relative">
@@ -119,6 +167,7 @@ const Application = ({ applicationId, onClose }) => {
             
             {iframeUrl && (
               <iframe
+                ref={iframeRef}
                 src={iframeUrl}
                 className="w-full h-full border-0"
                 title={`Caregiver Application`}
