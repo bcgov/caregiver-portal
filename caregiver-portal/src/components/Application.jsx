@@ -136,23 +136,6 @@ const Application = ({ applicationId, onClose }) => {
     
       return (
         <div className="h-screen flex flex-col bg-gray-100">
-
-                      {/* Submit Button Bar */}
-                      <div className="bg-white border-b border-gray-200 p-4 flex justify-end">
-              <button
-                onClick={handleSubmitForm}
-                disabled={!isIframeLoaded}
-                className={`px-4 py-2 rounded-md transition-colors flex items-center space-x-2 ${
-                  isIframeLoaded
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <Send className="w-4 h-4" />
-                <span>Submit Form</span>
-              </button>
-            </div>
-    
           {/* iFrame Container */}
           <div className="flex-1 relative">
 
