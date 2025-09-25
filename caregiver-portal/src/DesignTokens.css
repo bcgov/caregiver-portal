@@ -228,6 +228,18 @@ body {
     margin-top: 8px; /* 22.5px */
   }
 
+  .caption-small {
+    align-self: stretch;
+    max-width: 760px;
+    color: var(--typography-color-primary, #2D2D2D);
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 125%;
+    margin-top: 8px; /* 22.5px */
+  }
+
   .image-frame {
     display: flex;
     width: 412px;
