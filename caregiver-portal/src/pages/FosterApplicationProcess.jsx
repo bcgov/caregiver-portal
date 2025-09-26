@@ -13,9 +13,10 @@ const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [forms, setForms] = React.useState([]);
+  const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationId, setReferralApplicationId] = React.useState(null);
   const navigate = useNavigate();
-  const { getApplicationForms } = useApplicationPackage();
+  const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
@@ -41,15 +42,17 @@ const FosterApplicationProcess = () => {
     const loadForms = async () => {
       if (applicationPackageId) {
         try {
-          console.log('Loading forms for packageId:', applicationPackageId);
-          const formsArray = await getApplicationForms(applicationPackageId);
-          console.log('loaded forms:', formsArray);
+          const [formsArray, packageData] = await Promise.all([
+            getApplicationForms(applicationPackageId),
+            getApplicationPackage(applicationPackageId)
+          ]);
           setForms(formsArray);
+          setApplicationPackage(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
           const referralId = referralForm?.applicationId || null;
           setReferralApplicationId(referralForm?.applicationId || null);
-          console.log('referral id:', referralId);
+          //console.log('referral id:', referralId);
         } catch (error) {
           console.error('Failed to load forms:', error);
         }
@@ -83,14 +86,32 @@ const FosterApplicationProcess = () => {
     } catch (err) {
       console.error('Failed to cancel:', err);
     }
-  }  
-  const steps = [
-    {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.' },
-    {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.' },
-    {key: 'consent', label: 'Consents & Agreements', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.'},
-    {key: 'screening', label: 'Screening', description: 'Once consents are received, the ministry will begin reviewing and conducting checks on all the adult members of your household. This process can take anywhere from 2 weeks to 3 months.'},
-    {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.'},
- ];
+  }
+  const getSteps = (applicationPackage) => {
+    const baseSteps = [
+      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.' },
+      {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.' },
+      {key: 'consent', label: 'Consents & Agreements', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.'},
+      {key: 'screening', label: 'Screening', description: 'Once consents are received, the ministry will begin reviewing and conducting checks on all the adult members of your household. This process can take anywhere from 2 weeks to 3 months.'},
+      {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.'},
+    ];
+    return baseSteps.map(step => {
+      if (step.key === 'referral' && applicationPackage?.referralstate === 'Requested') {
+        return {
+          ...step,
+          label: 'Information Session Requested',
+          description: 'Your request for an information session has been submitted. You will be contacted to schedule your session shortly.',
+          disabled: true,
+          iconType: 'waiting',
+        };
+      }
+      return step;
+    });
+  }
+
+    const dynamicSteps = React.useMemo(() => {
+      return getSteps(applicationPackage);
+    }, [applicationPackage]);
 
 return (
     <div className="application-frame">
@@ -98,9 +119,9 @@ return (
           <h1 className="page-title">Become a foster caregiver</h1>
           <p className="caption">You're on Step 1 of 4</p>
         <div className="application-package">
-            {steps.map((step, index) => (
+            {dynamicSteps.map((step, index) => (
             <div key={step.key}>
-               <ApplicationProcessStep step={step} index={index} onContinue={ () => handleContinue(step)} />
+               <ApplicationProcessStep step={step} index={index} onContinue={ step.disabled ? undefined : () => handleContinue(step)} />
             </div>
             ))}
         </div>

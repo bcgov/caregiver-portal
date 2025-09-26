@@ -61,6 +61,7 @@ const Application = ({ applicationId, onClose }) => {
         loadApplication();
       };
 
+      /*
       const handleSubmitForm = () => {
         console.log("trying to submit");
         if (iframeRef.current) {
@@ -90,7 +91,8 @@ const Application = ({ applicationId, onClose }) => {
         console.log('Submit button click message sent to iframe');
           }
         }
-      };      
+      };   
+    */   
     
       if (loading) {
         return (
