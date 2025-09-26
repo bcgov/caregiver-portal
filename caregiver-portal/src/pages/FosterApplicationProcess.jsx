@@ -7,11 +7,15 @@ import { Trash } from 'lucide-react';
 import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
+import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [forms, setForms] = React.useState([]);
+  const [referralApplicationId, setReferralApplicationId] = React.useState(null);
   const navigate = useNavigate();
+  const { getApplicationForms } = useApplicationPackage();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
@@ -33,8 +37,35 @@ const FosterApplicationProcess = () => {
     navigate(item.path);
   };
 
-  const handleContinue = () => {
-    navigate(`/foster-application/application-package/${applicationPackageId}`);
+  React.useEffect(() => {
+    const loadForms = async () => {
+      if (applicationPackageId) {
+        try {
+          console.log('Loading forms for packageId:', applicationPackageId);
+          const formsArray = await getApplicationForms(applicationPackageId);
+          console.log('loaded forms:', formsArray);
+          setForms(formsArray);
+
+          const referralForm = formsArray.find(form => form.type === 'Referral');
+          const referralId = referralForm?.applicationId || null;
+          setReferralApplicationId(referralForm?.applicationId || null);
+          console.log('referral id:', referralId);
+        } catch (error) {
+          console.error('Failed to load forms:', error);
+        }
+      }
+    };
+    loadForms();
+  }, []);
+
+  //const referralId = formsArray.
+
+  const handleContinue = (step) => {
+    if(step.key === "referral") {
+      navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationId}`);
+    } else {
+      navigate(`/foster-application/application-package/${applicationPackageId}`);
+    }
   };
 
   const handleCancel = () => {
@@ -69,7 +100,7 @@ return (
         <div className="application-package">
             {steps.map((step, index) => (
             <div key={step.key}>
-               <ApplicationProcessStep step={step} index={index} onContinue={handleContinue} />
+               <ApplicationProcessStep step={step} index={index} onContinue={ () => handleContinue(step)} />
             </div>
             ))}
         </div>
