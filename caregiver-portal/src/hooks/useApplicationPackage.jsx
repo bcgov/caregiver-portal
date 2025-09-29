@@ -64,6 +64,31 @@ export const useApplicationPackage = () => {
     }
   };
 
+  const getApplicationPackage = async (applicationPackageId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch application package: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getApplicationForms = async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
@@ -110,6 +135,7 @@ export const useApplicationPackage = () => {
 
   return {
     createApplicationPackage,
+    getApplicationPackage,
     getApplicationPackages,
     getApplicationForms,
     submitApplicationPackage,

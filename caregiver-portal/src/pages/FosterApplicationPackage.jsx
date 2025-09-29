@@ -76,6 +76,10 @@ const FosterApplicationPackage = () => {
         <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
           <h1 className="page-title">Application to provide foster family care</h1>
+          <p className="caption-small">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
+            under Section 26(c) and will be used for the purposes of your Caregiver Application. The information collected on these forms will be strictly used by 
+            MCFD for Caregiver Application and Assessment activities. If you have questions about the collection of your information for this purpose, please contact 
+            the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
           <div className="application-package">
             {forms.map((step, index) => (
 

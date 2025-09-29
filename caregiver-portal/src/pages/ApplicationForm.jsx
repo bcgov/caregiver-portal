@@ -20,7 +20,6 @@ const ApplicationForm = () => {
   return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
-        <h1 className="page-title">Generic Form</h1>
         <Application applicationId={applicationId} />
     </div>
   );
