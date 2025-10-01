@@ -40,6 +40,18 @@ const Application = ({ applicationId, onClose }) => {
         } 
       };
 
+       useEffect(() => {
+        function handleMessage(event) {
+          console.log("Form update >> ",event.data);
+        }
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+          window.removeEventListener('message', handleMessage);
+        };
+      }, []);
+
       useEffect(() => {
         console.log(`ApplicationID: ${applicationId}`);
         if (applicationId) {
