@@ -89,6 +89,20 @@ export const useApplicationPackage = () => {
     }
   };
 
+  // get an applicationForm meta data by applicationId
+  // does not return the form data itself
+  const getApplicationForm = async (applicationId) => {
+    const response = await fetch(`${API_BASE_URL}/application-form/${applicationId}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok){
+      throw new Error(`Failed to fetch application form data: ${response.status}`)
+    }
+    return await response.json();
+  };
+
   const getApplicationForms = async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
@@ -138,6 +152,7 @@ export const useApplicationPackage = () => {
     getApplicationPackage,
     getApplicationPackages,
     getApplicationForms,
+    getApplicationForm,
     submitApplicationPackage,
     loading,
     error,

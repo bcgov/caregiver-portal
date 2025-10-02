@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
+import { getApplicationForm } from '../hooks/useApplicationPackage';
 
 const Application = ({ applicationId, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
@@ -9,6 +10,15 @@ const Application = ({ applicationId, onClose }) => {
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const iframeRef = useRef(null);
+
+    const [applicationForm, setApplicationForm] = useState(null);
+
+    // get the application form metadata
+    useEffect(() => {
+      if (applicationId) {
+        getApplicationForm(applicationId).then(setApplicationForm);
+      }
+    }, [applicationId]);
 
     //const navigate = useNavigate();
     // TODO: Handle onNext to move to next step in application process
@@ -23,7 +33,8 @@ const Application = ({ applicationId, onClose }) => {
     const { getFormAccessToken } = useGetFormAccessToken(applicationId, (formAccessToken) => {
       console.log('Received formAccessToken:', formAccessToken); 
       const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-      const url = `${formServiceUrl}/new?id=${formAccessToken}`;
+      const urlPath = applicationForm?.status === 'Draft' ? 'edit' : 'new';      
+      const url = `${formServiceUrl}/${urlPath}?id=${formAccessToken}`;
       console.log('Setting iframe URL:', url);     
       setIframeUrl(url);
       setLoading(false);
