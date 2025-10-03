@@ -108,6 +108,17 @@ const Application = ({ applicationId, onClose }) => {
       }
     }, [tokenError]);
 
+       useEffect(() => {
+        function handleMessage(event) {
+          console.log("Form update >> ",event.data);
+        }
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+          window.removeEventListener('message', handleMessage);
+        };
+      }, []);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
