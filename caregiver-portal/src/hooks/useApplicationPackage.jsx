@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -91,8 +91,8 @@ export const useApplicationPackage = () => {
 
   // get an applicationForm meta data by applicationId
   // does not return the form data itself
-  const getApplicationForm = async (applicationId) => {
-    const response = await fetch(`${API_BASE_URL}/application-form/${applicationId}`, {
+  const getApplicationForm = useCallback(async (applicationId) => {
+    const response = await fetch(`${API_BASE_URL}/application-forms/${applicationId}`, {
       method: 'GET',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' }
@@ -101,7 +101,7 @@ export const useApplicationPackage = () => {
       throw new Error(`Failed to fetch application form data: ${response.status}`)
     }
     return await response.json();
-  };
+  }, []);
 
   const getApplicationForms = async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
