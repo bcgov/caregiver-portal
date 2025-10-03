@@ -48,12 +48,18 @@ import { useState, useCallback } from 'react';
             console.log('Type of data:', typeof data);
             console.log('Data keys:', Object.keys(data));            
     
-            if (data.formAccessToken && onSuccess) {
-              console.log('Calling onSuccess with token:', data.formAccessToken);               
-              onSuccess(data.formAccessToken);
+            if (data.formAccessToken) {
+              console.log('Returning token:', data.formAccessToken);
+              if (onSuccess) {
+                console.log('Calling onSuccess with token:', data.formAccessToken);
+                onSuccess(data.formAccessToken);
+              }
+              return data.formAccessToken;
             } else {
-                console.log('No formAccessToken in response or no onSuccess callback'); 
+                console.log('No formAccessToken in response');
+                return null;
             }
+          
           } catch (err) {
             setError(err.message);
           }
