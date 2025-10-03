@@ -2,108 +2,124 @@ import React, { useState, useEffect, useRef } from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
-import { getApplicationForm } from '../hooks/useApplicationPackage';
+import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
 const Application = ({ applicationId, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+    const [applicationForm, setApplicationForm] = useState(null);
     const iframeRef = useRef(null);
 
-    const [applicationForm, setApplicationForm] = useState(null);
-
-    // get the application form metadata
-    useEffect(() => {
-      if (applicationId) {
-        getApplicationForm(applicationId).then(setApplicationForm);
-      }
-    }, [applicationId]);
-
-    //const navigate = useNavigate();
-    // TODO: Handle onNext to move to next step in application process
-
-    // TODO: Handle accessToken expiry and refresh
-  
-    // Fetch form access token and set iframe URL
-
-    //console.log(`Application Form for: ${applicationId}`);
-    //console.log(`FormAccess Token is: ${formAccessToken}`)
-
-    const { getFormAccessToken } = useGetFormAccessToken(applicationId, (formAccessToken) => {
-      console.log('Received formAccessToken:', formAccessToken); 
+    const { getApplicationForm } = useApplicationPackage();
+    /*
+    const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationId,  (formAccessToken) => {
       const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-      const urlPath = applicationForm?.status === 'Draft' ? 'edit' : 'new';      
+      console.log('Application form status:', applicationForm?.status); // Add this line
+      const urlPath = applicationForm?.status === 'New' ? 'new' : 'edit';      
       const url = `${formServiceUrl}/${urlPath}?id=${formAccessToken}`;
       console.log('Setting iframe URL:', url);     
       setIframeUrl(url);
-      setLoading(false);
+      setLoading(false);      
     });
+    
+    // get the application form metadata
+    useEffect(() => {
+      if (applicationId) {
+        console.log('Loading application form for applicationId:', applicationId);
+        setLoading(true);
+        setError(null);
 
-    const loadApplication = async () => {
-        try {
-          setLoading(true);
-          setError(null);
-          await getFormAccessToken(); 
-        } catch (err) {
+        getApplicationForm(applicationId)
+        .then(setApplicationForm)
+        .catch(err => {
+          console.error('Error fetching application form:', err);
+          setError(err.message);
+          //setLoading(false);
+        });
+      }
+    }, [applicationId, getApplicationForm]);
+
+    // TODO: Handle onNext to move to next step in application process
+    // TODO: Handle accessToken expiry and refresh
+  
+    // Fetch form access token and set iframe URL
+    useEffect(() => {
+      if (applicationForm && applicationId) {
+        console.log('getting form access token for form:', applicationForm);
+        // Only start getting the token after we have the form metadata
+        getFormAccessToken().catch(err => {
+          console.error('Error fetching form access token:', err);
           setError(err.message);
           setLoading(false);
-        } 
-      };
+        });
+      }
+    }, [applicationForm, applicationId, getFormAccessToken]);
+    */
 
-      useEffect(() => {
-        console.log(`ApplicationID: ${applicationId}`);
-        if (applicationId) {
-          setLoading(true);
-          setError(null);
-          getFormAccessToken().catch(err => {
-            setError(err.message);
-            setLoading(false);  
-          });
-        }
-      }, [applicationId, getFormAccessToken]);
+    useEffect(() => {
+      if (applicationId) {
+        console.log('Loading application form for applicationId:', applicationId);
+        setLoading(true);
+        setError(null);
+  
+        getApplicationForm(applicationId)
+        .then(setApplicationForm)
+        .catch(err => {
+          console.error('Error fetching application form:', err);
+          setError(err.message);
+          setLoading(false);
+        });
+      }
+    }, [applicationId, getApplicationForm]);
+
+  // Remove the callback from useGetFormAccessToken
+  const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationId);
+
+  // Move the URL logic into the effect where you call getFormAccessToken
+  useEffect(() => {
+    if (applicationForm && applicationId) {
+      console.log('getting form access token for form:', applicationForm);
+
+      getFormAccessToken()
+        .then((formAccessToken) => {
+          const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
+          console.log('Application form status:', applicationForm?.status);
+          const urlPath = applicationForm?.status === 'New' ? 'new' : 'edit';
+          const url = `${formServiceUrl}/${urlPath}?id=${formAccessToken}`;
+          console.log('Setting iframe URL:', url);
+          setIframeUrl(url);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error('Error fetching form access token:', err);
+          setError(err.message);
+          setLoading(false);
+        });
+    }
+  }, [applicationForm, applicationId, getFormAccessToken]);
+
+    // Handle token errors
+    useEffect(() => {
+      if (tokenError) {
+        setError(tokenError);
+        setLoading(false);
+      }
+    }, [tokenError]);
+
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
       };
     
       const handleRetry = () => {
+        setError(null);
         setIsIframeLoaded(false);
-        loadApplication();
+        setApplicationForm(null);
+        setIframeUrl('');
+        //loadApplication();
       };
-
-      /*
-      const handleSubmitForm = () => {
-        console.log("trying to submit");
-        if (iframeRef.current) {
-          console.log("current");
-          try {
-            // Try same-origin access first
-            const iframeDocument = iframeRef.current.contentDocument || iframeRef.current.contentWindow.document;
-            const form = iframeDocument.querySelector('form');
-            if (form) {
-              form.submit();
-              console.log('Form submitted via direct DOM access');
-            } else {
-              console.log('No form found in iframe');
-            }
-          } catch (error) {
-        // If same-origin fails, use postMessage for cross-origin communication
-        console.log('Same-origin access failed, trying postMessage:', error);
-
-        // Send specific action to trigger the submit button
-        iframeRef.current.contentWindow.postMessage(
-          {
-            action: 'clickSubmitButton',
-            buttonLabel: 'Submit Application'
-          },
-          '*' // In production, use specific origin like 'https://localhost:8080'
-        );
-        console.log('Submit button click message sent to iframe');
-          }
-        }
-      };   
-    */   
     
       if (loading) {
         return (
@@ -160,7 +176,7 @@ const Application = ({ applicationId, onClose }) => {
                 </div>
               </div>
             )}
-            
+             <p>{applicationForm?.status}</p>
             {iframeUrl && (
               <iframe
                 ref={iframeRef}
@@ -173,6 +189,7 @@ const Application = ({ applicationId, onClose }) => {
               />
             )}
           </div>
+         
         </div>
       );
     };
