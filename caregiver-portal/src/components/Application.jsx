@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
@@ -12,51 +12,9 @@ const Application = ({ applicationId, onClose }) => {
     const [applicationForm, setApplicationForm] = useState(null);
     const iframeRef = useRef(null);
 
+    const navigate = useNavigate();
+
     const { getApplicationForm } = useApplicationPackage();
-    /*
-    const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationId,  (formAccessToken) => {
-      const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-      console.log('Application form status:', applicationForm?.status); // Add this line
-      const urlPath = applicationForm?.status === 'New' ? 'new' : 'edit';      
-      const url = `${formServiceUrl}/${urlPath}?id=${formAccessToken}`;
-      console.log('Setting iframe URL:', url);     
-      setIframeUrl(url);
-      setLoading(false);      
-    });
-    
-    // get the application form metadata
-    useEffect(() => {
-      if (applicationId) {
-        console.log('Loading application form for applicationId:', applicationId);
-        setLoading(true);
-        setError(null);
-
-        getApplicationForm(applicationId)
-        .then(setApplicationForm)
-        .catch(err => {
-          console.error('Error fetching application form:', err);
-          setError(err.message);
-          //setLoading(false);
-        });
-      }
-    }, [applicationId, getApplicationForm]);
-
-    // TODO: Handle onNext to move to next step in application process
-    // TODO: Handle accessToken expiry and refresh
-  
-    // Fetch form access token and set iframe URL
-    useEffect(() => {
-      if (applicationForm && applicationId) {
-        console.log('getting form access token for form:', applicationForm);
-        // Only start getting the token after we have the form metadata
-        getFormAccessToken().catch(err => {
-          console.error('Error fetching form access token:', err);
-          setError(err.message);
-          setLoading(false);
-        });
-      }
-    }, [applicationForm, applicationId, getFormAccessToken]);
-    */
 
     useEffect(() => {
       if (applicationId) {
@@ -108,17 +66,25 @@ const Application = ({ applicationId, onClose }) => {
       }
     }, [tokenError]);
 
-       useEffect(() => {
-        function handleMessage(event) {
-          console.log("Form update >> ",event.data);
+    useEffect(() => {
+      function handleMessage(event) {
+        console.log("Form update >> ", event.data);
+        console.log("applicationForm:", applicationForm);
+        console.log("applicationPackageId:", applicationForm?.applicationPackageId);
+
+        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}') {
+          const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
+          console.log("Attempting to navigate to:", targetUrl);
+          navigate(targetUrl);
         }
+      }
 
-        window.addEventListener('message', handleMessage);
+      window.addEventListener('message', handleMessage);
 
-        return () => {
-          window.removeEventListener('message', handleMessage);
-        };
-      }, []);
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
+    }, [applicationForm, navigate]);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
