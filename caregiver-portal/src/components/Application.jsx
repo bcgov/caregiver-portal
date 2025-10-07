@@ -10,11 +10,13 @@ const Application = ({ applicationId, onClose }) => {
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const [applicationForm, setApplicationForm] = useState(null);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    
     const iframeRef = useRef(null);
 
     const navigate = useNavigate();
 
-    const { getApplicationForm } = useApplicationPackage();
+    const { getApplicationForm, submitApplicationPackage } = useApplicationPackage();
 
     useEffect(() => {
       if (applicationId) {
@@ -67,15 +69,30 @@ const Application = ({ applicationId, onClose }) => {
     }, [tokenError]);
 
     useEffect(() => {
-      function handleMessage(event) {
+      async function handleMessage(event) {
         console.log("Form update >> ", event.data);
         console.log("applicationForm:", applicationForm);
         console.log("applicationPackageId:", applicationForm?.applicationPackageId);
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}') {
-          const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
-          console.log("Attempting to navigate to:", targetUrl);
-          navigate(targetUrl);
+          //const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
+          //console.log("Attempting to navigate to:", targetUrl);
+          //navigate(targetUrl);
+
+
+          setIsSubmitting(true);
+          try {
+            const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
+            console.log('Submission successful:', result);
+            navigate(`/foster-application/${applicationForm?.applicationPackageId}`);
+          } catch (error) {
+            console.error('Submit failed:', error);
+            alert('Failed to submit application. Please try again.');
+          } finally {
+            setIsSubmitting(false);
+          }
+
+
         }
       }
 

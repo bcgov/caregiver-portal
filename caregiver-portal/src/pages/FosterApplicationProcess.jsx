@@ -50,7 +50,7 @@ const FosterApplicationProcess = () => {
           setApplicationPackage(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
-          const referralId = referralForm?.applicationId || null;
+          //const referralId = referralForm?.applicationId || null;
           setReferralApplicationId(referralForm?.applicationId || null);
           //console.log('referral id:', referralId);
         } catch (error) {
@@ -89,11 +89,11 @@ const FosterApplicationProcess = () => {
   }
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.' },
-      {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.' },
-      {key: 'consent', label: 'Consents & Agreements', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.'},
-      {key: 'screening', label: 'Screening', description: 'Once consents are received, the ministry will begin reviewing and conducting checks on all the adult members of your household. This process can take anywhere from 2 weeks to 3 months.'},
-      {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.'},
+      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.', disabled: false },
+      {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
+      {key: 'consent', label: 'Consents & Agreements', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
+      {key: 'screening', label: 'Screening', description: 'Once consents are received, the ministry will begin reviewing and conducting checks on all the adult members of your household. This process can take anywhere from 2 weeks to 3 months.', disabled: true},
+      {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
     ];
     return baseSteps.map(step => {
       if (step.key === 'referral' && applicationPackage?.referralstate === 'Requested') {
@@ -105,6 +105,14 @@ const FosterApplicationProcess = () => {
           iconType: 'waiting',
         };
       }
+      if (step.key === 'application' && applicationPackage?.srStage === 'Application') {
+        return {
+          ...step,
+          description: 'Complete and submit your caregiver application package.',
+          disabled: false,
+          iconType: 'start',
+        }
+      }  
       return step;
     });
   }

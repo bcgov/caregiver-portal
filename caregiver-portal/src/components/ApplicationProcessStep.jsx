@@ -7,7 +7,7 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
 
       // Function to render the appropriate icon
       const renderStepIcon = () => {
-        if (index === 0) {
+        if (step.iconType) {
             if (step.iconType === 'waiting') {
                 return (
                     <div className="application-step-indicator">
@@ -64,8 +64,8 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
                 <p className="application-step-label">Step {index + 1}</p>
                 <h2 className="application-step-title">{`${step.label}`}</h2>
                 <p className="application-step-description">{step.description}</p>
-                {index === 0 && onContinue && !step.disabled && (
-                <Button onClick={() => onContinue()} variant="primary">Register for Info Session <ArrowRight className="buttonIcon" /></Button>
+                {onContinue && !step.disabled && (
+                <Button onClick={() => onContinue()} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
                 )}
             </div>
 
