@@ -18,9 +18,9 @@ const TaskCard = ({applicationPackage}) => {
         }
       }
 
-      const {status, referralState} = applicationPackage;
+      const {status, referralstate} = applicationPackage;
 
-      if (referralState === 'Requested') {
+      if (referralstate === 'Requested') {
         return {
           text: 'Information Session Requested',
           className: 'task-card-status--requested'
