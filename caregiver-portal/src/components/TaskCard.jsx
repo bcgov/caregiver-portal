@@ -18,18 +18,18 @@ const TaskCard = ({applicationPackage}) => {
         }
       }
 
-      const {status, referralstate} = applicationPackage;
+      const {status, srStage, referralstate} = applicationPackage;
 
-      if (referralstate === 'Requested') {
+      if (referralstate === 'Requested' && srStage !== 'Application') {
         return {
           text: 'Information Session Requested',
           className: 'task-card-status--requested'
         }
       }
 
-      if (status === 'Submitted') {
+      if (srStage === 'Application') {
         return {
-          text: 'Application Submitted',
+          text: 'Complete Your Application',
           className: 'task-card-status--submitted'
         }
       }
