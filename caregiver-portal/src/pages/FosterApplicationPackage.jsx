@@ -23,9 +23,14 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        //path: `/foster-application/application-package/${applicationPackageId}/application-form/${applicationFormId}`
-        console.log(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
-        navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
+        if (item.type && item.type.toLowerCase().includes('household')) {
+          // Special case for household form
+          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationId}`);
+          return;
+        } else { 
+          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
+          return
+        }
       }
 
       const handleSubmit = async () => {
@@ -82,9 +87,8 @@ const FosterApplicationPackage = () => {
             the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
           <div className="application-package">
             {forms.map((step, index) => (
-
+              step.type !== 'Referral' && // Exclude 'Referral' type steps
                <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}}/>
-            
             ))}
         </div>
         <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
