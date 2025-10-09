@@ -97,6 +97,7 @@ const FosterApplicationProcess = () => {
     ];
     return baseSteps.map(step => {
       if (step.key === 'referral' && applicationPackage?.referralstate === 'Requested') {
+
         return {
           ...step,
           label: 'Information Session Requested',
@@ -106,6 +107,7 @@ const FosterApplicationProcess = () => {
         };
       }
       if (step.key === 'application' && applicationPackage?.srStage === 'Application') {
+
         return {
           ...step,
           description: 'Complete and submit your caregiver application package.',
@@ -125,7 +127,7 @@ return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
           <h1 className="page-title">Become a foster caregiver</h1>
-          <p className="caption">You're on Step 1 of 4</p>
+          <p className="caption">You're on Step X of Y</p>
         <div className="application-package">
             {dynamicSteps.map((step, index) => (
             <div key={step.key}>
