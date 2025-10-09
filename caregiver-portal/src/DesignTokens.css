@@ -215,6 +215,7 @@ body {
     line-height: 125%; /* 40px */
     padding: 0px;
     margin: 0px;
+    margin-bottom: 32px;
   }
 
   .caption {
@@ -298,6 +299,7 @@ body {
   display: flex;
   
   padding: 16px 0 16px 0;
+  width: 936px;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -740,13 +742,26 @@ a {
     justify-content: flex-end;
   }
 
+  .form-container{
+    width: 100%;
+  }
+
+  .required {
+    color: var(--Web-Text-Required-asterisk, #B30000);
+    text-align: center;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%; /* 18px */
+  }
+
   .form-group {
     display: flex;
     padding: 24px 20px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 32px;
     align-self: stretch;
+    margin-bottom: 24px;
 
     border-radius: 0 0 10px 10px;
     border-top: 8px solid var(--theme-gold-80, #F9C462);
@@ -755,6 +770,87 @@ a {
     border-bottom: 1px solid transparent;
     background: var(--surface-color-background-white, #FFF);
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .form-sub-group {
+    display: flex;
+    padding: 24px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    border-radius: 0 0 10px 10px;
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    background: var(--surface-color-background-white, #FFF);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  .form-group-header{
+    color: #000;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: 54px; /* 225% */
+
+  }
+
+  .form-control-label {
+    color: #525252;
+
+    /* Web/Body/Label */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%; /* 24px */
+    letter-spacing: 0.32px;
+  }
+
+  .form-control {
+    display: flex;
+    height: 22px;
+    padding: 11px 16px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+
+    border: 1px solid var(--Web-Border-input, #8D8D8D);
+  }
+
+  .form-control-date {
+    display: flex;
+    height: 22px;
+    padding: 11px 16px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+
+    overflow: hidden;
+    color: var(--Web-Text-Placeholder, #A8A8A8);
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 125% */
+    letter-spacing: 0.32px;
+
+    border: 1px solid var(--Web-Border-input, #8D8D8D);
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+  }
+  .field-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
   }
 
   .radio-button-group {
@@ -775,4 +871,54 @@ a {
     font-weight: 700;
     line-height: 150%; /* 24px */
     letter-spacing: 0.32px;    
+  }
+
+  .household-member-form{
+    border: solid 1px #ccc;
+    border-radius: 8px;
+    margin-bottom: 24px;
+  }
+
+  .member-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 24px;
+    align-items: center;
+    margin-bottom: 12px;
+    background-color: #d8d8d8;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+
+  select {
+    border: 1px solid var(--Web-Border-input, #8D8D8D);
+    background-color: #fff;
+    gap: 16px;
+    padding: 11px 16px;
+    color: #9f9f9f;
+  }
+  
+  select:hover {
+    border: solid 1px #353433;
+    color: #2D2d2D;
+  }
+  
+  select:focus {
+    border: solid 1px #0043CE;
+    color: #2D2d2D;
+  }
+  
+  select:invalid {
+    border: solid 1px red;
+  }
+
+  .section-description{
+    margin-bottom: 24px;
+    font-size: 16px;
+    font-weight: 300;
+    color: #525252;
+    background-color: #EDF5FF;
+    border-left: solid 6px #0043CE;
+    padding: 12px 24px;
+    line-height: 125%;
   }

@@ -3,10 +3,12 @@ import { AlertCircle, Loader2, RefreshCw, Plus, Trash2, Trash } from 'lucide-rea
 import Button from './Button';
 import DateField from './Date'; // Assuming you have a Date component for date handling
 
-const Household = ({ currentApplication }) => {
+const Household = ({ applicationPackageId, applicationId }) => {
 
     // the radio button indicates whether they have a partner/spouse
     const [hasPartner, setHasPartner] = useState(null);
+
+    const [hasChildren, setHasChildren] = useState(null);
     // radio button indicates whether there are other  household members
     const [hasHousehold, setHasHousehold] = useState(null);
     //const [hasValidHousehold, setHasValidHousehold] = useState(false);
@@ -37,7 +39,7 @@ const Household = ({ currentApplication }) => {
         };
 
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
-    const [partnerEmailValidationError/*, setPartnerEmailValidationError*/] = useState('');
+    const [partnerEmailValidationError] = useState('');
 
     const updatePartner = (field, value) => {
       // if updating the date of birth, validate that the spouse is an adult
@@ -70,7 +72,7 @@ const Household = ({ currentApplication }) => {
 
     return () => clearTimeout(timer); // reset the clock.
 
-    }, [partner.firstName, partner.lastName, partner.dob, partner.email, autoSavePartner, hasPartner, partner]);
+    }, [partner.firstName, partner.lastName, partner.dob, partner.email, hasPartner]);
 
     // auto save household members when they have completed data
     useEffect(() => {
@@ -106,16 +108,16 @@ const Household = ({ currentApplication }) => {
         }
       }, 2000);
       return () => clearTimeout(timer);
-    }, [householdMembers, currentApplication]);
+    }, [householdMembers, applicationPackageId, applicationId]);
 
     // load existing household data on component mount
     useEffect(() => {
       const loadHouseholdData = async () => {
-        if (!currentApplication) return;
+        if (!applicationPackageId || !applicationId) return;
 
         const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
         try {
-          const response = await fetch(`${API_BASE}/applications/${currentApplication}/household-members`, {
+          const response = await fetch(`${API_BASE}/application-package/${applicationPackageId}/household-members/${applicationId}`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -174,7 +176,7 @@ const Household = ({ currentApplication }) => {
       };
 
       loadHouseholdData();
-    }, [currentApplication]);
+    }, [applicationPackageId, applicationId]);
 
     useEffect(() => {
       if (hasHousehold && householdMembers.length === 0) {
@@ -192,7 +194,7 @@ const Household = ({ currentApplication }) => {
 
       try {
         const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-        const response = await fetch(`${API_BASE}/applications/${currentApplication}/household-members/${householdMemberId}`, {
+        const response = await fetch(`${API_BASE}/application-package/${applicationPackageId}/household-members/${applicationId}/${householdMemberId}`, {
           method: 'DELETE',
           credentials: 'include',
           headers: {
@@ -226,14 +228,14 @@ const Household = ({ currentApplication }) => {
     const savePartnerDraft = async (partnerData) => {
       console.log('Saving partner draft:', partnerData);
       const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001'
-      const response = await fetch(`${API_BASE}/applications/${currentApplication}/household-members`, {
+      const response = await fetch(`${API_BASE}/application-package/${applicationPackageId}/household-members/${applicationId}`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          applicationId: currentApplication,
+          applicationId: applicationId,
           householdMemberId: partnerData.householdMemberId,
           relationshipToPrimary: 'Spouse',
           firstName: partnerData.firstName,
@@ -299,14 +301,14 @@ const Household = ({ currentApplication }) => {
 
       try {
         const response = await
-        fetch(`${API_BASE}/applications/${currentApplication}/household-members`, {
+        fetch(`${API_BASE}/application-package/${applicationPackageId}/household-members/${applicationId}`, {
               method: 'POST',
               credentials: 'include',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                applicationId: currentApplication,
+                applicationId: applicationId,
                 householdMemberId: memberData.householdMemberId,
                 relationshipToPrimary: memberData.relationship,
                 firstName: memberData.firstName,
@@ -432,8 +434,9 @@ const Household = ({ currentApplication }) => {
           
         {hasPartner && (
          <>
-            <h3>My spouse/partner</h3>
-              <div className="form-group">
+            <h3 className="form-group-header">My spouse/partner</h3>
+              <div className="field-group">
+                <div className="field-control">
                 <label htmlFor="partner-firstName" className="form-control-label">
                   First Name<span className="required">*</span>
                 </label>
@@ -444,6 +447,8 @@ const Household = ({ currentApplication }) => {
                   onChange={(e) => updatePartner('firstName', e.target.value)}
                   className="form-control"
                 />
+                </div>
+                <div className="field-control">
                 <label htmlFor="partner-lastName" className="form-control-label">
                   Last Name<span className="required">*</span>
                 </label>
@@ -454,6 +459,8 @@ const Household = ({ currentApplication }) => {
                   onChange={(e) => updatePartner('lastName', e.target.value)}
                   className="form-control"
                 />
+                </div>
+                <div className="field-control">
                 <label htmlFor="partner-dob" className="form-control-label">
                       Date of Birth<span className="required">*</span>
                 </label>
@@ -467,6 +474,8 @@ const Household = ({ currentApplication }) => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerAgeValidationError}
                 </label>
+                </div>
+                <div className="field-control">
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
@@ -480,18 +489,17 @@ const Household = ({ currentApplication }) => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerEmailValidationError}
                 </label>
-              </div>    
+                </div>
+               </div> 
         </>
         )}
         </fieldset>
 
-          <fieldset className="form-group">
-          <legend>
-            <label className="form-label">
+        <fieldset className="form-group">
+          <div className="radio-button-group">
+            <div className="radio-button-header">
               Do you have anyone else living your primary residence?<span className="required">*</span>
-            </label>
-          </legend>
-          <div className="radio-group">
+            </div>
             <label>
               <input
                 type="radio"
@@ -513,14 +521,15 @@ const Household = ({ currentApplication }) => {
               No
             </label>
           </div>
-          <div className="helper-text">Helper text goes here</div>
-        </fieldset>
+      
+
         {hasHousehold && (
          <>
           <div className="household-section">
-            <div className="section-header">
-              <h2 className="section-header-title">Other persons in your home</h2>
-            </div>
+
+
+            <h3 className="form-group-header">Other persons in your home</h3>
+        
             <div className="section-description">
               <p>
               All persons 18 years or older in your home will be required to consent to background checks before your application can be approved. Once you submit your application, we’ll send them an email asking them to log in with their BC Services Card to provide those consents.
@@ -549,9 +558,9 @@ const Household = ({ currentApplication }) => {
                   
                 </div>
                 
-                <div className="form-group">
+                <div className="form-sub-group">
                 <label htmlFor={`member-${member.householdMemberId}-relationship`} className="form-control-label">
-                    Relationship to Applicant<span className="required">*</span>
+                    Relationship to you<span className="required">*</span>
                   </label>
                   <select
                     id={`member-${member.householdMemberId}-relationship`}
@@ -567,9 +576,7 @@ const Household = ({ currentApplication }) => {
                     <option value="Boarder">Boarder</option>
                     <option value="Other">Other</option>
                   </select>
-                  <div className="helper-text">
-                    Select how this person is related to you.
-                  </div>                  
+           
                   <label htmlFor={`member-${member.householdMemberId}-firstName`} className="form-control-label">
                     First Name<span className="required">*</span>
                   </label>
@@ -633,8 +640,9 @@ const Household = ({ currentApplication }) => {
             </div>
           </div>
         </>
+        
         )}
-
+        </fieldset>
         
         <div style={{color: 'red', padding: '10px', background: '#fee'}}>
         {saveStatus}
