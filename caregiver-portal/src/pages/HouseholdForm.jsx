@@ -5,11 +5,11 @@ import Breadcrumb from '../components/Breadcrumb';
 import Household from '../components/Household';
 
 const HouseholdForm = () => {
-  const { applicationId } = useParams();
+  const { applicationPackageId, applicationId } = useParams();
   const navigate = useNavigate();
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationId}` },
+    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}` },
   ];
 
   const handleBackClick = (item) => {
@@ -20,7 +20,7 @@ const HouseholdForm = () => {
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         <h1 className="page-title">My household and support network</h1>
-        <Household applicationId={applicationId} />
+        <Household applicationPackageId={applicationPackageId} applicationId={applicationId} />
     </div>
   );
 

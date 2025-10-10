@@ -42,8 +42,8 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/application-form/:applicationId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/referral-form/:applicationId" element={<ProtectedRoute><ReferralForm /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationPackageId/household-form/:applicationId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
-        <Route path="/foster-application/application-package/household-form/:applicationId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>        
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 
       </Routes>
