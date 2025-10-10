@@ -10,9 +10,10 @@ import Button from '../components/Button';
 const FosterApplicationPackage = () => {
   const { applicationPackageId } = useParams();
   const [forms, setForms] = React.useState([]);
+  const [appPackage, setAppPackage] = React.useState();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms, submitApplicationPackage } = useApplicationPackage();
+  const { getApplicationForms, submitApplicationPackage, getApplicationPackage } = useApplicationPackage();
 
     const breadcrumbItems = [
         { label: 'Back', path: `/foster-application/${applicationPackageId}` },
@@ -45,6 +46,20 @@ const FosterApplicationPackage = () => {
           setIsSubmitting(false);
         }
       }
+
+      React.useEffect(() => {
+        const loadPackage = async () => {
+          try {
+            console.log('Loading package for packageId:', applicationPackageId)
+            const appPackage = await getApplicationPackage(applicationPackageId);
+            console.log('Application package:', appPackage);
+            setAppPackage(appPackage);
+          } catch (error) {
+            console.error('failed to load application package', error);
+          }
+        }
+        loadPackage();
+      }, []);
   
       React.useEffect(() => {
         const loadForms = async () => {
@@ -64,6 +79,8 @@ const FosterApplicationPackage = () => {
 
       console.log('applicationPackageId:', applicationPackageId);
       console.log('forms:', forms);
+
+
   
       
     //const applicationPackageItems = [
