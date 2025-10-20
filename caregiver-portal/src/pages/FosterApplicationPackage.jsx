@@ -10,10 +10,12 @@ import Button from '../components/Button';
 const FosterApplicationPackage = () => {
   const { applicationPackageId } = useParams();
   const [forms, setForms] = React.useState([]);
+  const [household, setHousehold] = React.useState();
   const [appPackage, setAppPackage] = React.useState();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms, submitApplicationPackage, getApplicationPackage } = useApplicationPackage();
+  const { getApplicationForms, submitApplicationPackage, getApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
 
     const breadcrumbItems = [
         { label: 'Back', path: `/foster-application/${applicationPackageId}` },
@@ -33,6 +35,27 @@ const FosterApplicationPackage = () => {
           return
         }
       }
+
+      const handleState = (item) => {
+        // TODO: Finish this
+
+        //household will need a verify complet function that looks into the hasHoushold, hasSpouse, etc to verify they are not null
+        //and for either of those that are true, verify that there is at least one household member that matches those criterion
+        // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
+        // state
+
+
+
+        if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
+          return 'complete';
+        } else {
+          return 'default';
+        }
+      }
+
+      const isApplicationComplete = () => {
+        return household?.isComplete === true;
+      }; 
 
       const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -77,6 +100,17 @@ const FosterApplicationPackage = () => {
         loadForms();
       }, []);
 
+      React.useEffect(() => {
+        const loadHouseholdStatus = async () => {
+          if (applicationPackageId) {
+            const householdStatus = await validateHouseholdCompletion(applicationPackageId)
+            setHousehold(householdStatus);
+            console.log('household status:', householdStatus);
+        }
+        };
+        loadHouseholdStatus();
+      }, []);
+
       console.log('applicationPackageId:', applicationPackageId);
       console.log('forms:', forms);
 
@@ -105,11 +139,22 @@ const FosterApplicationPackage = () => {
           <div className="application-package">
             {forms.map((step, index) => (
               step.type !== 'Referral' && // Exclude 'Referral' type steps
-               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}}/>
+               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
-        <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
-        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+
+        {!isApplicationComplete() &&
+          <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
+        }
+        {isApplicationComplete() && 
+          <>
+          <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
+          <div className="declaration">
+          <input className="declaration-checkbox" checked={isDeclarationChecked} onChange={(e) => setIsDeclarationChecked(e.target.checked)} type="checkbox"/><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
+          </div>
+          </>
+        }
+        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
       </div>
     )
 };

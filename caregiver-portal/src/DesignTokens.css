@@ -218,14 +218,78 @@ body {
     margin-bottom: 32px;
   }
 
+  .declaration {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .declaration-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 22px;
+    height: 20px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fff;
+    position: relative;
+    margin-top: 14px;       /* adjusted so it aligns better with text */
+    margin-right: 8px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+  
+  /* Hover state */
+  .declaration-checkbox:hover {
+    background-color: #f0f0f0;
+    border-color: #333;
+  }
+  
+  /* Checked state — black background */
+  .declaration-checkbox:checked {
+    background: var(--surface-color-primary-button-default, #013366);
+    border-color: #000;
+  }
+  
+  /* Checkmark — centered “X” */
+  .declaration-checkbox:checked::after {
+    content: '✕'; /* nicer X symbol */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+  }
+  
+  /* Optional: focus for accessibility */
+  .declaration-checkbox:focus {
+    outline: 2px solid #255A90;
+    outline-offset: 2px;
+  }
+
+  .declaration-text {
+    display: block;
+    align-self: stretch;
+    color: var(--typography-color-primary, #2D2D2D);
+    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    margin-top: 8px; /* 22.5px */
+  }
+
   .caption {
     align-self: stretch;
     color: var(--typography-color-primary, #2D2D2D);
     font-family: "BC Sans", Helvetica, Arial, sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
-    font-weight: 300;
-    line-height: 125%;
+    font-weight: 400;
+    line-height: 150%;
     margin-top: 8px; /* 22.5px */
   }
 
@@ -452,6 +516,15 @@ justify-content: center;
   height: 16px;
   flex-shrink: 0; 
   color: #F8BB47;
+
+}
+
+.application-package-icon-complete {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0; 
+  color: #28a745;
+  font-weight: 800;
 
 }
 
