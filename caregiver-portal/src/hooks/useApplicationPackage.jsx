@@ -119,6 +119,7 @@ export const useApplicationPackage = () => {
       return await response.json();
   };
 
+  // initial submission of an application package for the referral step
   const submitApplicationPackage = async (applicationPackageId) => {
     setLoading(true);
     setError(null);
@@ -146,6 +147,33 @@ export const useApplicationPackage = () => {
       setLoading(false);
     }
   };
+
+  // lock, and potentially finalize, an application package
+  // will enable household consent forms to be collected, if applicable
+  const lockApplicationPackage = async (applicationPackageId) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/lock-application`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {'Content-Type': 'application/json'}
+      });
+
+      if(!response.ok) {
+        throw new Error(`Failed to lock application package: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const validateHouseholdCompletion = async (applicationPackageId) => {
     setLoading(true);
@@ -178,6 +206,7 @@ export const useApplicationPackage = () => {
     getApplicationPackage,
     getApplicationPackages,
     getApplicationForms,
+    lockApplicationPackage,
     getApplicationForm,
     submitApplicationPackage,
     validateHouseholdCompletion,
