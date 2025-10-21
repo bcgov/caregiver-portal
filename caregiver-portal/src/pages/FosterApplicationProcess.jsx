@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+//import { useDates } from '../hooks/useDates';
 
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
@@ -17,6 +18,7 @@ const FosterApplicationProcess = () => {
   const [referralApplicationId, setReferralApplicationId] = React.useState(null);
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
+  //const formatSubmissionDate = useDates();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
@@ -25,6 +27,20 @@ const FosterApplicationProcess = () => {
       navigate('/dashboard');
     }, 10);
     });
+
+  const statusStepMap = {
+    'Draft': 1,
+    'Referral': 1,
+    'Application': 2,
+    'Consent': 3,
+    'Submitted': 4,
+    'Complete': 5
+  }
+
+  const getCurrentStep = (status) => {
+    return statusStepMap[status]
+  };
+  
 
   console.log(`Foster Application Process with: ${applicationPackageId} `);
 
@@ -87,6 +103,8 @@ const FosterApplicationProcess = () => {
       console.error('Failed to cancel:', err);
     }
   }
+
+  
   const getSteps = (applicationPackage) => {
     const baseSteps = [
       {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.', disabled: false },
@@ -96,7 +114,7 @@ const FosterApplicationProcess = () => {
       {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
     ];
     return baseSteps.map(step => {
-      if (step.key === 'referral' && applicationPackage?.referralstate === 'Requested') {
+      if (step.key === 'referral' && applicationPackage?.status === 'Referral Requested') {
 
         return {
           ...step,
@@ -106,7 +124,17 @@ const FosterApplicationProcess = () => {
           iconType: 'waiting',
         };
       }
-      if (step.key === 'application' && applicationPackage?.srStage === 'Application') {
+      if (step.key === 'referral' && applicationPackage?.status !== 'Draft' && applicationPackage?.status != 'Referral Requested') {
+
+        return {
+          ...step,
+          label: 'Information Session Completed',
+          description: 'You have attended an information session.',
+          disabled: true,
+          iconType: 'complete',
+        };
+      }
+      if (step.key === 'application' && applicationPackage?.status === 'Application') {
 
         return {
           ...step,
@@ -114,7 +142,45 @@ const FosterApplicationProcess = () => {
           disabled: false,
           iconType: 'start',
         }
-      }  
+      } 
+      if (step.key === 'application' && (applicationPackage?.status === 'Consent' || applicationPackage?.status === 'Submitted')) {
+
+        return {
+          ...step,
+          description: 'Your caregiver application package was was completed.',
+          disabled: true,
+          iconType: 'complete',
+        }
+      }
+      if (step.key === 'consent' && applicationPackage?.status === 'Consent') {
+
+        return {
+          ...step,
+          description: 'Check the status of your household consent forms.',
+          disabled: false,
+          iconType: 'start',
+        }
+      }
+      if (step.key === 'consent' && applicationPackage?.status === 'Submitted') {
+
+        return {
+          ...step,
+          description: 'Consent forms completed.',
+          disabled: true,
+          iconType: 'complete',
+        }
+      }
+      if (step.key === 'screening' && applicationPackage?.status === 'Submitted') {
+
+        return {
+          ...step,
+          description: 'Screening process is underway.',
+          disabled: true,
+          iconType: 'waiting',
+        }
+      }
+      
+
       return step;
     });
   }
@@ -127,7 +193,7 @@ return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
           <h1 className="page-title">Become a foster caregiver</h1>
-          <p className="caption">You're on Step X of Y</p>
+          <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 5</p>
         <div className="application-package">
             {dynamicSteps.map((step, index) => (
             <div key={step.key}>
