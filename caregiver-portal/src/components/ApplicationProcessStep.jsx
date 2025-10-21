@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, CircleAlert, CircleCheck, CircleArrowRight, ChevronRight, Clock } from "lucide-react";
+import { ArrowRight, CircleAlert, Check, CircleArrowRight, ChevronRight, Clock } from "lucide-react";
 import Button from "./Button";
 
 
@@ -8,25 +8,36 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
       // Function to render the appropriate icon
       const renderStepIcon = () => {
         if (step.iconType) {
-            if (step.iconType === 'waiting') {
-                return (
-                    <div className="application-step-indicator">
-                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="18" cy="18" r="18" fill="#013366"/> {/* Blue color for waiting */}
-                            <Clock transform="translate(6,6)" color="white" />
-                        </svg>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="application-step-indicator">
-                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
-                            <ArrowRight transform="translate(6,6)" />
-                        </svg>
-                    </div>
-                );
+            switch (step.iconType) {
+                case 'waiting':
+                    return (
+                        <div className="application-step-indicator">
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" fill="#013366"/> {/* Blue color for waiting */}
+                                <Clock transform="translate(6,6)" color="white" />
+                            </svg>
+                        </div>
+                    );
+                case 'complete':
+                    return (
+                        <div className="application-step-indicator">
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" fill="#42814A"/>
+                                <Check transform="translate(6,6)" />
+                            </svg>
+                        </div>
+                    );
+                default:
+                    return (
+                        <div className="application-step-indicator">
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
+                                <ArrowRight transform="translate(6,6)" />
+                            </svg>
+                        </div>
+                    );
             }
+
         } else {
             return (
                 <div className="application-step-later">
