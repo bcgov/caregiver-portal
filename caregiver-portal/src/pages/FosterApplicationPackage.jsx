@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import ApplicationPackageStep from '../components/ApplicationPackageStep';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import { useDates } from '../hooks/useDates';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 
@@ -14,8 +15,10 @@ const FosterApplicationPackage = () => {
   const [appPackage, setAppPackage] = React.useState();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
+  const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms, submitApplicationPackage, getApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
+  const { getApplicationForms, getApplicationPackage, lockApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
+  const { formatSubmissionDate } = useDates();
 
     const breadcrumbItems = [
         { label: 'Back', path: `/foster-application/${applicationPackageId}` },
@@ -44,8 +47,6 @@ const FosterApplicationPackage = () => {
         // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
         // state
 
-
-
         if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
           return 'complete';
         } else {
@@ -55,16 +56,17 @@ const FosterApplicationPackage = () => {
 
       const isApplicationComplete = () => {
         return household?.isComplete === true;
-      }; 
+      };
 
       const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-          const result = await submitApplicationPackage(applicationPackageId);
-          console.log('Submission successful:', result);
+          const result = await lockApplicationPackage(applicationPackageId);
+          console.log('lock successful:', result);
+          setIsApplicationLocked(true);
         } catch (error) {
-          console.error('Submit failed:', error);
-          alert('Failed to submit application. Please try again.');
+          console.error('lock failed:', error);
+          alert('Failed to lock application. Please try again.');
         } finally {
           setIsSubmitting(false);
         }
@@ -77,6 +79,13 @@ const FosterApplicationPackage = () => {
             const appPackage = await getApplicationPackage(applicationPackageId);
             console.log('Application package:', appPackage);
             setAppPackage(appPackage);
+            if(appPackage.status === 'Submitted') {
+              console.log('locking application');
+              setIsApplicationLocked(true);
+              navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
+            } else {
+              console.log('not locking application');
+            }
           } catch (error) {
             console.error('failed to load application package', error);
           }
@@ -150,11 +159,23 @@ const FosterApplicationPackage = () => {
           <>
           <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
           <div className="declaration">
-          <input className="declaration-checkbox" checked={isDeclarationChecked} onChange={(e) => setIsDeclarationChecked(e.target.checked)} type="checkbox"/><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
+          <input className="declaration-checkbox" 
+            checked={isDeclarationChecked || isApplicationLocked} 
+            onChange={(e) => setIsDeclarationChecked(e.target.checked)} 
+            disabled={isApplicationLocked}
+            type="checkbox"
+            /><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
           </div>
           </>
         }
+        {!isApplicationLocked ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+        ) : (
+          <div className="section-description">
+          <p><strong>Application Submitted on {formatSubmissionDate(appPackage.submittedAt)}</strong></p>
+          
+        </div>
+        )}
       </div>
     )
 };
