@@ -11,7 +11,6 @@ const HouseholdSummary = ({applicationPackageId}) => {
     //console.log("Application ID in HouseholdSummary:", applicationId);
 
     useEffect(() => {
-        console.log("FART")
           loadHousehold();
       }, [applicationPackageId, loadHousehold]);
 
