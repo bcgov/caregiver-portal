@@ -4,16 +4,16 @@ import HouseholdSummaryItem from "./HouseholdSummaryItem";
 import { useEffect } from "react";
 import { useHousehold } from "../hooks/useHousehold";
 
+const HouseholdSummary = ({applicationPackageId}) => {
 
-const HouseholdSummary = ({applicationId}) => {
-
-    const { household, loadHousehold } = useHousehold({applicationId});
+    const { partner, householdMembers, loadHousehold } = useHousehold({applicationPackageId});
 
     //console.log("Application ID in HouseholdSummary:", applicationId);
 
     useEffect(() => {
+        console.log("FART")
           loadHousehold();
-      }, [applicationId, loadHousehold]);
+      }, [applicationPackageId, loadHousehold]);
 
     return (
         <div>
@@ -21,12 +21,20 @@ const HouseholdSummary = ({applicationId}) => {
         <SectionDescription>
             text
         </SectionDescription>
-
-            {household.map((member, index) => (
+            {partner && partner.lastName && (
                 <HouseholdSummaryItem 
-                    key={index}
+                    key="partner"
+                    member={partner}
+                    applicationPackageId={applicationPackageId}
+                />
+            
+            )}
+
+            {householdMembers.map((member, index) => (
+                <HouseholdSummaryItem 
+                    key={index+1}
                     member={member}
-                    applicationId={applicationId}
+                    applicationPackageId={applicationPackageId}
                 />
             
             ))}

@@ -2,7 +2,7 @@ import { useState, useCallback} from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-export const useHousehold = ({applicationPackageId, applicationId}) => {
+export const useHousehold = ({applicationPackageId}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -16,7 +16,8 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
         householdMemberId: null
     });
 
-    const [householdMembers, setHouseholdMembers] = useState([]);
+    //const [allMembers, setAllMembers] = useState([]);   // all household members (excludes "self")
+    const [householdMembers, setHouseholdMembers] = useState([]); // all non-spouse household members 
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
  
@@ -64,7 +65,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
         try {
             setIsLoading(true);
             setError(null);
-            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${applicationId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members`, {
               method: 'GET',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' }
@@ -75,6 +76,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
             const data = await response.json();
             // remove primary applicant from household data
             const householdData = data.filter(member => member.relationshipToPrimary !== 'Self'); 
+            console.log("Loaded household data: ", householdData);
             // find partner/spouse in household data
             const existingPartner = data.find(member => member.relationshipToPrimary === 'Spouse' || member.relationshipToPrimary === 'Common law' || member.relationshipToPrimary === 'Partner'); // TO DO: Add 'Common-law', 'Partner' when available in dropdown
             if (existingPartner) {
@@ -105,7 +107,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
             } else {
                 setHouseholdMembers([]);
             }
-                  
+            
             //setHousehold(householdData);
 
         } catch (err) {
@@ -114,7 +116,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
         } finally {
             setIsLoading(false);
         }
-    }, [applicationPackageId, applicationId]);
+    }, [applicationPackageId]);
 
     const saveHouseholdMember = useCallback(async (memberData) => {
         setSaveStatus('saving');
@@ -135,7 +137,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
                 requestBody.genderType = memberData.genderType;
             }          
 
-            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${applicationId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -169,7 +171,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
             console.error('Error saving household member:', error);
             throw error;
         }
-    }, [applicationId, applicationPackageId]);
+    }, [applicationPackageId]);
 
     const deleteHouseholdMember = useCallback(async (householdMemberId) => {
         if (!householdMemberId) {
@@ -178,7 +180,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${applicationId}/${householdMemberId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}`, {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' }
@@ -193,7 +195,7 @@ export const useHousehold = ({applicationPackageId, applicationId}) => {
             console.error('Error deleting household member:', error);
             return false;
         }
-    }, [applicationId, applicationPackageId]);
+    }, [applicationPackageId]);
 
 
     const addHouseholdMember = useCallback(() => {
