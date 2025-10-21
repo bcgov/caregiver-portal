@@ -44,8 +44,6 @@ const FosterApplicationProcess = () => {
 
   console.log(`Foster Application Process with: ${applicationPackageId} `);
 
-  // TODO: Figure out what step we're on...
-
   const breadcrumbItems = [
     { label: 'Home', path: '/dashboard' },
   ];
@@ -80,11 +78,18 @@ const FosterApplicationProcess = () => {
   //const referralId = formsArray.
 
   const handleContinue = (step) => {
-    if(step.key === "referral") {
-      navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationId}`);
-    } else {
-      navigate(`/foster-application/application-package/${applicationPackageId}`);
+    switch(step.key) {
+      case "referral":
+        navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationId}`);
+        break;
+      case "consent":
+        navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
+        break;
+      default: 
+        navigate(`/foster-application/application-package/${applicationPackageId}`);
+        break;
     }
+
   };
 
   const handleCancel = () => {
