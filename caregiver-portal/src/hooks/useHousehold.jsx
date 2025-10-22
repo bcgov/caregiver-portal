@@ -87,7 +87,8 @@ export const useHousehold = ({applicationPackageId}) => {
                     email: existingPartner.email,
                     relationship: existingPartner.relationshipToPrimary,
                     genderType: existingPartner.genderType || '',
-                    householdMemberId: existingPartner.householdMemberId
+                    householdMemberId: existingPartner.householdMemberId,
+                    requireScreening: existingPartner.requireScreening
                 });
             }
             // find non-spouse members
@@ -101,6 +102,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     email: member.email,
                     relationship: member.relationshipToPrimary,
                     genderType: member.genderType || '',
+                    requireScreening: member.requireScreening
 
                 }));
                 setHouseholdMembers(formattedMembers);
@@ -283,6 +285,31 @@ export const useHousehold = ({applicationPackageId}) => {
         return true;
     }, [partner.householdMemberId, deleteHouseholdMember]);
 
+    const loadHouseholdMember = useCallback(async (householdMemberId) => {
+        if (!householdMemberId) {
+            console.error('No householdMemberId provided for deletion.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error deleting household member:', error);
+            return false;
+        }
+    }, [applicationPackageId]);
+
+
     const calculateAge = useCallback((dob) => {
         if (!dob) return 0;
         const today = new Date();
@@ -325,6 +352,7 @@ export const useHousehold = ({applicationPackageId}) => {
         removePartner,
         calculateAge,
         loadHousehold,
+        loadHouseholdMember,
         loadApplicationPackage,
       };
 
