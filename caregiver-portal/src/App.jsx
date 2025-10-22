@@ -22,6 +22,7 @@ import ProfileForm from './pages/ProfileForm';
 import HouseholdForm from './pages/HouseholdForm';
 import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
+import ConsentOverview from './pages/ConsentOverview';
 
 const App = () => {
 
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId/referral-form/:applicationId" element={<ProtectedRoute><ReferralForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/household-form/:applicationId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/application/:applicationId" element={<ProtectedRoute><ApplicationPackageWrapper /></ProtectedRoute>}/>
 

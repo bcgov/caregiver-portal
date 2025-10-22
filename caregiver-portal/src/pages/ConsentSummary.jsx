@@ -10,7 +10,7 @@ const ConsentSummary = () => {
   const navigate = useNavigate();
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}` },
+    { label: 'Back', path: `/foster-application/${applicationPackageId}` },
   ];
 
   const handleBackClick = (item) => {

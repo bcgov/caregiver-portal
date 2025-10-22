@@ -291,6 +291,7 @@ body {
     font-weight: 400;
     line-height: 150%;
     margin-top: 8px; /* 22.5px */
+    gap: 4px;
   }
 
   .caption-small {
@@ -983,6 +984,15 @@ line-height: 54px; /* 225% */
     border: solid 1px red;
   }
 
+  .consent-overview-form {
+    display: flex;
+    padding: 12px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+  }
+
   .section-description{
     margin-bottom: 24px;
     font-size: 16px;
@@ -993,3 +1003,111 @@ line-height: 54px; /* 225% */
     padding: 12px 24px;
     line-height: 125%;
   }
+
+  .task-list {
+    display: flex;
+    padding: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    border-radius: 6px;
+    background: var(--theme-gray-20, #F3F2F1);
+  }
+
+  .task-list-item {
+    display: flex;
+    width: 356px;
+    padding-bottom: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .task-list-item-check {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+
+    color: #008000;
+  }
+
+  .task-list-item-missing {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+
+    
+  }
+
+  .task-list-item-supporting-text {
+    flex: 1 0 0;
+    color: var(--typography-color-primary, #2D2D2D);
+
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+  }
+
+  .householdSummaryItem {
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+  }
+  .topLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    margin-bottom: 10px;
+  }
+  .bottomLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #6b7280;
+  }
+  .nameLabel {
+    font-weight: 600;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform:capitalize;
+  }
+  
+  .pill {
+    font-size: 12px;
+    color: #374151;
+    background: #f3f4f6;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    text-transform: lowercase;
+  }
+  .alert {
+    display: inline-grid;
+    place-items: center;
+    background: var(--icons-color-warning, #F8BB47);
+    color: white;
+    border-radius: 50%;
+  
+  }
+  
+  .completed {
+    display: inline-grid;
+    place-items: center;
+    background:green; 
+    color: white;
+    border-radius: 50%;
+  
+  }
+  
+  .chevronRight {
+    color: #555;
+  }  
