@@ -6,13 +6,13 @@ export const useInviteHouseholdMember = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const inviteMember = async (applicationId, householdMemberId) => {
+    const inviteMember = async (applicationPackageId, householdMemberId) => {
         try {
             setIsLoading(true);
             setError(null);
 
             const response = await fetch(
-                `${API_BASE_URL}/application/${applicationId}/household/${householdMemberId}/invite`,
+                `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/invite`,
                 {
                   method: 'POST',
                   credentials: 'include',

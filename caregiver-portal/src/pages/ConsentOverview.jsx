@@ -5,6 +5,7 @@ import { useState } from 'react';
 import "../DesignTokens.css";
 import Breadcrumb from '../components/Breadcrumb';
 import { useHousehold } from '../hooks/useHousehold';
+import { useInviteHouseholdMember } from '../hooks/useInviteHouseholdMember';
 
 
 const ConsentOverview = () => {
@@ -13,6 +14,7 @@ const ConsentOverview = () => {
   const [householdMember, setHouseholdMember] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { loadHouseholdMember } = useHousehold({ applicationPackageId });
+
 
   const breadcrumbItems = [
     { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}/consent-summary` },
@@ -35,6 +37,8 @@ const ConsentOverview = () => {
     };
     fetchMember();
   }, [householdMemberId, loadHouseholdMember]);
+
+  //TODO: Load the access code for demo purposes.
 
   const handleBackClick = (item) => {
     navigate(item.path);
