@@ -11,7 +11,7 @@ export const useAccessCode = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`${API_BASE_URL}/application/access-code/associate`, {
+      const response = await fetch(`${API_BASE_URL}/household/access-code/associate`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
