@@ -4,16 +4,17 @@ import { useState, useCallback } from 'react';
 
   export const useApplications = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [applications, setApplications] = useState([]);
-    const [hasFosterApp, setHasExistingFosterApp] = useState(false);
+    const [applicationForms, setApplicationForms] = useState([]);
+   // const [applicationPackages, setApplicationPackages] = useState([]);
     const [error, setError] = useState(null);
 
-    const loadApplications = useCallback(async () => {
+    // will load screening applicationForms for the authenticated user
+    const getApplicationForms = useCallback(async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(`${API_BASE_URL}/application`, {
+        const response = await fetch(`${API_BASE_URL}/application-forms`, {
           method: 'GET',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' }
@@ -24,23 +25,23 @@ import { useState, useCallback } from 'react';
         }
 
         const data = await response.json();
-        const hasFosterApp = data.some(app => app.type === "Foster Caregiver");
+        
+        setApplicationForms(data);
+        //setApplicationPackages(hasFosterApp);
 
-        setApplications(data);
-        setHasExistingFosterApp(hasFosterApp);
       } catch (err) {
         setError(err.message);
-        setApplications([]);
+        setApplicationForms([]);
+       // setApplicationPackages([]);
       } finally {
         setIsLoading(false);
       }
     }, []);
 
     return {
-      applications,
+      applicationForms,
       isLoading,
-      hasFosterApp,
       error,
-      loadApplications
+      getApplicationForms
     };
   };

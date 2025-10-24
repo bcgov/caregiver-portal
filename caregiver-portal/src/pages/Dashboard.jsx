@@ -1,11 +1,12 @@
 import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-//import { useApplications,  } from '../hooks/useApplications';
+import { useApplications } from '../hooks/useApplications';
 //import { useCreateApplication } from '../hooks/useCreateApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import TaskCard from '../components/TaskCard';
+import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 
 const Dashboard = () => {
@@ -19,9 +20,14 @@ const Dashboard = () => {
     //error
   } = useApplicationPackage();
 
+  //const {
+  //  getApplicationForms
+  //} = useApplicationForms();
+
   //const { applications, isLoading, hasFosterApp, loadApplications } = getApplicationPackages();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
+ // const [screeningForms, setScreeningForms] = React.useState([]);
   const [hasFCHApp, setHasFCHApp] = React.useState(false);
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
@@ -38,6 +44,25 @@ const Dashboard = () => {
     }
   }, []);
 
+
+  const {
+    getApplicationForms,
+    applicationForms: screeningForms,
+    isLoading: formsLoading
+  } = useApplications();
+
+  const loadApplicationForms = useCallback(() => {
+    getApplicationForms();
+  }, [getApplicationForms]);
+  /*
+    try {
+      const forms = await getApplicationForms();
+      setScreeningForms(forms || []);
+    } catch (err) {
+      console.error('Failed to load screening forms');
+    }
+  }, [getApplicationForms])
+*/
   const handleCreateApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
@@ -53,8 +78,9 @@ const Dashboard = () => {
   useEffect(() => {
     if (!auth.loading && auth.user) {
       loadApplicationPackages();
+      loadApplicationForms();
     }
-  }, [auth.loading, auth.user, loadApplicationPackages]);
+  }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
 
   if (auth.loading) {
     return <div>Loading user information...</div>;
@@ -70,10 +96,15 @@ const Dashboard = () => {
           <h2 className="page-heading">My tasks</h2>
           <div className="draft-applications">
             {applicationPackages.map((app) => (
-              <div key={app.applicationFormId}>
+              <div key={app.applicationPackageId}>
                 {app.subtype === "FCH" && (
                 <TaskCard applicationPackage={app} />
                 )}
+              </div>
+            ))}
+            {screeningForms.map((app) => (
+              <div key={app.applicationFormId}>
+                <ScreeningTaskCard applicationForm={app} />
               </div>
             ))}
           <AccessCard></AccessCard>
@@ -85,6 +116,11 @@ const Dashboard = () => {
         !hasFCHApp && (
           <>
           <FosterApplicationStart onClick={handleCreateApplication} />
+          {screeningForms.map((app) => (
+              <div key={app.applicationFormId}>
+                <ScreeningTaskCard applicationForm={app} />
+              </div>
+            ))}
           <AccessCard></AccessCard>
           </>
         )
