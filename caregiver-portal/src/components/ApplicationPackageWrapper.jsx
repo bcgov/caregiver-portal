@@ -4,20 +4,18 @@ import ApplicationPackage from './ApplicationPackage';
 import Breadcrumb from './Breadcrumb';
 
 const ApplicationPackageWrapper = () => {
-  const { applicationId } = useParams();
+  const { applicationFormId } = useParams();
   const navigate = useNavigate();
 
   const handleClose = () => {
     navigate('/dashboard');
   };
 
-  //console.log("Rendering ApplicationPackageWrapper with applicationId:", applicationId);
-
   return (
     <div className="application-frame">
-      <Breadcrumb items={[{ label: 'Back', path: `/foster-application/${applicationId}` }]} onBackClick={() => navigate(`/foster-application/${applicationId}`)} />
+      <Breadcrumb items={[{ label: 'Back', path: `/foster-application/${applicationFormId}` }]} onBackClick={() => navigate(`/foster-application/${applicationFormId}`)} />
       <ApplicationPackage 
-        applicationId={applicationId}
+        applicationFormId={applicationFormId}
         onClose={handleClose}
       />
     </div>    

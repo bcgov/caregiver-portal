@@ -4,7 +4,7 @@ import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
-const Application = ({ applicationId, onClose }) => {
+const Application = ({ applicationFormId, onClose }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,12 +19,12 @@ const Application = ({ applicationId, onClose }) => {
     const { getApplicationForm, submitApplicationPackage } = useApplicationPackage();
 
     useEffect(() => {
-      if (applicationId) {
-        console.log('Loading application form for applicationId:', applicationId);
+      if (applicationFormId) {
+        console.log('Loading application form for applicationFormId:', applicationFormId);
         setLoading(true);
         setError(null);
   
-        getApplicationForm(applicationId)
+        getApplicationForm(applicationFormId)
         .then(setApplicationForm)
         .catch(err => {
           console.error('Error fetching application form:', err);
@@ -32,14 +32,14 @@ const Application = ({ applicationId, onClose }) => {
           setLoading(false);
         });
       }
-    }, [applicationId, getApplicationForm]);
+    }, [applicationFormId, getApplicationForm]);
 
   // Remove the callback from useGetFormAccessToken
-  const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationId);
+  const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
   // Move the URL logic into the effect where you call getFormAccessToken
   useEffect(() => {
-    if (applicationForm && applicationId) {
+    if (applicationForm && applicationFormId) {
       console.log('getting form access token for form:', applicationForm);
 
       getFormAccessToken()
@@ -58,7 +58,7 @@ const Application = ({ applicationId, onClose }) => {
           setLoading(false);
         });
     }
-  }, [applicationForm, applicationId, getFormAccessToken]);
+  }, [applicationForm, applicationFormId, getFormAccessToken]);
 
     // Handle token errors
     useEffect(() => {

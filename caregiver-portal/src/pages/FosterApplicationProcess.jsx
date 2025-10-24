@@ -15,7 +15,7 @@ const FosterApplicationProcess = () => {
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [forms, setForms] = React.useState([]);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
-  const [referralApplicationId, setReferralApplicationId] = React.useState(null);
+  const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   //const formatSubmissionDate = useDates();
@@ -65,7 +65,7 @@ const FosterApplicationProcess = () => {
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
           //const referralId = referralForm?.applicationId || null;
-          setReferralApplicationId(referralForm?.applicationId || null);
+          setReferralApplicationFormId(referralForm?.applicationFormId || null);
           //console.log('referral id:', referralId);
         } catch (error) {
           console.error('Failed to load forms:', error);
@@ -80,7 +80,7 @@ const FosterApplicationProcess = () => {
   const handleContinue = (step) => {
     switch(step.key) {
       case "referral":
-        navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationId}`);
+        navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
         break;
       case "consent":
         navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);

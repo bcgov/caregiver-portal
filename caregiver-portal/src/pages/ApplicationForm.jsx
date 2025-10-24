@@ -6,7 +6,7 @@ import Application from '../components/Application';
 
 
 const ApplicationForm = () => {
-  const { applicationPackageId, applicationId } = useParams();
+  const { applicationPackageId, applicationFormId } = useParams();
   const navigate = useNavigate();
 
   const breadcrumbItems = [
@@ -20,7 +20,7 @@ const ApplicationForm = () => {
   return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
-        <Application applicationId={applicationId} />
+        <Application applicationFormId={applicationFormId} />
     </div>
   );
 

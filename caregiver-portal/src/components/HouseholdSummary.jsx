@@ -10,7 +10,6 @@ const HouseholdSummary = ({applicationPackageId}) => {
     const { partner, householdMembers, loadHousehold } = useHousehold({applicationPackageId});
     const navigate = useNavigate();
 
-    //console.log("Application ID in HouseholdSummary:", applicationId);
 
     useEffect(() => {
           loadHousehold();

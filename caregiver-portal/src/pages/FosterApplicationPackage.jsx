@@ -31,10 +31,10 @@ const FosterApplicationPackage = () => {
       const handleContinue = (item) => {
         if (item.type && item.type.toLowerCase().includes('household')) {
           // Special case for household form
-          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationId}`);
+          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
           return;
         } else { 
-          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
+          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
           return
         }
       }

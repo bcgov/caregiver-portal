@@ -8,7 +8,7 @@ import Application from '../components/Application';
 
 
 const ReferralForm = () => {
-  const { applicationPackageId, applicationId } = useParams();
+  const { applicationPackageId, applicationFormId } = useParams();
   const navigate = useNavigate();
   //const [isSubmitting, setIsSubmitting] = React.useState(false);
   //const { submitApplicationPackage } = useApplicationPackage();  
@@ -40,7 +40,7 @@ const ReferralForm = () => {
   return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
-        <Application applicationId={applicationId} />
+        <Application applicationFormId={applicationFormId} />
     </div>
   );
 

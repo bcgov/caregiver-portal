@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import TaskCard from '../components/TaskCard';
-//import AccessCard from '../components/AccessCard';
+import AccessCard from '../components/AccessCard';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -70,22 +70,27 @@ const Dashboard = () => {
           <h2 className="page-heading">My tasks</h2>
           <div className="draft-applications">
             {applicationPackages.map((app) => (
-              <div key={app.applicationId}>
+              <div key={app.applicationFormId}>
                 {app.subtype === "FCH" && (
                 <TaskCard applicationPackage={app} />
                 )}
-            </div>
+              </div>
             ))}
+          <AccessCard></AccessCard>
       </div>
         </div>
         ) 
       : (
 
         !hasFCHApp && (
+          <>
           <FosterApplicationStart onClick={handleCreateApplication} />
+          <AccessCard></AccessCard>
+          </>
         )
       )
-      }  
+      }
+
     </div>
   );
 };
