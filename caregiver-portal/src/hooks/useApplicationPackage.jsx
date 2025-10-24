@@ -89,10 +89,10 @@ export const useApplicationPackage = () => {
     }
   };
 
-  // get an applicationForm meta data by applicationId
+  // get an applicationForm meta data by applicationFormId
   // does not return the form data itself
-  const getApplicationForm = useCallback(async (applicationId) => {
-    const response = await fetch(`${API_BASE_URL}/application-forms/${applicationId}`, {
+  const getApplicationForm = useCallback(async (applicationFormId) => {
+    const response = await fetch(`${API_BASE_URL}/application-forms/${applicationFormId}`, {
       method: 'GET',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' }

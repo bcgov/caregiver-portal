@@ -4,7 +4,7 @@ import Button from './Button';
 import DateField from './Date'; 
 import { useHousehold } from '../hooks/useHousehold';
 
-const Household = ({ applicationPackageId, applicationId }) => {
+const Household = ({ applicationPackageId, applicationFormId }) => {
 
   const {
     partner,
@@ -24,7 +24,7 @@ const Household = ({ applicationPackageId, applicationId }) => {
     setHasHousehold,
     setHasPartner,
     loadApplicationPackage,
-    } = useHousehold({ applicationPackageId, applicationId });
+    } = useHousehold({ applicationPackageId, applicationFormId });
 
     // UI state only (not data state)
     //const [hasPartner, setHasPartner] = useState(null);
