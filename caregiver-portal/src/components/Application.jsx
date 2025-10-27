@@ -10,7 +10,7 @@ const Application = ({ applicationFormId, onClose }) => {
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const [applicationForm, setApplicationForm] = useState(null);
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = React.useState(true);
     
     const iframeRef = useRef(null);
 
@@ -158,6 +158,7 @@ const Application = ({ applicationFormId, onClose }) => {
       }
     
       return (
+        <>
         <div className="h-screen flex flex-col bg-gray-100">
           {/* iFrame Container */}
           <div className="flex-1 relative">
@@ -183,8 +184,9 @@ const Application = ({ applicationFormId, onClose }) => {
               />
             )}
           </div>
-         
+
         </div>
+      </>
       );
     };
     
