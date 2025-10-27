@@ -30,9 +30,9 @@ import { useState, useCallback } from 'react';
         const data = await response.json();
         console.log('Create application response:', data); // Add this        
 
-        if (data.applicationId && onSuccess) {
-          console.log('Calling onSuccess with applicationId:', data.applicationId); // Add this
-          onSuccess(data.applicationId);
+        if (data.applicationFormId && onSuccess) {
+          console.log('Calling onSuccess with applicationFormId:', data.applicationFormId); // Add this
+          onSuccess(data.applicationFormId);
         }
       } catch (err) {
         setError(err.message);

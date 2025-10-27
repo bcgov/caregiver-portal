@@ -23,6 +23,7 @@ const HamburgerMenu = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+ 
     };
 
     const handleMenuItemClick = (item) => {
@@ -52,7 +53,7 @@ const HamburgerMenu = () => {
             {isOpen && (
                 <div className="dropdown-menu">
                 <ul className="menu-list">
-                <li className="menu-header">{user.name}</li>
+                <li className="menu-header">{user.name?.replace(/undefined/gi, '').trim() || 'User'}</li>
                 <li className="menu-item">
                     <button onClick={() => handleMenuItemClick('logout')}>
                     Log out

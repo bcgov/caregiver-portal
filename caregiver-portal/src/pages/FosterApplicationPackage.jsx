@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import ApplicationPackageStep from '../components/ApplicationPackageStep';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import { useDates } from '../hooks/useDates';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 
@@ -10,9 +11,14 @@ import Button from '../components/Button';
 const FosterApplicationPackage = () => {
   const { applicationPackageId } = useParams();
   const [forms, setForms] = React.useState([]);
+  const [household, setHousehold] = React.useState();
+  const [appPackage, setAppPackage] = React.useState();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
+  const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms, submitApplicationPackage } = useApplicationPackage();
+  const { getApplicationForms, getApplicationPackage, lockApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
+  const { formatSubmissionDate } = useDates();
 
     const breadcrumbItems = [
         { label: 'Back', path: `/foster-application/${applicationPackageId}` },
@@ -23,23 +29,69 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        //path: `/foster-application/application-package/${applicationPackageId}/application-form/${applicationFormId}`
-        console.log(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
-        navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationId}`);
+        if (item.type && item.type.toLowerCase().includes('household')) {
+          // Special case for household form
+          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
+          return;
+        } else { 
+          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
+          return
+        }
       }
+
+      const handleState = (item) => {
+        // TODO: Finish this
+
+        //household will need a verify complet function that looks into the hasHoushold, hasSpouse, etc to verify they are not null
+        //and for either of those that are true, verify that there is at least one household member that matches those criterion
+        // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
+        // state
+
+        if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
+          return 'complete';
+        } else {
+          return 'default';
+        }
+      }
+
+      const isApplicationComplete = () => {
+        return household?.isComplete === true;
+      };
 
       const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-          const result = await submitApplicationPackage(applicationPackageId);
-          console.log('Submission successful:', result);
+          const result = await lockApplicationPackage(applicationPackageId);
+          console.log('lock successful:', result);
+          setIsApplicationLocked(true);
         } catch (error) {
-          console.error('Submit failed:', error);
-          alert('Failed to submit application. Please try again.');
+          console.error('lock failed:', error);
+          alert('Failed to lock application. Please try again.');
         } finally {
           setIsSubmitting(false);
         }
       }
+
+      React.useEffect(() => {
+        const loadPackage = async () => {
+          try {
+            console.log('Loading package for packageId:', applicationPackageId)
+            const appPackage = await getApplicationPackage(applicationPackageId);
+            console.log('Application package:', appPackage);
+            setAppPackage(appPackage);
+            if(appPackage.status === 'Submitted') {
+              console.log('locking application');
+              setIsApplicationLocked(true);
+              navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
+            } else {
+              console.log('not locking application');
+            }
+          } catch (error) {
+            console.error('failed to load application package', error);
+          }
+        }
+        loadPackage();
+      }, []);
   
       React.useEffect(() => {
         const loadForms = async () => {
@@ -57,8 +109,21 @@ const FosterApplicationPackage = () => {
         loadForms();
       }, []);
 
+      React.useEffect(() => {
+        const loadHouseholdStatus = async () => {
+          if (applicationPackageId) {
+            const householdStatus = await validateHouseholdCompletion(applicationPackageId)
+            setHousehold(householdStatus);
+            console.log('household status:', householdStatus);
+        }
+        };
+        loadHouseholdStatus();
+      }, []);
+
       console.log('applicationPackageId:', applicationPackageId);
       console.log('forms:', forms);
+
+
   
       
     //const applicationPackageItems = [
@@ -82,13 +147,35 @@ const FosterApplicationPackage = () => {
             the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
           <div className="application-package">
             {forms.map((step, index) => (
-
-               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}}/>
-            
+              step.type !== 'Referral' && // Exclude 'Referral' type steps
+               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
-        <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
-        <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+
+        {!isApplicationComplete() &&
+          <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
+        }
+        {isApplicationComplete() && 
+          <>
+          <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
+          <div className="declaration">
+          <input className="declaration-checkbox" 
+            checked={isDeclarationChecked || isApplicationLocked} 
+            onChange={(e) => setIsDeclarationChecked(e.target.checked)} 
+            disabled={isApplicationLocked}
+            type="checkbox"
+            /><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
+          </div>
+          </>
+        }
+        {!isApplicationLocked ? (
+        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+        ) : (
+          <div className="section-description">
+          <p><strong>Application Submitted on {formatSubmissionDate(appPackage.submittedAt)}</strong></p>
+          
+        </div>
+        )}
       </div>
     )
 };

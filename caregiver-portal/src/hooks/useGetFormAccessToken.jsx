@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-  export const useGetFormAccessToken = (applicationId, onSuccess) => {
+  export const useGetFormAccessToken = (applicationFormId, onSuccess) => {
 
         const [error, setError] = useState(null);
     
@@ -12,7 +12,7 @@ import { useState, useCallback } from 'react';
           try {
             setError(null);
     
-            const response = await fetch(`${API_BASE_URL}/application-forms/token?applicationId=${applicationId}`, {
+            const response = await fetch(`${API_BASE_URL}/application-forms/token?applicationFormId=${applicationFormId}`, {
               method: 'GET',
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
@@ -63,7 +63,7 @@ import { useState, useCallback } from 'react';
           } catch (err) {
             setError(err.message);
           }
-        }, [applicationId]);
+        }, [applicationFormId]);
     
         return { getFormAccessToken, error };
       };

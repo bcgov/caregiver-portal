@@ -2,14 +2,15 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import Breadcrumb from '../components/Breadcrumb';
-import Household from '../components/Household';
+import Application from '../components/Application';
 
-const HouseholdForm = () => {
-  const { applicationPackageId, applicationFormId } = useParams();
+
+const ScreeningForm = () => {
+  const { applicationFormId } = useParams();
   const navigate = useNavigate();
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}` },
+    { label: 'Back', path: `/dashboard` },
   ];
 
   const handleBackClick = (item) => {
@@ -19,11 +20,10 @@ const HouseholdForm = () => {
   return (
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
-        <h1 className="page-title">My household and support network</h1>
-        <Household applicationPackageId={applicationPackageId} applicationFormId={applicationFormId} />
+        <Application applicationFormId={applicationFormId} />
     </div>
   );
 
 };
 
-export default HouseholdForm;
+export default ScreeningForm;

@@ -1,38 +1,32 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const TaskCard = ({applicationPackage}) => {
+const ScreeningTaskCard = ({applicationForm}) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-      if (applicationPackage.applicationPackageId) {
-        navigate(`/foster-application/${applicationPackage.applicationPackageId}`);
+      if (applicationForm.applicationFormId) {
+        navigate(`/screening-form/${applicationForm.applicationFormId}`);
         }
     };
 
     const getStatusInfo = () => {
-      if (!applicationPackage){
+      if (!applicationForm){
         return {
           text: 'Loading...',
           className: 'task-card-status--loading'
         }
       }
 
-      const {status, srStage, referralstate} = applicationPackage;
+      const {type} = applicationForm;
 
-      if (referralstate === 'Requested' && srStage !== 'Application') {
+      if (type === 'Screening') {
         return {
-          text: 'Information Session Requested',
+          text: 'Screening Information Required',
           className: 'task-card-status--requested'
         }
       }
 
-      if (srStage === 'Application') {
-        return {
-          text: 'Complete Your Application',
-          className: 'task-card-status--submitted'
-        }
-      }
 
       return {
         text: 'In progress',
@@ -56,4 +50,4 @@ const TaskCard = ({applicationPackage}) => {
     );
   };
 
-export default TaskCard;
+export default ScreeningTaskCard;

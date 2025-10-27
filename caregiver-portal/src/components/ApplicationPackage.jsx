@@ -4,7 +4,7 @@ import Household from './Household';
 import HouseholdSummary from './HouseholdSummary';
 import Button from './Button';
 
-const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make initial step a parameter
+const ApplicationPackage = ({ applicationFormId, onClose }) => {      // to do, make initial step a parameter
     const [currentStep, setCurrentStep] = useState('application');
     // possible steps: 'application', 'household', 'submission', 'review'
 
@@ -44,21 +44,21 @@ const ApplicationPackage = ({ applicationId, onClose }) => {      // to do, make
         <div className="application-content">
             {currentStep === 'application' && (
                 <Application
-                    applicationId={applicationId}
+                    applicationFormId={applicationFormId}
                     onNext={() => handleStepChange('household')}
                 />
             )}
 
             {currentStep === 'household' && (
                 <Household
-                    currentApplication={applicationId}
+                    currentApplication={applicationFormId}
                     onNext={() => handleStepChange('submission')}
                     onBack={() => handleStepChange('application')}
                 />
             )}
 
             {currentStep === 'submission' && (
-                <HouseholdSummary applicationId={applicationId}></HouseholdSummary>
+                <HouseholdSummary applicationFormId={applicationFormId}></HouseholdSummary>
             )}
 
         </div>

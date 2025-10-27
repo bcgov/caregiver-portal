@@ -41,9 +41,9 @@ const AccessCard = () => {
     };
 
     return (
-                <div className="card">
+                <div className="task-card">
                   
-                    <h2>Caregiver Screening Access Code</h2>
+                    <h2 className='task-card-title'>Caregiver Screening Access Code</h2>
                     <p>
                     If you have been sent an access code to complete a caregiver screening application, please enter it below.
                     </p>
@@ -52,6 +52,7 @@ const AccessCard = () => {
                     value={accessCode}
                     onChange={(e) => setAccessCode(e.target.value)}
                     disabled={isLoading}
+                    className='form-control'
                     />
 
                     {message && (
@@ -63,7 +64,7 @@ const AccessCard = () => {
                     <div className="buttonGroup">
                   
                       <Button 
-                        variant="primary" 
+                        variant="secondary" 
                         onClick={handleClick}
                         >
                         {isLoading ? 'Verifying...' : 'Continue with Access Code'}

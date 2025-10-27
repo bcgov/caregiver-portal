@@ -6,11 +6,11 @@ import Application from '../components/Application';
 
 
 const ProfileForm = () => {
-  const { applicationId } = useParams();
+  const { applicationFormId } = useParams();
   const navigate = useNavigate();
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationId}` },
+    { label: 'Back', path: `/foster-application/application-package/${applicationFormId}` },
   ];
 
   const handleBackClick = (item) => {
@@ -21,7 +21,7 @@ const ProfileForm = () => {
     <div className="application-frame">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         <h1 className="page-title">Caregiver Profile Details</h1>
-        <Application applicationId={applicationId} />
+        <Application applicationFormId={applicationFormId} />
     </div>
   );
 
