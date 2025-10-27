@@ -1039,10 +1039,11 @@ line-height: 54px; /* 225% */
   }
 
   .task-list-item-missing {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     aspect-ratio: 1/1;
+    color: grey;
 
     
   }
