@@ -30,7 +30,7 @@ const FosterApplicationProcess = () => {
 
   const statusStepMap = {
     'Draft': 1,
-    'Referral': 1,
+    'Referral Requested': 1,
     'Application': 2,
     'Consent': 3,
     'Submitted': 4,
