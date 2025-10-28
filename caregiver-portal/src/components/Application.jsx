@@ -34,10 +34,8 @@ const Application = ({ applicationFormId, onClose }) => {
       }
     }, [applicationFormId, getApplicationForm]);
 
-  // Remove the callback from useGetFormAccessToken
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
-  // Move the URL logic into the effect where you call getFormAccessToken
   useEffect(() => {
     if (applicationForm && applicationFormId) {
       console.log('getting form access token for form:', applicationForm);
@@ -81,6 +79,7 @@ const Application = ({ applicationFormId, onClose }) => {
 
 
           setIsSubmitting(true);
+          
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
             console.log('Submission successful:', result);
@@ -171,7 +170,6 @@ const Application = ({ applicationFormId, onClose }) => {
                 </div>
               </div>
             )}
-             <p>{applicationForm?.status}</p>
             {iframeUrl && (
               <iframe
                 ref={iframeRef}
