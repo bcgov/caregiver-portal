@@ -1,11 +1,13 @@
 import React from 'react';
 import Button from './Button';
 import { useAccessCode } from '../hooks/useAccessCode';
+import { useNavigate } from 'react-router-dom';
 
 const AccessCard = () => {
     const [accessCode, setAccessCode] = React.useState('');
     const [message, setMessage] = React.useState('');
     const { associateAccessCode, isLoading } = useAccessCode();
+    const navigate = useNavigate();
 
     const handleClick = async(e) => {
 
@@ -21,9 +23,9 @@ const AccessCard = () => {
             setMessage('Access code associated successfully, opening screening form...');
             console.log("Access code associated, result:", result);
             // navigate to the application page using the returned applicationId
-            //setTimeout(() => {
-            //    navigate(`/application/${result.screeningApplicationId}`);
-            //  }, 1500);
+            setTimeout(() => {
+                navigate(`/screening-form/${result.applicationFormId}`);
+            }, 1500);
         } catch (err) {
             
             switch (err.message.trim()) {
