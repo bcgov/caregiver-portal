@@ -170,7 +170,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Consent forms completed.',
+          description: 'All household members have submitted their screening forms.',
           disabled: true,
           iconType: 'complete',
         }
