@@ -557,6 +557,20 @@ iframe {
   margin-bottom: 14px;
 }
 
+.task-card-minor {
+  display: flex;
+  width: 380px;
+  padding: 24px;
+  flex-direction: column;
+  align-items: flex-start;
+
+  border-radius: 0 0 10px 10px;
+  border-top: 4px solid var(--theme-primaryGold, #e0e0e0);
+  background: #FFF;
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.25);
+  margin-bottom: 14px;
+}
+
 .task-card-content {
   display: flex;
   flex-direction: column;
@@ -1124,18 +1138,52 @@ line-height: 54px; /* 225% */
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
   }
 
   .submission-modal {
     background: white;
-    border-radius: 8px;
-    padding: 2rem;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     max-width: 400px;
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  .submission-spinner {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 24px;
+    color: #2563eb;
+    animation: spin 0.8s linear infinite;
+    filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.3))
+  }
+
+  .submission-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+  }
+
+  .submission-text {
+    font-size: 0.95rem;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }

@@ -10,7 +10,7 @@ const Application = ({ applicationFormId, onClose }) => {
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const [applicationForm, setApplicationForm] = useState(null);
-    const [isSubmitting, setIsSubmitting] = React.useState(true);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
     
     const iframeRef = useRef(null);
 
@@ -83,7 +83,11 @@ const Application = ({ applicationFormId, onClose }) => {
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
             console.log('Submission successful:', result);
+            if(applicationForm?.type === 'Screening') {
+              navigate(`/dashboard`);              
+            } else {
             navigate(`/foster-application/${applicationForm?.applicationPackageId}`);
+            }
           } catch (error) {
             console.error('Submit failed:', error);
             alert('Failed to submit application. Please try again.');
@@ -182,7 +186,16 @@ const Application = ({ applicationFormId, onClose }) => {
               />
             )}
           </div>
-
+            {/* Submission Overlay - appears over entire page including iframe */}
+            {isSubmitting && (
+              <div className="submission-overlay">
+                <div className="submission-modal">
+                  <Loader2 className="submission-spinner" />
+                  <p className="submission-title">Submitting Form</p>
+                  <p className="submission-text">Please wait while we process your submission...</p>
+                </div>
+              </div>
+            )}
         </div>
       </>
       );
