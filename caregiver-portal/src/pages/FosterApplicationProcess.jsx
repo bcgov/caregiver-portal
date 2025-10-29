@@ -175,7 +175,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && applicationPackage?.status === 'Submitted') {
+      if (step.key === 'screening' && applicationPackage?.srStage === 'Screening') {
 
         return {
           ...step,
