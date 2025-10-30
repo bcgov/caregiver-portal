@@ -27,7 +27,7 @@
     background-color:transparent;
     font-weight: normal;
     color:  var(--typography-color-primary, #2D2d2D);
-    border: 1px solid  #2D2d2D;
+    border: 1px solid  transparent;
   }
 
   .btn-danger {

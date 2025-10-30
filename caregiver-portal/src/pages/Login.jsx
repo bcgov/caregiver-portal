@@ -42,12 +42,21 @@ export default function Home() {
   
   return (
     <div className="page">
-        <div className="welcome-frame">
-          <h1 className="page-title">Welcome to the <br/>B.C. Caregiver Portal</h1>
-          <p className="page-content">Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
-          <Button onClick={login} variant="primary">Log in</Button>
+        <div className="task-frame">
+          <div className="task-content">
+            <h1 className="page-title">Welcome to the B.C. Caregiver Portal</h1>
+            <p>Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
+            <Button onClick={login} variant="primary">Create Account / Log In</Button>
+          </div>
         </div>
-        <FosterApplicationStart onClick={login}/>
+        <div className="page-details">
+          <div className="page-details-row">
+            <div className="page-details-content">
+          <FosterApplicationStart onClick={login}/>
+          <FosterApplicationStart onClick={login}/>
+          </div>
+        </div>
+        </div>
     </div>
   );
 }
