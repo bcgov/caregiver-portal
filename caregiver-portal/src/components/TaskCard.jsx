@@ -27,10 +27,18 @@ const TaskCard = ({applicationPackage}) => {
         }
       }
 
+
       if (srStage === 'Application') {
         return {
           text: 'Complete Your Application',
           className: 'task-card-status--submitted'
+        }
+      }
+
+      if (srStage === 'Screening') {
+        return {
+          text: 'Screening in Progress',
+          className: 'task-card-status--requested'
         }
       }
 

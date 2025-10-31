@@ -30,7 +30,7 @@ const FosterApplicationProcess = () => {
 
   const statusStepMap = {
     'Draft': 1,
-    'Referral': 1,
+    'Referral Requested': 1,
     'Application': 2,
     'Consent': 3,
     'Submitted': 4,
@@ -170,12 +170,12 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Consent forms completed.',
+          description: 'All household members have submitted their screening forms.',
           disabled: true,
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && applicationPackage?.status === 'Submitted') {
+      if (step.key === 'screening' && applicationPackage?.srStage === 'Screening') {
 
         return {
           ...step,

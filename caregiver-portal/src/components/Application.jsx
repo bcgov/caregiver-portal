@@ -34,10 +34,8 @@ const Application = ({ applicationFormId, onClose }) => {
       }
     }, [applicationFormId, getApplicationForm]);
 
-  // Remove the callback from useGetFormAccessToken
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
-  // Move the URL logic into the effect where you call getFormAccessToken
   useEffect(() => {
     if (applicationForm && applicationFormId) {
       console.log('getting form access token for form:', applicationForm);
@@ -81,10 +79,15 @@ const Application = ({ applicationFormId, onClose }) => {
 
 
           setIsSubmitting(true);
+          
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
             console.log('Submission successful:', result);
+            if(applicationForm?.type === 'Screening') {
+              navigate(`/dashboard`);              
+            } else {
             navigate(`/foster-application/${applicationForm?.applicationPackageId}`);
+            }
           } catch (error) {
             console.error('Submit failed:', error);
             alert('Failed to submit application. Please try again.');
@@ -158,6 +161,7 @@ const Application = ({ applicationFormId, onClose }) => {
       }
     
       return (
+        <>
         <div className="h-screen flex flex-col bg-gray-100">
           {/* iFrame Container */}
           <div className="flex-1 relative">
@@ -170,7 +174,6 @@ const Application = ({ applicationFormId, onClose }) => {
                 </div>
               </div>
             )}
-             <p>{applicationForm?.status}</p>
             {iframeUrl && (
               <iframe
                 ref={iframeRef}
@@ -183,8 +186,18 @@ const Application = ({ applicationFormId, onClose }) => {
               />
             )}
           </div>
-         
+            {/* Submission Overlay - appears over entire page including iframe */}
+            {isSubmitting && (
+              <div className="submission-overlay">
+                <div className="submission-modal">
+                  <Loader2 className="submission-spinner" />
+                  <p className="submission-title">Submitting Form</p>
+                  <p className="submission-text">Please wait while we process your submission...</p>
+                </div>
+              </div>
+            )}
         </div>
+      </>
       );
     };
     

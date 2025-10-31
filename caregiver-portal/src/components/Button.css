@@ -27,7 +27,7 @@
     background-color:transparent;
     font-weight: normal;
     color:  var(--typography-color-primary, #2D2d2D);
-    border: 1px solid  #2D2d2D;
+    border: 1px solid  transparent;
   }
 
   .btn-danger {
@@ -63,10 +63,16 @@
   }
 
   .btn-nav {
-    background-color: transparent;
-    color: white;
-    font-weight: normal;
-    border: 1px solid white;
+    display: flex;
+    height: 40px;
+    padding: var(--layout-margin-small, 8px) var(--layout-margin-medium, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--layout-margin-small, 8px);
+
+    border-radius: var(--layout-borderRadius-medium, 4px);
+    border: 1px solid var(--surface-color-border-dark, #353433);
+    background: var(--surface-color-secondary-button-default, #FFF);
   }
 
   .btn-section-header {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Button from './Button';
 import HamburgerMenu from './HamburgerMenu';
-import BCLogo from '../assets/BCID_V_RGB_rev.svg';
+import BCLogo from '../assets/BCID_V_RGB_pos.png';
 
 const Header = () => {
     const auth = useAuth();
@@ -11,23 +11,25 @@ const Header = () => {
       <>
         <header className="top-nav">
           <title>MCFD Caregiver Portal</title>
-          <nav className="nav-left">
-            <img src={BCLogo} alt="BC Government Logo" className="bc-logo" />
-            <div className="app-title">
-              Caregiver <span className="highlight">Portal</span>
+          <div className="nav-bar">
+            <div className="nav-left">
+              <img src={BCLogo} alt="BC Government Logo" className="bc-logo" />
+              <div className="app-title">
+                Caregiver Portal
+              </div>
             </div>
-          </nav>
-          <nav className="nav-right">
+            <div className="nav-right">
+            
             {auth.user ? (
               <HamburgerMenu />
             ) : (
               <Button onClick={auth.login} variant="nav">
-                Log In
+                Create Account / Log In
               </Button>
             )}
-          </nav>
+            </div>
+          </div>
         </header>
-        <div className="gold-underline" />
       </>
     );
   };

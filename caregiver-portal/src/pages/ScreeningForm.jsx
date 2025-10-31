@@ -19,7 +19,8 @@ const ScreeningForm = () => {
 
   return (
     <div className="application-frame">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
+        <p>This is supposed to be a screening form...</p>
         <Application applicationFormId={applicationFormId} />
     </div>
   );

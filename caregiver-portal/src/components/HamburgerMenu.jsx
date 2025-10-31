@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { Menu } from 'lucide-react';
+import { Menu, CircleUserRound, X } from 'lucide-react';
+import Button from './Button';
 import { useAuth } from "../hooks/useAuth";
 
 const HamburgerMenu = () => {
@@ -41,13 +42,19 @@ const HamburgerMenu = () => {
 
     return (
         <div className="hamburger-container" ref={menuRef}>
-            <button
-             className={`hamburger-button ${isOpen ? `active` : ''}`}
+            <Button
+             variant="nav"
              onClick={toggleMenu}
              aria-label="Toggle menu"
              >
-                <Menu />
-            </button>
+                {!isOpen ? 
+                    <>
+                        <CircleUserRound/>{user.name}
+                    </>
+                :
+                    <>Close menu <X/></>
+                }
+            </Button>
 
             {/* Dropdown Menu */}
             {isOpen && (
