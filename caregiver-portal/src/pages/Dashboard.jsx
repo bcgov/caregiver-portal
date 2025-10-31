@@ -87,48 +87,40 @@ const Dashboard = () => {
   }
   return (
 
-    <div className="dashboard-container">
+    <div className="page">
       
         {isLoading && <div>Loading applications...</div>}
-      {applicationPackages.length > 0 ? (
-        <div className="application-frame">
-          <hr className="gold-underline-large" />
-          <h2 className="page-heading">My tasks</h2>
-          <div className="draft-applications">
-            {applicationPackages.map((app) => (
-              <div key={app.applicationPackageId}>
-                {app.subtype === "FCH" && (
-                <TaskCard applicationPackage={app} />
-                )}
+        {applicationPackages.length > 0 && (
+          <div className="task-frame">
+            <div className="task-content">
+              <hr className="gold-underline-large" />
+              <h2 className="page-heading">My tasks</h2>
+              <div className="draft-applications">
+                {applicationPackages.map((app) => (
+                  <div key={app.applicationPackageId}>
+                  {app.subtype === "FCH" && (
+                    <TaskCard applicationPackage={app} />
+                  )}
+                  </div>
+                ))}
+                {screeningForms.map((app) => (
+                  <div key={app.applicationFormId}>
+                    <ScreeningTaskCard applicationForm={app} />
+                  </div>
+                ))}
               </div>
-            ))}
-            {screeningForms.map((app) => (
-              <div key={app.applicationFormId}>
-                <ScreeningTaskCard applicationForm={app} />
-              </div>
-            ))}
+            </div>
+          </div>
+        )}
+
+        <div className="page-details">
+          <div className="page-details-row">
+            <div className="page-details-content"> 
+          <FosterApplicationStart onClick={handleCreateApplication} disabled={applicationPackages.length > 0}/>
           <AccessCard></AccessCard>
-      </div>
+          </div>
         </div>
-        ) 
-      : (
-
-        !hasFCHApp && (
-          <>
-          <FosterApplicationStart onClick={handleCreateApplication} />
-          {screeningForms.map((app) => (
-              <div key={app.applicationFormId}>
-                <ScreeningTaskCard applicationForm={app} />
-              </div>
-            ))}
-            <br></br>
-            <br></br>
-          <AccessCard></AccessCard>
-          </>
-        )
-      )
-      }
-
+        </div>
     </div>
   );
 };

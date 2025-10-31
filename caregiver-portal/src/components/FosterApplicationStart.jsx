@@ -3,7 +3,7 @@ import Button from './Button';
 import Family from '../assets/foster-couple-hero.png';
 import { ExternalLink } from "lucide-react";
 
-const FosterApplicationStart = ({onClick}) => {
+const FosterApplicationStart = ({onClick, disabled = false}) => {
     const [isStarting, setIsStarting] = React.useState(false);
 
     const handleStartClick = async () => {
@@ -26,8 +26,10 @@ const FosterApplicationStart = ({onClick}) => {
                 </div>
                 <p className="page-content">Foster caregiving is about opening your home and sharing your love, nurturing and caring for children and youth in B.C. who are under the age of 19 and who temporarily cannot live with their own families.</p>
                 <div className="buttonGroup">
+                    {!disabled && (
                     <Button onClick={handleStartClick} 
                       variant={isStarting ? "disabled" : "primary"}>Start application</Button>
+                    )}
                     <Button onClick={() => {window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving"}} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
                 </div>
             </div>

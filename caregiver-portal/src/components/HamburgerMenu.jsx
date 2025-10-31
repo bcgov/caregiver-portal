@@ -1,5 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react';
-import { Menu, CircleUserRound } from 'lucide-react';
+import { Menu, CircleUserRound, X } from 'lucide-react';
 import Button from './Button';
 import { useAuth } from "../hooks/useAuth";
 
@@ -47,7 +47,13 @@ const HamburgerMenu = () => {
              onClick={toggleMenu}
              aria-label="Toggle menu"
              >
-                <CircleUserRound/>{user.name}
+                {!isOpen ? 
+                    <>
+                        <CircleUserRound/>{user.name}
+                    </>
+                :
+                    <>Close menu <X/></>
+                }
             </Button>
 
             {/* Dropdown Menu */}

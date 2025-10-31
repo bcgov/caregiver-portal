@@ -77,7 +77,10 @@ body {
   }
 
   .draft-applications {
-    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
     
   }
 
@@ -595,11 +598,9 @@ iframe {
   flex-direction: column;
   align-items: flex-start;
 
-  border-radius: 0 0 10px 10px;
-  border-top: 4px solid var(--theme-primaryGold, #FCBA19);
+  border-radius: 8px;
   background: #FFF;
   box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.25);
-  margin-bottom: 14px;
 }
 
 .task-card-minor {
