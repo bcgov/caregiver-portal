@@ -8,6 +8,7 @@ import FosterApplicationStart from '../components/FosterApplicationStart';
 import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
+import { Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -82,14 +83,32 @@ const Dashboard = () => {
     }
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
 
-  if (auth.loading) {
-    return <div>Loading user information...</div>;
+  //if (auth.loading) {
+    if (auth.loading) {
+    return (            
+        <div className="submission-overlay">
+          <div className="submission-modal">
+            <Loader2 className="submission-spinner" />
+            <p className="submission-title">Processing authentication</p>
+            <p className="submission-text">Please wait while we process your submission...</p>
+          </div>
+        </div>
+      );
   }
   return (
 
     <div className="page">
       
-        {isLoading && <div>Loading applications...</div>}
+        {isLoading || formsLoading && 
+          <div className="submission-overlay">
+            <div className="submission-modal">
+              <Loader2 className="submission-spinner" />
+              <p className="submission-title">Processing authentication</p>
+              <p className="submission-text">Please wait while we process your submission...</p>
+            </div>
+          </div>
+        }
+
         {applicationPackages.length > 0 && (
           <div className="task-frame">
             <div className="task-content">

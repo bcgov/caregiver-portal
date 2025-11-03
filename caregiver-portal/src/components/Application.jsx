@@ -120,12 +120,13 @@ const Application = ({ applicationFormId, onClose }) => {
     
       if (loading) {
         return (
-          <div className="application-frame">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-              <p className="text-gray-600">Loading application...</p>
-            </div>
+          <div className="submission-overlay">
+          <div className="submission-modal">
+            <Loader2 className="submission-spinner" />
+            <p className="submission-title">Loading application form</p>
+            <p className="submission-text">Please wait while we load the application form...</p>
           </div>
+        </div>
         );
       }
     
@@ -165,15 +166,6 @@ const Application = ({ applicationFormId, onClose }) => {
         <div className="iframe-container">
           {/* iFrame Container */}
           <div className="iframe-content">
-
-            {!isIframeLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white">
-                <div className="text-center">
-                  <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-600" />
-                  <p className="text-sm text-gray-600">Loading content...</p>
-                </div>
-              </div>
-            )}
             {iframeUrl && (
               <iframe
                 ref={iframeRef}
