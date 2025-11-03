@@ -273,7 +273,7 @@ p {
   .page-details-row-footer {
     display: flex;
     width: 1120px;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     border-top: 1px solid var(--theme-gray-40, #E0DEDC);
     padding: 24px 0px;
@@ -374,7 +374,6 @@ p {
 
   .caption-small {
     align-self: stretch;
-    max-width: 760px;
     color: var(--typography-color-primary, #2D2D2D);
     font-family: "BC Sans", Helvetica, Arial, sans-serif;
     font-size: 12px;
@@ -454,6 +453,7 @@ p {
 .application-package{
   display: flex;
   padding: 16px 0;
+  width: 100%;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;

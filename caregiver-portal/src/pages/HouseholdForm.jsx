@@ -17,11 +17,22 @@ const HouseholdForm = () => {
   };
 
   return (
-    <div className="application-frame">
+    <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
+          
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+        </div>
+        <div className="page-details-row-small">
         <h1 className="page-title">My household and support network</h1>
-        <Household applicationPackageId={applicationPackageId} applicationFormId={applicationFormId} />
-    </div>
+        </div>
+        
+        <div className="page-details-row">
+          <Household applicationPackageId={applicationPackageId} applicationFormId={applicationFormId} />
+        </div>
+        </div>
+        </div>
+    
   );
 
 };
