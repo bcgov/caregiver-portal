@@ -162,9 +162,9 @@ const Application = ({ applicationFormId, onClose }) => {
     
       return (
         <>
-        <div className="h-screen flex flex-col bg-gray-100">
+        <div className="iframe-container">
           {/* iFrame Container */}
-          <div className="flex-1 relative">
+          <div className="iframe-content">
 
             {!isIframeLoaded && (
               <div className="absolute inset-0 flex items-center justify-center bg-white">
