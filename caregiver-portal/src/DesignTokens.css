@@ -775,6 +775,7 @@ iframe {
   font-style: normal;
   font-weight: 400;
   line-height: 21px; /* 150% */  
+  font-family: "BC Sans";
 }
 
 .footer-links-container {
@@ -808,6 +809,7 @@ iframe {
   font-style: normal;
   font-weight: 700;
   line-height: 18px; /* 150% */  
+  font-family: "BC Sans";
 }
 
 .footer-links-row {
@@ -818,6 +820,7 @@ iframe {
 
   display: flex;
   justify-content: space-between;
+  font-family: "BC Sans";
 }
 
 .footer-copyright {
@@ -855,6 +858,7 @@ a {
   text-decoration-thickness: auto;
   text-underline-offset: auto;
   text-underline-position: from-font;
+  font-family: "BC Sans";
 }
 
   /* Modal styles */
