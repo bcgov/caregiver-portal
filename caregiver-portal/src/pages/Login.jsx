@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import "../DesignTokens.css";
 import Button from "../components/Button";
 import FosterApplicationStart from "../components/FosterApplicationStart";
+import OOCApplicationStart from "../components/OOCApplicationStart";
+import WelcomeCard from "../components/WelcomeCard";
 
 
 export default function Home() {
@@ -41,18 +43,17 @@ export default function Home() {
   
   return (
     <div className="page">
-        <div className="task-frame">
+        <div className="task-frame-image">
+
           <div className="task-content">
-            <h1 className="page-title">Welcome to the B.C. Caregiver Portal</h1>
-            <p>Apply to be a caregiver in B.C. and manage the tasks required of you by the Ministry of Children and Family Development.</p>
-            <Button onClick={login} variant="primary">Create Account / Log In</Button>
+          <WelcomeCard login={login}></WelcomeCard>
           </div>
         </div>
         <div className="page-details">
           <div className="page-details-row">
             <div className="page-details-content">
-          <FosterApplicationStart onClick={login}/>
-          <FosterApplicationStart onClick={login}/>
+          <FosterApplicationStart onClick={login} disabled={true}/>
+          <OOCApplicationStart onClick={login} disabled={true}/>
           </div>
         </div>
         </div>
