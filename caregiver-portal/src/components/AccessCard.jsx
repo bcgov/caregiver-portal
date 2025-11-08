@@ -2,7 +2,7 @@ import React from 'react';
 import Button from './Button';
 import { useAccessCode } from '../hooks/useAccessCode';
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowRight } from 'lucide-react';
 
 const AccessCard = () => {
     const [accessCode, setAccessCode] = React.useState('');
@@ -50,23 +50,17 @@ const AccessCard = () => {
     };
 
     return (
-                <div className="task-card-minor">
-                  
-                    <h2 className='task-card-title' onClick={toggleExpanded}>Have you received a Caregiver Screening Access Code?         <span style={{ fontSize: '0.8em', marginLeft: '10px' }}>
-              {isExpanded ? '−' : '+'}
-          </span></h2>
-                    {isExpanded && (
-
-                    <>
-                        <p>
-                        If you have been sent an access code to complete a caregiver screening application, please enter it below.
+                
+                        <div className="task-card-minor-container">
+                        <p className="task-card-content">
+                        Access code
                         </p>
                         <input type="text" 
                         placeholder="Enter Access Code" 
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
-                        className='form-control'
+                        className='access-form-control'
                         />
 
                         {message && (
@@ -75,18 +69,18 @@ const AccessCard = () => {
                             </p>
                         )}
 
-                        <div className="buttonGroup">
+                        
                     
                         <Button 
-                            variant="secondary" 
+                            variant="lowkey" 
                             onClick={handleClick}
                             >
-                            {isLoading ? 'Verifying...' : 'Continue with Access Code'}
+                            {isLoading ? 'Verifying...' : 'Submit'}
+                            <ArrowRight class="minor"></ArrowRight>
                             </Button>                    
 
-                        </div>
-                    </>
-                    )}
+                        
+                    
                         {/* Access Code Verification Overlay */}
                         {isLoading && (
                             <div className="submission-overlay">
@@ -98,6 +92,7 @@ const AccessCard = () => {
                             </div>
                         )}
                         </div>
+                        
                 
         
     );
