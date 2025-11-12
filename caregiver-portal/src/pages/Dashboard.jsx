@@ -5,9 +5,11 @@ import { useApplications } from '../hooks/useApplications';
 //import { useCreateApplication } from '../hooks/useCreateApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import FosterApplicationStart from '../components/FosterApplicationStart';
+import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
+import WelcomeCard from '../components/WelcomeCard';
 import { Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -109,34 +111,49 @@ const Dashboard = () => {
           </div>
         }
 
-        {applicationPackages.length > 0 && (
-          <div className="task-frame">
+ 
+          <>
+            <div className="task-frame-image">
             <div className="task-content">
-              <hr className="gold-underline-large" />
-              <h2 className="page-heading">My tasks</h2>
-              <div className="draft-applications">
-                {applicationPackages.map((app) => (
-                  <div key={app.applicationPackageId}>
-                  {app.subtype === "FCH" && (
-                    <TaskCard applicationPackage={app} />
-                  )}
-                  </div>
-                ))}
-                {screeningForms.map((app) => (
-                  <div key={app.applicationFormId}>
-                    <ScreeningTaskCard applicationForm={app} />
-                  </div>
-                ))}
-              </div>
+            <WelcomeCard></WelcomeCard>
             </div>
           </div>
-        )}
+          <div className="task-frame">
+
+          <div className="task-content">
+    <div className="task-content-list">
+      {(applicationPackages?.length > 0 || screeningForms?.length > 0) && (
+        <h2 className="page-heading">My tasks</h2>
+      )}
+      <div className="draft-applications">
+        {applicationPackages?.map((app) => (
+          <div key={app.applicationPackageId}>
+            {app.subtype === "FCH" && (
+              <TaskCard applicationPackage={app} />
+            )}
+          </div>
+        ))}
+        {screeningForms?.map((app) => (
+          <div key={app.applicationFormId}>
+            <ScreeningTaskCard applicationForm={app} />
+          </div>
+        ))}
+        <AccessCard />
+      </div>
+    </div>
+  </div>
+
+          
+          </div>
+          </>
+      
 
         <div className="page-details">
           <div className="page-details-row">
             <div className="page-details-content"> 
           <FosterApplicationStart onClick={handleCreateApplication} disabled={applicationPackages.length > 0}/>
-          <AccessCard></AccessCard>
+          <OOCApplicationStart disabled={true}/>
+          
           </div>
         </div>
         </div>
