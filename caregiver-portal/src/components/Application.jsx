@@ -72,13 +72,22 @@ const Application = ({ applicationFormId, onClose }) => {
         console.log("applicationForm:", applicationForm);
         console.log("applicationPackageId:", applicationForm?.applicationPackageId);
 
-        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}') {
+
+        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           //const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
           //console.log("Attempting to navigate to:", targetUrl);
           //navigate(targetUrl);
 
 
           setIsSubmitting(true);
+
+          if (applicationForm.type !== "Referral" && applicationForm.type !== "Screening") {
+            setIsSubmitting(true);
+            navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+          } else {
+
+          
+  
           
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
@@ -94,6 +103,7 @@ const Application = ({ applicationFormId, onClose }) => {
           } finally {
             setIsSubmitting(false);
           }
+        }
 
 
         }
@@ -120,12 +130,13 @@ const Application = ({ applicationFormId, onClose }) => {
     
       if (loading) {
         return (
-          <div className="application-frame">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-              <p className="text-gray-600">Loading application...</p>
-            </div>
+          <div className="submission-overlay">
+          <div className="submission-modal">
+            <Loader2 className="submission-spinner" />
+            <p className="submission-title">Loading application form</p>
+            <p className="submission-text">Please wait while we load the application form...</p>
           </div>
+        </div>
         );
       }
     
@@ -162,18 +173,9 @@ const Application = ({ applicationFormId, onClose }) => {
     
       return (
         <>
-        <div className="h-screen flex flex-col bg-gray-100">
+        <div className="iframe-container">
           {/* iFrame Container */}
-          <div className="flex-1 relative">
-
-            {!isIframeLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white">
-                <div className="text-center">
-                  <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-600" />
-                  <p className="text-sm text-gray-600">Loading content...</p>
-                </div>
-              </div>
-            )}
+          <div className="iframe-content">
             {iframeUrl && (
               <iframe
                 ref={iframeRef}

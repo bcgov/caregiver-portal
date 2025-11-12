@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { Loader2 } from 'lucide-react';
 
 export const AuthCallback = () => {
   const navigate = useNavigate();
@@ -80,11 +81,12 @@ export const AuthCallback = () => {
   }, [navigate, checkAuthStatus]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="mt-4">Processing authentication...</p>
-      </div>
+    <div className="submission-overlay">
+    <div className="submission-modal">
+      <Loader2 className="submission-spinner" />
+      <p className="submission-title">Processing authentication</p>
+      <p className="submission-text">Please wait while we process your submission...</p>
     </div>
+  </div>
   );
 };

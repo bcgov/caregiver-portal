@@ -3,7 +3,7 @@ import { ArrowRight, CircleAlert, Check, CircleArrowRight, ChevronRight, Clock }
 import Button from "./Button";
 
 
-const ApplicationProcessStep = ({step, index, onContinue}) => {
+const ApplicationProcessStep = ({step, index, last, onContinue}) => {
 
       // Function to render the appropriate icon
       const renderStepIcon = () => {
@@ -66,7 +66,10 @@ const ApplicationProcessStep = ({step, index, onContinue}) => {
 
 
                 {/* Timeline Rail */}
-                <div className="application-timeline-rail" aria-hidden />
+                {!last 
+                    ? <div className="application-timeline-rail" aria-hidden />
+                    : <div className="application-timeline-rail-hidden" aria-hidden />
+        }
             </div>
 
 

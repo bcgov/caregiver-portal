@@ -1,4 +1,6 @@
 import React from 'react';
+import Button from './Button';
+import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const ScreeningTaskCard = ({applicationForm}) => {
@@ -38,15 +40,24 @@ const ScreeningTaskCard = ({applicationForm}) => {
     const statusInfo = getStatusInfo();
 
     return (
-        <div className="task-card" onClick={() => handleClick()}>
+      <div className="task-card" onClick={() => applicationForm.status === "Complete" ? null : handleClick()}>
+
+      {applicationForm.status === "Complete" && 
         <div className="task-card-content">
+                
+            <div className="task-card-title">Your household screening form was successfully submitted</div>
+            <div className="caption-small">Submitted on {applicationForm.submittedAt}</div>
 
-                <div className={`task-card-status ${statusInfo.className}`}>{statusInfo.text}</div>
-
-
-            <div className="task-card-title">Become a foster caregiver</div>
         </div>
-      </div>
+      }
+      {applicationForm.status !== "Complete" && 
+        <div className="task-card-content">
+                
+            <div className="task-card-title">Complete your foster caregiver household screening form</div>
+            <Button variant="primary">Continue<ArrowRight></ArrowRight></Button>
+        </div>
+      }
+    </div>
     );
   };
 

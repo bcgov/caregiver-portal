@@ -5,11 +5,14 @@ import Button from "./Button";
 
 const ApplicationPackageStep = ({step, index, onContinue, state = 'default'}) => {
 
+   // const appState = step?.status;
+
     const getIcon = () => {
         switch (state) {
-            case 'complete':
+            case 'Complete':
                 return <CircleCheck className="application-package-icon-complete" />;
-            case 'default':
+            case 'Draft':
+                return <CircleCheck className="application-package-icon-complete" />;
             default:
                 return <CircleAlert className="application-package-icon-alert" />;       
         }

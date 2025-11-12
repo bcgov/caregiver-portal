@@ -180,6 +180,9 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
         {hasPartner && (
          <>
             <h3 className="form-group-header">My spouse/partner</h3>
+              <div className="section-description">
+              Your spouse/partner will be named as a co-applicant. They will be required to log into the Portal separately to provide information and consents and sign a declaration.
+              </div>
               <div className="field-group">
               <label htmlFor={`partner-relationship`} className="form-control-label">
                     Relationship to you<span className="required">*</span>

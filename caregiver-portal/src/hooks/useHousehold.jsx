@@ -88,7 +88,8 @@ export const useHousehold = ({applicationPackageId}) => {
                     relationship: existingPartner.relationshipToPrimary,
                     genderType: existingPartner.genderType || '',
                     householdMemberId: existingPartner.householdMemberId,
-                    requireScreening: existingPartner.requireScreening
+                    requireScreening: existingPartner.requireScreening,
+                    userId: existingPartner.userId,
                 });
             }
             // find non-spouse members
@@ -102,7 +103,8 @@ export const useHousehold = ({applicationPackageId}) => {
                     email: member.email,
                     relationship: member.relationshipToPrimary,
                     genderType: member.genderType || '',
-                    requireScreening: member.requireScreening
+                    requireScreening: member.requireScreening,
+                    userId: member.userId,
 
                 }));
                 setHouseholdMembers(formattedMembers);

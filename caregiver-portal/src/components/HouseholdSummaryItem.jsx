@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleAlert, CircleCheck, ChevronRight } from "lucide-react";
+import { CircleAlert, CircleCheck, ChevronRight, Check } from "lucide-react";
 import Button from "./Button";
 import AccessCodeModal from "./AccessCodeModal";
 import { useInviteHouseholdMember } from "../hooks/useInviteHouseholdMember";
@@ -8,6 +8,7 @@ const HouseholdSummaryItem = ({member, onClick}) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);    
     const [accessCodeData, setAccessCodeData] = React.useState(null);
     const { inviteMember, isLoading } = useInviteHouseholdMember();
+    
 
     /*
     const handleInviteClick = async () => {
@@ -27,8 +28,28 @@ const HouseholdSummaryItem = ({member, onClick}) => {
         setAccessCodeData(null);
       };
 
+    const calculateCompletion = (member) => {
+        let completedTasks = 0;
+        let totalTasks = 1;
+
+        console.log(member);
+
+        // task 1: Account created
+        if (member.userId) {
+            completedTasks++;
+        }
+
+        if (member.requireScreening) {
+            totalTasks = 2;
+        }
+
+        return { completedTasks, totalTasks};
+    };
+
+    const { completedTasks, totalTasks } = calculateCompletion(member);
+
     return (
-        <div className="householdSummaryItem" onClick={onClick}>
+        <div className="householdSummaryItem" onClick={member.requireScreening ? onClick : null}>
             <div className="householdSummaryItemLeft">
                 <div className="topLabel">
                     <span className="nameLabel">{member.firstName} {member.lastName} </span>
@@ -39,7 +60,14 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                         <CircleAlert size={20} className="alert" /> 
                     : <CircleCheck size={20} className="completed" /> 
                     }
-                    0 of 4 tasks completed
+
+                    { member.requireScreening && (
+                    <div className="caption-small">{completedTasks} of {totalTasks} tasks completed</div>
+                    )}
+
+                    { !member.requireScreening && (
+                    <div className="caption-small">Screening information is not required for non-adult household members.</div>
+                    )}
                 </div>
             </div>
                 <span className="chevronRight">
@@ -54,7 +82,7 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                     <ChevronRight size={40}
                         className="chevronRight" 
                         />
-                    : <ChevronRight size={40}
+                    : <Check size={40}
                         className="chevronRight" 
                         />  
                 }

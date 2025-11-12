@@ -112,11 +112,12 @@ const FosterApplicationProcess = () => {
   
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.', disabled: false },
+      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start'},
       {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
-      {key: 'consent', label: 'Consents & Agreements', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
-      {key: 'screening', label: 'Screening', description: 'Once consents are received, the ministry will begin reviewing and conducting checks on all the adult members of your household. This process can take anywhere from 2 weeks to 3 months.', disabled: true},
-      {key: 'homevisits', label: 'Home Visits', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
+      {key: 'consent', label: 'Household Screening Forms and Consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
+      {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
+      {key: 'training', label: 'Training', description: 'Parent Resources for Information Development and Education (PRIDE) Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
+      {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
     ];
     return baseSteps.map(step => {
       if (step.key === 'referral' && applicationPackage?.status === 'Referral Requested') {
@@ -152,7 +153,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Your caregiver application package was was completed.',
+          description: 'Your caregiver application package was completed.',
           disabled: true,
           iconType: 'complete',
         }
@@ -195,18 +196,29 @@ const FosterApplicationProcess = () => {
     }, [applicationPackage]);
 
 return (
-    <div className="application-frame">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+
+  
+    <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+        </div>
+        <div className='page-details-row-small'>
           <h1 className="page-title">Become a foster caregiver</h1>
-          <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 5</p>
+        </div>
+        <div className='page-details-row-small'>
+          <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 6</p>
+        </div>
+        <div className='page-details-row-small'>
         <div className="application-package">
             {dynamicSteps.map((step, index) => (
             <div key={step.key}>
-               <ApplicationProcessStep step={step} index={index} onContinue={ step.disabled ? undefined : () => handleContinue(step)} />
+               <ApplicationProcessStep step={step} index={index} last={index === dynamicSteps.length - 1} onContinue={ step.disabled ? undefined : () => handleContinue(step)} />
             </div>
             ))}
         </div>
-        <div className="application-package-footer">
+        </div>
+        <div className="page-details-row-footer">
                 <Button variant="danger"
                   onClick={() => handleCancel(applicationPackageId)}
                   disabled={isDeleting}
@@ -224,6 +236,7 @@ return (
                     isLoading={isDeleting}
                     />
                     {error && <div className="error-message">{error}</div>}
+        </div>
         </div>
       </div>
   );

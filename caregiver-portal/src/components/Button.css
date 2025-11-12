@@ -22,12 +22,64 @@
   .btn-primary:hover {
     background-color: #0059c1;
   }
+
+  .btn-lowkey {
+    display: flex;
+    height: 40px;
+    padding: var(--layout-margin-small, 8px) var(--layout-margin-medium, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--layout-margin-small, 8px);
+
+    border-radius: var(--layout-borderRadius-default, 4px);
+    background: var(--surface-color-primary-button-disabled, #EDEBE9);
+
+    color: var(--typography-color-disabled, #9F9D9C);
+    text-align: center;
+
+      /* regular/body */
+      font-family: "BC Sans";
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 27.008px; /* 168.8% */
+      
+  }
   
   .btn-secondary {
     background-color:transparent;
-    font-weight: normal;
-    color:  var(--typography-color-primary, #2D2d2D);
+    color: var(--typography-color-link, #255A90);
+    text-align: center;
+    
+    padding: 0px;
+    
+    /* regular/body */
+    font-family: "BC Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27.008px; /* 168.8% */
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
     border: 1px solid  transparent;
+  }
+
+  .btn-white {
+    display: flex;
+    height: 40px;
+    padding: var(--layout-margin-small, 8px) var(--layout-margin-medium, 16px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--layout-margin-small, 8px);
+
+    border-radius: var(--layout-borderRadius-medium, 4px);
+    border: 1px solid var(--surface-color-border-dark, #353433);
+    background: var(--surface-color-secondary-button-default, #FFF);
+
   }
 
   .btn-danger {

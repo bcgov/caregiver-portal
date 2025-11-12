@@ -48,9 +48,9 @@ const FosterApplicationPackage = () => {
         // state
 
         if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
-          return 'complete';
+          return 'Complete';
         } else {
-          return 'default';
+          return item.status;
         }
       }
 
@@ -64,6 +64,7 @@ const FosterApplicationPackage = () => {
           const result = await lockApplicationPackage(applicationPackageId);
           console.log('lock successful:', result);
           setIsApplicationLocked(true);
+          //navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error('lock failed:', error);
           alert('Failed to lock application. Please try again.');
@@ -138,20 +139,30 @@ const FosterApplicationPackage = () => {
 */// ]
 
     return (
-        <div className="application-frame">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+      <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
+        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
+        </div>
+        <div className='page-details-row-small'>
           <h1 className="page-title">Application to provide foster family care</h1>
-          <p className="caption-small">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
+        </div>
+        <div className='page-details-row-small'>
+          <p className="caption">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
             under Section 26(c) and will be used for the purposes of your Caregiver Application. The information collected on these forms will be strictly used by 
             MCFD for Caregiver Application and Assessment activities. If you have questions about the collection of your information for this purpose, please contact 
             the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
+        </div>
+        <div className='page-details-row-small'>
           <div className="application-package">
             {forms.map((step, index) => (
               step.type !== 'Referral' && // Exclude 'Referral' type steps
                <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
-
+        </div>
+        
+        <div className="page-details-row-footer">
         {!isApplicationComplete() &&
           <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
         }
@@ -166,8 +177,10 @@ const FosterApplicationPackage = () => {
             type="checkbox"
             /><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
           </div>
+      
           </>
         }
+        <div className="page-details-row-small">
         {!isApplicationLocked ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
         ) : (
@@ -176,6 +189,20 @@ const FosterApplicationPackage = () => {
           
         </div>
         )}
+        </div>
+        </div>
+      </div>
+                  {/* Submission Overlay - appears over entire page including iframe */}
+                  {isSubmitting && (
+              <div className="submission-overlay">
+                <div className="submission-modal">
+                  <Loader2 className="submission-spinner" />
+                  <p className="submission-title">Submitting Form</p>
+                  <p className="submission-text">Please wait while we process your submission...</p>
+                </div>
+              </div>
+            )}
+
       </div>
     )
 };

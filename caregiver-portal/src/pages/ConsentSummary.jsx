@@ -18,9 +18,15 @@ const ConsentSummary = () => {
   };
 
   return (
-    <div className="application-frame">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
-        <HouseholdSummary applicationPackageId={applicationPackageId} />
+    <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+        </div>       
+        <div className="page-details-row-small">
+          <HouseholdSummary applicationPackageId={applicationPackageId} />
+        </div>
+    </div>
     </div>
   );
 

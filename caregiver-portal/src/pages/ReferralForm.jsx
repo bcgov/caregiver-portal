@@ -38,9 +38,14 @@ const ReferralForm = () => {
   };
 
   return (
-    <div className="application-frame">
+    <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
+        </div>
         <Application applicationFormId={applicationFormId} />
+        
+        </div>
     </div>
   );
 
