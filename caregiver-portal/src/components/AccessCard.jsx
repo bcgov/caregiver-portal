@@ -9,7 +9,6 @@ const AccessCard = () => {
     const [message, setMessage] = React.useState('');
     const { associateAccessCode, isLoading } = useAccessCode();
     const navigate = useNavigate();
-    const [isExpanded, setIsExpanded] = React.useState(false);
     //const [isLoading, setIsLoading] = React.useState(false);
 
     const handleClick = async(e) => {
@@ -45,9 +44,6 @@ const AccessCard = () => {
         }
     };
 
-    const toggleExpanded = () => {
-        setIsExpanded(!isExpanded);
-    };
 
     return (
                 
@@ -61,6 +57,7 @@ const AccessCard = () => {
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
                         className='access-form-control'
+                        maxLength={6}
                         />
 
                         {message && (
