@@ -72,13 +72,22 @@ const Application = ({ applicationFormId, onClose }) => {
         console.log("applicationForm:", applicationForm);
         console.log("applicationPackageId:", applicationForm?.applicationPackageId);
 
-        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}') {
+
+        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           //const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
           //console.log("Attempting to navigate to:", targetUrl);
           //navigate(targetUrl);
 
 
           setIsSubmitting(true);
+
+          if (applicationForm.type !== "Referral" && applicationForm.type !== "Screening") {
+            setIsSubmitting(true);
+            navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+          } else {
+
+          
+  
           
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
@@ -94,6 +103,7 @@ const Application = ({ applicationFormId, onClose }) => {
           } finally {
             setIsSubmitting(false);
           }
+        }
 
 
         }
