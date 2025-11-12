@@ -48,9 +48,9 @@ const FosterApplicationPackage = () => {
         // state
 
         if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
-          return 'complete';
+          return 'Complete';
         } else {
-          return 'default';
+          return item.status;
         }
       }
 
@@ -64,6 +64,7 @@ const FosterApplicationPackage = () => {
           const result = await lockApplicationPackage(applicationPackageId);
           console.log('lock successful:', result);
           setIsApplicationLocked(true);
+          //navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error('lock failed:', error);
           alert('Failed to lock application. Please try again.');
@@ -141,7 +142,7 @@ const FosterApplicationPackage = () => {
       <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
           <h1 className="page-title">Application to provide foster family care</h1>
@@ -191,6 +192,17 @@ const FosterApplicationPackage = () => {
         </div>
         </div>
       </div>
+                  {/* Submission Overlay - appears over entire page including iframe */}
+                  {isSubmitting && (
+              <div className="submission-overlay">
+                <div className="submission-modal">
+                  <Loader2 className="submission-spinner" />
+                  <p className="submission-title">Submitting Form</p>
+                  <p className="submission-text">Please wait while we process your submission...</p>
+                </div>
+              </div>
+            )}
+
       </div>
     )
 };
