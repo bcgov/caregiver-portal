@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, CircleDashed, CircleAlert, Flag } from 'lucide-react';
+import { Check, CircleDashed, CircleAlert, Flag, ExternalLink, BookText  } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import "../DesignTokens.css";
@@ -63,29 +63,37 @@ const ConsentOverview = () => {
   };
 
   return (
-    <div className="application-frame">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} /> 
-       <div className="consent-overview-form">
-       <h1>{householdMember?.householdMember?.firstName} {householdMember?.householdMember?.lastName}</h1>
-       <div className="caption"><span> {getCurrentStep()} of 2 tasks completed:</span></div>
-       <div className="task-list">
-        <div className="task-list-item">
+    <div className="page">
+      <div className="page-details">
+        <div className="page-details-row-breadcrumb">
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} /> 
+        </div>
+        <div className="page-details-row-small">
+          <h1>{householdMember?.householdMember?.firstName} {householdMember?.householdMember?.lastName}</h1>
+        </div>
+        <div className="page-details-row-small">
+        <div className="page-details-content-col">
+          <div className="caption"><span> {getCurrentStep()} of 2 tasks completed:</span></div>
+          <div className="task-list">
+          <div className="task-list-item">
             { householdMember?.householdMember?.userId  === null ? (
                 <CircleAlert className="task-list-item-missing"></CircleAlert> )
              : ( 
                 <Check className="task-list-item-check"></Check>
             )}
             <span className="task-list-item-supporting-text">Logged into portal and used Access Code</span>
-        </div>
-        <div className="task-list-item">
-        { !screeningStatus ? (
+          </div>
+          <div className="task-list-item">
+            { !screeningStatus ? (
                 <CircleAlert className="task-list-item-missing"></CircleAlert> )
              : ( 
                 <Check className="task-list-item-check"></Check>
             )}
             <span className="task-list-item-supporting-text">Completed Household Screening Form</span>
-        </div>
-       </div>
+          </div>
+
+          </div>
+      <div className="page-details-row">
        <div className="section-description">
         { householdMember?.householdMember?.userId === null && (
             <>
@@ -101,12 +109,29 @@ const ConsentOverview = () => {
         )}
         { !screeningStatus && (
           <>
-          <p>The Household Screening form is incomplete.</p>
+          <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), complete and sign these forms on paper then upload them below.</p>
+
           </>
         )} 
-
+        </div>
+        
        </div>
-       </div>  
+       { !screeningStatus && (
+        <div className="upload-container">
+          
+          <div className="upload-form-name">
+           <BookText/>
+            Household Screening Form
+            <ExternalLink/>
+            </div>
+            <div className="upload-form"></div>
+          
+          </div>
+       )}
+       
+       </div>
+    </div>
+    </div>
     </div>
   );
 
