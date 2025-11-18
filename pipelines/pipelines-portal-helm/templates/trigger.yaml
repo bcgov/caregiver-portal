@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger
 metadata:
   name: "{{ .Values.general.name }}-github-trigger"
-  namespace: {{.Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
 spec:
   interceptors:
     - ref:
@@ -11,11 +11,20 @@ spec:
         - name: overlays
           value:
             - key: branchName
+              # Extract branch name from refs/heads/<branch>
               expression: "body.ref.split('/')[2]"
         - name: filter
           value: |
-            body.ref.split('/')[2] == 'main' && body.head_commit.modified.exists(file,
-              file.startsWith('caregiver-portal') || file.startsWith('portal-helm') || file.startsWith('pipelines')
+            (
+              body.ref.split('/')[2] in ['main', 'prod', 'dev', 'develop', 'test']
+            )
+            &&
+            (
+              body.head_commit.modified.exists(file,
+                file.startsWith('caregiver-portal')
+                || file.startsWith('portal-helm')
+                || file.startsWith('pipelines')
+              )
             )
     - ref:
         name: github
@@ -29,6 +38,7 @@ spec:
           value:
             secretName: "{{ .Values.general.name }}-github-webhook-secret"
             secretKey: webhook-token
+
   bindings:
     - ref: "{{ .Values.general.name }}-github-trigger-binding"
   template:
