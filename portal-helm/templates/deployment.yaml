@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: caregiver-portal
-          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:latest'
+          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:{{ (split "-" .Release.Namespace | last) }}'
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -30,6 +30,13 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
+      resources: 
+        limits:
+          cpu: "500m"
+          memory: 512Mi
+        requests:
+          cpu: "100m"
+          memory: 256Mi
   strategy:
     type: RollingUpdate
     rollingUpdate:

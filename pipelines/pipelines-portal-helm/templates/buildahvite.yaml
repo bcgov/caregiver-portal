@@ -7,7 +7,9 @@ spec:
   params:
     - name: IMAGE
       type: string
-    - name: IMAGE_TAG
+    - name: VITE_SECRET_NAME
+      type: string
+    - name: BRANCH_NAME
       type: string
     - name: BUILDAH_IMAGE
       type: string
@@ -39,70 +41,40 @@ spec:
       image: $(params.BUILDAH_IMAGE)
       script: |
         #!/usr/bin/env bash
-        set -x
-        
-        rm -rf node_modules
-        rm -f package-lock.json
+        set -ex
+
+        # Clean and install dependencies
+        rm -rf node_modules package-lock.json
         npm cache clean --force
         npm install
 
-        # Login to the registry using credentials from secrets
+        # Login to container registry
         buildah login -u $IMAGE_REGISTRY_USER -p $IMAGE_REGISTRY_PASS $(params.IMAGE_REGISTRY)
 
+        # Build the container image using branch name as the tag
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud --no-cache \
           --build-arg VITE_API_URL=$VITE_API_URL \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
           --build-arg VITE_KILN_URL=$VITE_KILN_URL \
           --build-arg VITE_BCSC_AUTHORITY=$VITE_BCSC_AUTHORITY \
-          -f $(params.DOCKERFILE) -t $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest \
+          -f $(params.DOCKERFILE) \
+          -t $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME) \
           --isolation chroot $(params.CONTEXT)
 
-        # Push the image
-        buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest
-
-      workingDir: $(workspaces.source.path)
-      securityContext:
-        capabilities:
-          add: [SETFCAP]
-      volumeMounts:
-        - name: varlibcontainers
-          mountPath: /var/lib/containers
-      env:
-        - name: VITE_API_URL
-          valueFrom:
-            secretKeyRef:
-              key: VITE_API_URL
-              name: vite-secrets
-        - name: VITE_BCSC_CLIENT_ID
-          valueFrom:
-            secretKeyRef:
-              key: VITE_BCSC_CLIENT_ID
-              name: vite-secrets
-        - name: VITE_BCSC_AUTHORITY
-          valueFrom:
-            secretKeyRef:
-              key: VITE_BCSC_AUTHORITY
-              name: vite-secrets
-        - name: VITE_KILN_URL
-          valueFrom:
-            secretKeyRef:
-              key: VITE_KILN_URL
-              name: vite-secrets
     - name: trivy-scan
       image: docker.io/aquasec/trivy
       script: |
-        trivy image $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest
+        trivy image $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME)
       workingDir: $(workspaces.source.path)
       volumeMounts:
-        - mountPath: /var/lib/containers
-          name: varlibcontainers
+        - name: varlibcontainers
+          mountPath: /var/lib/containers
+
     - name: push
       image: $(params.BUILDAH_IMAGE)
       script: |
-        #!/usr/bin/env bash
-        set -x
         buildah login -u $IMAGE_REGISTRY_USER -p $IMAGE_REGISTRY_PASS $(params.IMAGE_REGISTRY)
-        buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE_REGISTRY)/$(params.IMAGE):latest
+        buildah --storage-driver=$(params.STORAGE_DRIVER) push $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME)
       workingDir: $(workspaces.source.path)
       securityContext:
         capabilities:
@@ -121,4 +93,23 @@ spec:
             secretKeyRef:
               name: $(params.IMAGE_REGISTRY_PASS)
               key: $(params.IMAGE_REGISTRY_PASS)
-
+        - name: VITE_API_URL
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_API_URL
+        - name: VITE_BCSC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_BCSC_CLIENT_ID
+        - name: VITE_BCSC_AUTHORITY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_BCSC_AUTHORITY
+        - name: VITE_KILN_URL
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_KILN_URL

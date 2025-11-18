@@ -7,5 +7,4 @@ general:
   helmrelease: portal
   helmdir: ./portal-helm/
   deploymentname: caregiver-portal
-  deploymentnamespace: f6e00d-dev
 

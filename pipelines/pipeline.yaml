@@ -5,51 +5,43 @@ metadata:
   namespace: f6e00d-tools
 spec:
   params:
-    - description: The directory where the helm chart is located.
-      name: helmDir
+    - name: helmDir
       type: string
-    - description: The values file relative to helmDir.
-      name: helmValues
+    - name: helmValues
       type: string
-    - description: The release name that will be used to identify the deployment.
-      name: helmRelease
+    - name: helmRelease
       type: string
-    - description: The helm docker image url to use.
-      name: helmImage
+    - name: helmImage
       type: string
-    - description: The Root url of the image registry. (ie. docker.io)
-      name: imageRegistry
+    - name: imageRegistry
       type: string
-    - description: The secret name of the secret holding the username.
-      name: imageRegistryUser
+    - name: imageRegistryUser
       type: string
-    - description: The secret name of the secret holding the password.
-      name: imageRegistryPass
+    - name: imageRegistryPass
       type: string
     - name: imageUrl
       type: string
-    - description: The git repository URL to clone from.
-      name: repoUrl
+    - name: repoUrl
       type: string
-    - description: The git branch to clone.
-      name: branchName
+    - name: branchName
       type: string
-    - description: Path of the Dockerfile.
-      name: pathToContext
+    - name: pathToContext
       type: string
-    - description: Location of the Dockerfile.
-      name: dockerfile
+    - name: dockerfile
       type: string
-    - description: Version of Buildah to run.
-      name: buildahImage
+    - name: buildahImage
       type: string
-    - description: The deployment name to reroll after the Helm deploy.
-      name: deploymentName
+    - name: deploymentName
       type: string
-    - description: The namespace in which the deployments exist.
-      name: namespace
-      type: string
+
+  workspaces:
+    - name: shared-data
+      description: Stores cloned source repository
+
   tasks:
+    # ---------------------------------------------------
+    # Clone Git Repository
+    # ---------------------------------------------------
     - name: git-clone
       params:
         - name: url
@@ -64,6 +56,10 @@ spec:
       workspaces:
         - name: output
           workspace: shared-data
+
+    # ---------------------------------------------------
+    # Generate Commit ID
+    # ---------------------------------------------------
     - name: generate-id
       runAfter:
         - git-clone
@@ -73,12 +69,55 @@ spec:
       workspaces:
         - name: source
           workspace: shared-data
+
+    # ---------------------------------------------------
+    # Set VITE Secret & Namespace dynamically based on branch
+    # ---------------------------------------------------
+    - name: set-vite-secret
+      runAfter:
+        - generate-id
+      taskSpec:
+        results:
+          - name: secretName
+          - name: namespace
+        params:
+          - name: branchName
+            type: string
+        steps:
+          - name: set-secret-and-namespace
+            image: registry.access.redhat.com/ubi9/ubi-minimal
+            script: |
+              #!/bin/bash
+              case "$(params.branchName)" in
+                dev|develop)
+                  echo -n "vite-dev" > $(results.secretName.path)
+                  echo -n "f6e00d-dev" > $(results.namespace.path)
+                  ;;
+                test)
+                  echo -n "vite-test" > $(results.secretName.path)
+                  echo -n "f6e00d-test" > $(results.namespace.path)
+                  ;;
+                main|prod)
+                  echo -n "vite-prod" > $(results.secretName.path)
+                  echo -n "f6e00d-prod" > $(results.namespace.path)
+                  ;;
+                *)
+                  echo "Unknown branch: $(params.branchName)"
+                  exit 1
+                  ;;
+              esac
+
+    # ---------------------------------------------------
+    # Build Image With Buildah (uses dynamic secret & branch tag)
+    # ---------------------------------------------------
     - name: buildah
+      runAfter:
+        - set-vite-secret
       params:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(tasks.generate-id.results.short-commit)
+          value: $(params.branchName)
         - name: IMAGE_REGISTRY
           value: $(params.imageRegistry)
         - name: IMAGE_REGISTRY_USER
@@ -91,15 +130,23 @@ spec:
           value: $(params.pathToContext)
         - name: BUILDAH_IMAGE
           value: $(params.buildahImage)
-      runAfter:
-        - generate-id
+        - name: VITE_SECRET_NAME
+          value: $(tasks.set-vite-secret.results.secretName)
+        - name: BRANCH_NAME
+          value: $(params.branchName)
       taskRef:
-        kind: Task
         name: buildah-vite
+        kind: Task
       workspaces:
         - name: source
           workspace: shared-data
+
+    # ---------------------------------------------------
+    # Helm Deploy
+    # ---------------------------------------------------
     - name: helm-deploy
+      runAfter:
+        - buildah
       params:
         - name: HELM_DIR
           value: $(params.helmDir)
@@ -112,28 +159,25 @@ spec:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(tasks.generate-id.results.short-commit)
-      runAfter:
-        - buildah
+          value: $(params.branchName)
       taskRef:
         kind: Task
         name: helm-deploy
       workspaces:
         - name: source
           workspace: shared-data
+
+    # ---------------------------------------------------
+    # Deployment Reroll (uses dynamic namespace)
+    # ---------------------------------------------------
     - name: reroll-deployment
       runAfter:
         - helm-deploy
-      taskRef:
-        kind: Task
-        name: reroll-deployment
       params:
         - name: deploymentName
           value: $(params.deploymentName)
         - name: namespace
-          value: $(params.namespace)
-  workspaces:
-    - description: |
-        This workspace will receive the cloned git repo and be passed
-        to the next Task for the repo's README.md file to be read.
-      name: shared-data
+          value: $(tasks.set-vite-secret.results.namespace)
+      taskRef:
+        kind: Task
+        name: reroll-deployment

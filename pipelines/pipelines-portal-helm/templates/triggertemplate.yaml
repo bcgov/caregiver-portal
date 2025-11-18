@@ -39,8 +39,6 @@ spec:
       name: helmImage
     - default: '{{ .Values.general.deploymentname }}'
       name: deploymentName
-    - default: '{{ .Values.general.deploymentnamespace }}'
-      name: namespace
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -78,8 +76,6 @@ spec:
             value: $(tt.params.helmImage)
           - name: deploymentName
             value: $(tt.params.deploymentName)
-          - name: namespace
-            value: $(tt.params.namespace)
         pipelineRef:
           name: portal
         workspaces:
