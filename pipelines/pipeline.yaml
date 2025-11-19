@@ -76,6 +76,9 @@ spec:
     - name: set-vite-secret
       runAfter:
         - generate-id
+      params:
+        - name: branchName
+          value: $(params.branchName)
       taskSpec:
         results:
           - name: secretName
