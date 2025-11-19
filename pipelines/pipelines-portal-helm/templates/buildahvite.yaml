@@ -81,15 +81,6 @@ spec:
               name: $(params.VITE_SECRET_NAME)
               key: VITE_KILN_URL
 
-    - name: trivy-scan
-      image: docker.io/aquasec/trivy
-      script: |
-        trivy image $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME)
-      workingDir: $(workspaces.source.path)
-      volumeMounts:
-        - name: varlibcontainers
-          mountPath: /var/lib/containers
-
     - name: push
       image: $(params.BUILDAH_IMAGE)
       script: |
@@ -101,3 +92,9 @@ spec:
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
+
+    - name: trivy-scan
+      image: docker.io/aquasec/trivy
+      script: |
+        trivy image $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME)
+      workingDir: $(workspaces.source.path)
