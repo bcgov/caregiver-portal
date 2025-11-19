@@ -1,0 +1,139 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: social-middleware  # note must match name prefix of tasks/ trigger
+  namespace: f6e00d-tools
+spec:
+  params:
+    - description: The directory where the helm chart is located.
+      name: helmDir
+      type: string
+    - description: The values file relative to helmDir.
+      name: helmValues
+      type: string
+    - description: The release name that will be used to identify the deployment.
+      name: helmRelease
+      type: string
+    - description: The helm docker image url to use.
+      name: helmImage
+      type: string
+    - description: The Root url of the image registry. (ie. docker.io)
+      name: imageRegistry
+      type: string
+    - description: The secret name of the secret holding the username.
+      name: imageRegistryUser
+      type: string
+    - description: The secret name of the secret holding the password.
+      name: imageRegistryPass
+      type: string
+    - name: imageUrl
+      type: string
+    - description: The git repository URL to clone from.
+      name: repoUrl
+      type: string
+    - description: The git branch to clone.
+      name: branchName
+      type: string
+    - description: Path of the Dockerfile.
+      name: pathToContext
+      type: string
+    - description: Location of the Dockerfile.
+      name: dockerfile
+      type: string
+    - description: Version of Buildah to run.
+      name: buildahImage
+      type: string
+    - description: The deployment name to reroll after the Helm deploy.
+      name: deploymentName
+      type: string
+    - description: The namespace in which the deployments exist.
+      name: namespace
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: $(params.repoUrl)
+        - name: deleteExisting
+          value: 'true'
+        - name: revision
+          value: $(params.branchName)
+      taskRef:
+        kind: Task
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-data
+    - name: generate-id
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: Task
+        name: generate-id
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: buildah
+      params:
+        - name: IMAGE
+          value: $(params.imageUrl)
+        - name: IMAGE_TAG
+          value: $(tasks.generate-id.results.short-commit)
+        - name: IMAGE_REGISTRY
+          value: $(params.imageRegistry)
+        - name: IMAGE_REGISTRY_USER
+          value: $(params.imageRegistryUser)
+        - name: IMAGE_REGISTRY_PASS
+          value: $(params.imageRegistryPass)
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
+        - name: CONTEXT
+          value: $(params.pathToContext)
+        - name: BUILDAH_IMAGE
+          value: $(params.buildahImage)
+      runAfter:
+        - generate-id
+      taskRef:
+        kind: Task
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: helm-deploy
+      params:
+        - name: HELM_DIR
+          value: $(params.helmDir)
+        - name: HELM_VALUES
+          value: $(params.helmValues)
+        - name: HELM_RELEASE
+          value: $(params.helmRelease)
+        - name: HELM_IMAGE
+          value: $(params.helmImage)
+        - name: IMAGE
+          value: $(params.imageUrl)
+        - name: IMAGE_TAG
+          value: $(tasks.generate-id.results.short-commit)
+      runAfter:
+        - buildah
+      taskRef:
+        kind: Task
+        name: helm-deploy
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: reroll-deployment
+      runAfter:
+        - helm-deploy
+      taskRef:
+        kind: Task
+        name: reroll-deployment
+      params:
+        - name: deploymentName
+          value: $(params.deploymentName)
+        - name: namespace
+          value: $(params.namespace)
+  workspaces:
+    - description: |
+        This workspace will receive the cloned git repo and be passed
+        to the next Task for the repo's README.md file to be read.
+      name: shared-data

@@ -1,0 +1,17 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: "{{ .Values.general.name }}-build-push-image-trigger"
+  namespace: {{.Release.Namespace}}
+  annotations:
+    meta.helm.sh/release-namespace: {{.Release.Namespace}}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+spec:
+  serviceAccountName: pipeline
+  namespaceSelector: {}
+  resources: {}
+  triggers:
+    - name: "{{ .Values.general.name }}-github-trigger"
+      triggerRef: "{{ .Values.general.name }}-github-trigger"
+      
