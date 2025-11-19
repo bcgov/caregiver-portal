@@ -21,7 +21,13 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
-          resources: {}
+          resources: 
+            limits:
+              cpu: "500m"
+              memory: 512Mi
+            requests:
+              cpu: "100m"
+              memory: 256Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
@@ -30,13 +36,7 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
-      resources: 
-        limits:
-          cpu: "500m"
-          memory: 512Mi
-        requests:
-          cpu: "100m"
-          memory: 256Mi
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
