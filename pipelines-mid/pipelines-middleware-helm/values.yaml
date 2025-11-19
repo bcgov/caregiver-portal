@@ -1,0 +1,12 @@
+general:
+  name: social-middleware
+  repourl: https://github.com/bcgov/social-middleware.git
+  imagetag: latest
+  contextpath: ./social-middleware/
+  imageurl: nextjs
+  helmrelease: social-middleware
+  helmdir: ./social-middleware-helm
+  deploymentname: social-middleware
+  deploymentnamespace: f6e00d-dev
+
+ 

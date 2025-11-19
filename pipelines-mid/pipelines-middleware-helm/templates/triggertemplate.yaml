@@ -1,0 +1,92 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: "{{ .Values.general.name }}-github-trigger"
+  namespace: {{.Release.Namespace}}
+spec:
+  params:
+    - default: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools'
+      name: imageRegistry
+    - default: image-registry-username
+      name: imageRegistryUser
+    - default: image-registry-password
+      name: imageRegistryPass
+    - default: '{{ .Values.general.imageurl }}'
+      name: imageUrl
+    - default: '{{ .Values.general.imagetag }}'
+      name: imageTag
+    - default: '{{ .Values.general.repourl }}'
+      name: repoUrl
+    - default: main
+      name: branchName
+    - default: '{{ .Values.general.helmrelease }}'
+      name: helmRelease
+    - default: '{{ .Values.general.helmdir }}'
+      name: helmDir
+    - default: values.yaml
+      name: helmValues
+    - default: ./Dockerfile
+      name: dockerfile
+    - default: '{{ .Values.general.contextpath }}'
+      name: pathToContext
+    - default: 'quay.io/buildah/stable:v1.39.3'
+      name: buildahImage
+    - default: 'docker.io/lachlanevenson/k8s-helm:v3.7.0'
+      name: helmImage
+    - default: '{{ .Values.general.deploymentname }}'
+      name: deploymentName
+    - default: '{{ .Values.general.deploymentnamespace }}'
+      name: namespace
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: pipeline-build-run-
+      spec:
+        params:
+          - name: imageRegistry
+            value: $(tt.params.imageRegistry)
+          - name: imageRegistryUser
+            value: $(tt.params.imageRegistryUser)
+          - name: imageRegistryPass
+            value: $(tt.params.imageRegistryPass)
+          - name: imageUrl
+            value: $(tt.params.imageUrl)
+          - name: imageTag
+            value: $(tt.params.imageTag)
+          - name: repoUrl
+            value: $(tt.params.repoUrl)
+          - name: branchName
+            value: $(tt.params.branchName)
+          - name: helmRelease
+            value: $(tt.params.helmRelease)
+          - name: helmDir
+            value: $(tt.params.helmDir)
+          - name: helmValues
+            value: $(tt.params.helmValues)
+          - name: dockerfile
+            value: $(tt.params.dockerfile)
+          - name: pathToContext
+            value: $(tt.params.pathToContext)
+          - name: buildahImage
+            value: $(tt.params.buildahImage)
+          - name: helmImage
+            value: $(tt.params.helmImage)
+          - name: deploymentName
+            value: $(tt.params.deploymentName)
+          - name: namespace
+            value: $(tt.params.namespace)
+        pipelineRef:
+          name: '{{ .Values.general.name }}'
+        workspaces:
+          - name: shared-data
+            volumeClaimTemplate:
+              metadata:
+                annotations:
+                  tekton.dev/deleteAfterRun: "true"
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 100Mi

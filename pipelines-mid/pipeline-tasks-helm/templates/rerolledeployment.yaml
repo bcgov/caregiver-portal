@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: reroll-deployment
+  namespace: {{.Release.Namespace}}
+spec:
+  description: |
+    This task will re-roll a single deployment using OpenShift's `oc patch` command as oc rollout not available in tekton oc version.
+  params:
+    - name: deploymentName
+      description: The name of the deployment to be re-rolled.
+      type: string
+    - name: namespace
+      description: The namespace where the deployment exists.
+      type: string
+  steps:
+    - name: reroll-deployment
+      image: 'openshift/origin-cli:latest' 
+      script: |
+        #!/bin/bash
+        echo "Re-rolling deployment: $(params.deploymentName) in namespace: $(params.namespace)"
+        oc patch deployment $(params.deploymentName) -n $(params.namespace) -p '{"spec":{"template":{"metadata":{"labels":{"date":"'$(date +%s)'"}}}}}'

@@ -1,0 +1,9 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: "{{ .Values.general.name }}-github-trigger-binding"
+  namespace: {{.Release.Namespace}}
+spec:
+  params:
+    - name: branchName
+      value: $(extensions.branchName)

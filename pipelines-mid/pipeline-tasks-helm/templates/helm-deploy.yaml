@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: helm-deploy
+  namespace: {{.Release.Namespace}}
+  labels:
+    app.kubernetes.io/version: '0.2'
+spec:
+  description: These tasks will install / upgrade a helm chart into your Kubernetes / OpenShift Cluster using Helm
+  params:
+    - description: The directory where the helm chart is located.
+      name: HELM_DIR
+      type: string
+    - description: The values file relative to helmDir.
+      name: HELM_VALUES
+      type: string
+    - description: The release name that will be used to identify the deployment.
+      name: HELM_RELEASE
+      type: string
+    - description: Name of App that will be deployed.
+      name: IMAGE
+      type: string
+    - description: Name of image tag.
+      name: IMAGE_TAG
+      type: string
+    - default: 'docker.io/lachlanevenson/k8s-helm@sha256:5c792f29950b388de24e7448d378881f68b3df73a7b30769a6aa861061fd08ae'
+      description: Specify a specific helm image
+      name: HELM_IMAGE
+      type: string
+  steps:
+    - image: $(params.HELM_IMAGE)
+      name: helm-deploy
+      resources: {}
+      script: |
+        helm upgrade --install $(params.HELM_RELEASE) --set image.tag=$(params.IMAGE_TAG) -f $(params.HELM_DIR)/$(params.HELM_VALUES) $(params.HELM_DIR) --namespace f6e00d-dev
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - name: source
