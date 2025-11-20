@@ -1,5 +1,6 @@
-First pass helm chart:
+caregiver portal helm chart
+NOTE: Ensure APS is deployed
 
-deploy react app / service
+
 
 
