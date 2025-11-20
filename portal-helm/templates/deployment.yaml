@@ -17,7 +17,11 @@ spec:
     spec:
       containers:
         - name: caregiver-portal
-          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:{{ splitList "-" .Release.Namespace | last }}'
+          {{- if eq (last (splitList "-" .Release.Namespace)) "dev" }}
+          image: "image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:dev"
+          {{- else }}
+          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:{{ (last (splitList "-" .Release.Namespace)) }}'
+          {{- end }}
           ports:
             - containerPort: 8080
               protocol: TCP
