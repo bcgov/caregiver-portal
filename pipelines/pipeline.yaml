@@ -4,6 +4,7 @@ metadata:
   name: portal
   namespace: f6e00d-tools
 spec:
+  serviceAccountName: pipeline
   params:
     - name: helmDir
       type: string
