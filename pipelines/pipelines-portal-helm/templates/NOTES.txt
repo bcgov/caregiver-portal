@@ -2,7 +2,6 @@ Ensure pipeline.yaml is deployed and the webhook secret is created
 
 pipeline name: '{{ .Values.general.name }}'
 webhook secret: "{{ .Values.general.name }}-github-webhook-secret"
-vite secret (injested in pipeline): vite-secrets
-ensure the tasks pipeline is deployed as well
+vite secret (injested in pipeline): vite-dev | vite-test | vite-prod
+ensure the tasks pipeline is deployed as well.
 
-TODO: Dynamically pull imagetag from source branch!

@@ -17,11 +17,21 @@ spec:
     spec:
       containers:
         - name: caregiver-portal
-          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:latest'
+          {{- if eq (last (splitList "-" .Release.Namespace)) "dev" }}
+          image: "image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:main"
+          {{- else }}
+          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:{{ (last (splitList "-" .Release.Namespace)) }}'
+          {{- end }}
           ports:
             - containerPort: 8080
               protocol: TCP
-          resources: {}
+          resources: 
+            limits:
+              cpu: "500m"
+              memory: 512Mi
+            requests:
+              cpu: "100m"
+              memory: 128Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
@@ -30,6 +40,7 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
