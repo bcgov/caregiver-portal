@@ -89,6 +89,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     genderType: existingPartner.genderType || '',
                     householdMemberId: existingPartner.householdMemberId,
                     requireScreening: existingPartner.requireScreening,
+                    screeningProvided: existingPartner.screeningProvided,
                     userId: existingPartner.userId,
                 });
             }
@@ -104,6 +105,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     relationship: member.relationshipToPrimary,
                     genderType: member.genderType || '',
                     requireScreening: member.requireScreening,
+                    screeningProvided: member.screeningProvided,
                     userId: member.userId,
 
                 }));
