@@ -8,6 +8,8 @@ import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import FileUpload from '../components/FileUpload';
+import { useAttachments } from '../hooks/useAttachments';
 //import { useDates } from '../hooks/useDates';
 
 const FosterApplicationProcess = () => {
@@ -17,6 +19,8 @@ const FosterApplicationProcess = () => {
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const navigate = useNavigate();
+  const { uploadAttachment, getAttachmentsByPackage, deleteAttachment } = useAttachments();
+  const [uploadedFiles, setUploadedFiles ] = React.useState([]);
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   //const formatSubmissionDate = useDates();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
@@ -51,6 +55,44 @@ const FosterApplicationProcess = () => {
   const handleBackClick = (item) => {
     navigate(item.path);
   };
+
+  const handleUpload = async (uploadData) => {
+    try {
+      await uploadAttachment(uploadData);
+      loadAttachments();
+      
+    } catch (error) {
+      
+      console.error('Upload failed:', error.message);
+    }
+  };
+
+  const handleDeleteAttachment = async (attachmentId) => {
+    try {
+      await deleteAttachment(attachmentId);
+      await loadAttachments();
+    } catch (error) {
+      console.error('Delete failed:', error.message);
+    }
+  }
+
+  const loadAttachments = async () => {
+    try {
+      const attachments = await getAttachmentsByPackage(applicationPackageId);
+      console.info("getting attachments", attachments);
+      setUploadedFiles(attachments);
+    } catch (error) {
+      console.error('Failed to load attachments:', error);
+    }
+  }
+
+  React.useEffect(() => {
+    if (applicationPackageId) {
+      loadAttachments();
+    } else {
+      console.error("no bueno");
+    }
+  }, []);
 
   React.useEffect(() => {
     const loadForms = async () => {
@@ -236,7 +278,9 @@ return (
                     isLoading={isDeleting}
                     />
                     {error && <div className="error-message">{error}</div>}
+
         </div>
+
         </div>
       </div>
   );
