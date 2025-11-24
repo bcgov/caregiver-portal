@@ -12,7 +12,7 @@ const ApplicationPackageStep = ({step, index, onContinue, state = 'default'}) =>
             case 'Complete':
                 return <CircleCheck className="application-package-icon-complete" />;
             case 'Draft':
-                return <CircleCheck className="application-package-icon-complete" />;
+                return <CircleAlert className="application-package-icon-alert" />;
             default:
                 return <CircleAlert className="application-package-icon-alert" />;       
         }
