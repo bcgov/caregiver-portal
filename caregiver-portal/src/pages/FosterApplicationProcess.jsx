@@ -8,21 +8,15 @@ import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
-import FileUpload from '../components/FileUpload';
-import { useAttachments } from '../hooks/useAttachments';
-//import { useDates } from '../hooks/useDates';
 
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  const [forms, setForms] = React.useState([]);
+  //const [forms, setForms] = React.useState([]);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const navigate = useNavigate();
-  const { uploadAttachment, getAttachmentsByPackage, deleteAttachment } = useAttachments();
-  const [uploadedFiles, setUploadedFiles ] = React.useState([]);
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
-  //const formatSubmissionDate = useDates();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
@@ -56,44 +50,6 @@ const FosterApplicationProcess = () => {
     navigate(item.path);
   };
 
-  const handleUpload = async (uploadData) => {
-    try {
-      await uploadAttachment(uploadData);
-      loadAttachments();
-      
-    } catch (error) {
-      
-      console.error('Upload failed:', error.message);
-    }
-  };
-
-  const handleDeleteAttachment = async (attachmentId) => {
-    try {
-      await deleteAttachment(attachmentId);
-      await loadAttachments();
-    } catch (error) {
-      console.error('Delete failed:', error.message);
-    }
-  }
-
-  const loadAttachments = async () => {
-    try {
-      const attachments = await getAttachmentsByPackage(applicationPackageId);
-      console.info("getting attachments", attachments);
-      setUploadedFiles(attachments);
-    } catch (error) {
-      console.error('Failed to load attachments:', error);
-    }
-  }
-
-  React.useEffect(() => {
-    if (applicationPackageId) {
-      loadAttachments();
-    } else {
-      console.error("no bueno");
-    }
-  }, []);
-
   React.useEffect(() => {
     const loadForms = async () => {
       if (applicationPackageId) {
@@ -102,13 +58,11 @@ const FosterApplicationProcess = () => {
             getApplicationForms(applicationPackageId),
             getApplicationPackage(applicationPackageId)
           ]);
-          setForms(formsArray);
+          //setForms(formsArray);
           setApplicationPackage(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
-          //const referralId = referralForm?.applicationId || null;
           setReferralApplicationFormId(referralForm?.applicationFormId || null);
-          //console.log('referral id:', referralId);
         } catch (error) {
           console.error('Failed to load forms:', error);
         }
@@ -116,8 +70,6 @@ const FosterApplicationProcess = () => {
     };
     loadForms();
   }, []);
-
-  //const referralId = formsArray.
 
   const handleContinue = (step) => {
     switch(step.key) {
@@ -131,7 +83,6 @@ const FosterApplicationProcess = () => {
         navigate(`/foster-application/application-package/${applicationPackageId}`);
         break;
     }
-
   };
 
   const handleCancel = () => {
