@@ -38,10 +38,42 @@ import { useState, useCallback } from 'react';
       }
     }, []);
 
+    // mark a screening form as having user-attached documents
+    const markFormAsAttached = useCallback(async (applicationFormId) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await fetch(
+          `${API_BASE_URL}/application-forms/${applicationFormId}/mark-attached`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    }, []);
+
+
     return {
       applicationForms,
       isLoading,
       error,
-      getApplicationForms
+      getApplicationForms,
+      markFormAsAttached
     };
   };
