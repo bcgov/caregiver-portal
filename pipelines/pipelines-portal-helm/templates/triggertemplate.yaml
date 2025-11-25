@@ -16,9 +16,7 @@ spec:
     - default: image-registry-password
       name: imageRegistryPass
     - default: portal
-      name: imageUrl
-    - default: latest
-      name: imageTag
+      name: imageUrl 
     - default: 'https://github.com/bcgov/caregiver-portal.git'
       name: repoUrl
     - default: main
@@ -54,8 +52,6 @@ spec:
             value: $(tt.params.imageRegistryPass)
           - name: imageUrl
             value: $(tt.params.imageUrl)
-          - name: imageTag
-            value: $(tt.params.imageTag)
           - name: repoUrl
             value: $(tt.params.repoUrl)
           - name: branchName
