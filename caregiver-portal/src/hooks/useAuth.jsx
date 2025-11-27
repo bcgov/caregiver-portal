@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     const params = new URLSearchParams({
       response_type: 'code',
       client_id: BCSC_CLIENT_ID,
-      redirect_uri: `${window.location.origin}/auth/callback`,
+      redirect_uri: `${API_BASE}/auth/callback`,
       scope: 'openid profile email',
       state: state,
       prompt: 'login'

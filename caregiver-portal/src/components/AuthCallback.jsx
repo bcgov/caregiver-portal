@@ -58,7 +58,7 @@ export const AuthCallback = () => {
           credentials: 'include', // Important for cookies
           body: JSON.stringify({
             code,
-            redirect_uri: `${window.location.origin}/auth/callback`,
+            redirect_uri: `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/auth/callback`,
           }),
         });
 
