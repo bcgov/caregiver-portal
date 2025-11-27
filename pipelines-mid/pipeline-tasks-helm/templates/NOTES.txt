@@ -1,3 +1,0 @@
-Generalize tasks.
-
-Note to add namespace and imagetag params
