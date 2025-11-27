@@ -1,38 +1,13 @@
 import React from "react";
 import { CircleAlert, CircleCheck, ChevronRight, Check } from "lucide-react";
-import Button from "./Button";
-import AccessCodeModal from "./AccessCodeModal";
-import { useInviteHouseholdMember } from "../hooks/useInviteHouseholdMember";
 
 const HouseholdSummaryItem = ({member, onClick}) => {
-    const [isModalOpen, setIsModalOpen] = React.useState(false);    
-    const [accessCodeData, setAccessCodeData] = React.useState(null);
-    const { inviteMember, isLoading } = useInviteHouseholdMember();
-    
-
-    /*
-    const handleInviteClick = async () => {
-        try {
-          const result = await inviteMember(applicationId, member.householdMemberId);
-          setAccessCodeData(result);
-          setIsModalOpen(true);
-        } catch (err) {
-          console.error('Failed to generate access code:', err);
-          // TODO: You could show an error toast here
-        }
-      };
-*/
-  
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setAccessCodeData(null);
-      };
 
     const calculateCompletion = (member) => {
         let completedTasks = 0;
         let totalTasks = 1;
 
-        console.log(member);
+        //console.log(member);
 
         // task 1: Account created
         if (member.userId) {
@@ -43,26 +18,35 @@ const HouseholdSummaryItem = ({member, onClick}) => {
             totalTasks = 2;
         }
 
+        if (member.screeningProvided) {
+            completedTasks = 2;
+            totalTasks = 2;
+        }
+
         return { completedTasks, totalTasks};
     };
 
     const { completedTasks, totalTasks } = calculateCompletion(member);
 
     return (
-        <div className="householdSummaryItem" onClick={member.requireScreening ? onClick : null}>
+        <div className="householdSummaryItem" onClick={member.requireScreening && !member.screeningProvided ? onClick : null}>
             <div className="householdSummaryItemLeft">
                 <div className="topLabel">
                     <span className="nameLabel">{member.firstName} {member.lastName} </span>
                     <span className="pill">{member.relationship}</span>
                 </div>
                 <div className="bottomLabel">
-                    { member.requireScreening ? 
+                    { !member.screeningProvided && member.requireScreening? 
                         <CircleAlert size={20} className="alert" /> 
                     : <CircleCheck size={20} className="completed" /> 
                     }
 
-                    { member.requireScreening && (
-                    <div className="caption-small">{completedTasks} of {totalTasks} tasks completed</div>
+                    { member.screeningProvided && (
+                    <div className="caption-small">Tasks completed</div>
+                    )}
+
+                    { !member.screeningProvided && member.requireScreening && (
+                    <div className="caption-small">Tasks still outstanding</div>
                     )}
 
                     { !member.requireScreening && (
@@ -71,14 +55,7 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                 </div>
             </div>
                 <span className="chevronRight">
-                { member.requireScreening ? 
-                //    <Button
-                //        onClick={handleInviteClick}
-                //        disabled={isLoading}
-                //        
-                //        >
-                //        Invite <ChevronRight size={40} />
-                //    </Button>
+                { member.requireScreening && !member.screeningProvided? 
                     <ChevronRight size={40}
                         className="chevronRight" 
                         />
@@ -86,18 +63,8 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                         className="chevronRight" 
                         />  
                 }
-
                 </span>
-                <AccessCodeModal
-                    isOpen={isModalOpen}
-                    onClose={handleCloseModal}
-                    accessCode={accessCodeData?.accessCode}
-                    memberName={`${member.firstName} ${member.lastName}`}
-                    expiresAt={accessCodeData?.expiresAt}
-                    isLoading={isLoading}
-                />
         </div>
-
     );
 };
 

@@ -1,8 +1,0 @@
-Ensure pipeline.yaml is deployed and the webhook secret is created
-
-pipeline name: '{{ .Values.general.name }}'
-webhook secret: "{{ .Values.general.name }}-github-webhook-secret"
-
-ensure the tasks pipeline is deployed as well
-
-TODO: Dynamically pull imagetag from source branch!

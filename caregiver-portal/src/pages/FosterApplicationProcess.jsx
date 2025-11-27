@@ -8,17 +8,15 @@ import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
-//import { useDates } from '../hooks/useDates';
 
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  const [forms, setForms] = React.useState([]);
+  //const [forms, setForms] = React.useState([]);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
-  //const formatSubmissionDate = useDates();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
     // Force restore scrolling before navigation
     document.body.style.overflow = 'unset';
@@ -60,13 +58,11 @@ const FosterApplicationProcess = () => {
             getApplicationForms(applicationPackageId),
             getApplicationPackage(applicationPackageId)
           ]);
-          setForms(formsArray);
+          //setForms(formsArray);
           setApplicationPackage(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
-          //const referralId = referralForm?.applicationId || null;
           setReferralApplicationFormId(referralForm?.applicationFormId || null);
-          //console.log('referral id:', referralId);
         } catch (error) {
           console.error('Failed to load forms:', error);
         }
@@ -74,8 +70,6 @@ const FosterApplicationProcess = () => {
     };
     loadForms();
   }, []);
-
-  //const referralId = formsArray.
 
   const handleContinue = (step) => {
     switch(step.key) {
@@ -89,7 +83,6 @@ const FosterApplicationProcess = () => {
         navigate(`/foster-application/application-package/${applicationPackageId}`);
         break;
     }
-
   };
 
   const handleCancel = () => {
@@ -236,7 +229,9 @@ return (
                     isLoading={isDeleting}
                     />
                     {error && <div className="error-message">{error}</div>}
+
         </div>
+
         </div>
       </div>
   );

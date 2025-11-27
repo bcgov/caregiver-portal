@@ -6,6 +6,8 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
+import Declaration from '../components/Declaration';
+import { Loader2 } from 'lucide-react';
 
 
 const FosterApplicationPackage = () => {
@@ -55,7 +57,17 @@ const FosterApplicationPackage = () => {
       }
 
       const isApplicationComplete = () => {
-        return household?.isComplete === true;
+        // Check if household is complete
+        const householdComplete = household?.isComplete === true;
+        // Check if all non-household forms have status 'Complete'
+        const nonHouseholdForms = forms.filter(form =>
+          !form.type?.toLowerCase().includes('household') &&
+          !form.type?.toLowerCase().includes('referral') 
+        );
+        const allFormsComplete = nonHouseholdForms.length > 0 &&
+          nonHouseholdForms.every(form => form.status === 'Complete');
+        // Both conditions must be true
+        return householdComplete && allFormsComplete;
       };
 
       const handleSubmit = async () => {
@@ -64,7 +76,7 @@ const FosterApplicationPackage = () => {
           const result = await lockApplicationPackage(applicationPackageId);
           console.log('lock successful:', result);
           setIsApplicationLocked(true);
-          //navigate(`/foster-application/${applicationPackageId}`);
+          navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error('lock failed:', error);
           alert('Failed to lock application. Please try again.');
@@ -169,18 +181,17 @@ const FosterApplicationPackage = () => {
         {isApplicationComplete() && 
           <>
           <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
-          <div className="declaration">
-          <input className="declaration-checkbox" 
-            checked={isDeclarationChecked || isApplicationLocked} 
-            onChange={(e) => setIsDeclarationChecked(e.target.checked)} 
+          <Declaration
+            checked={isDeclarationChecked || isApplicationLocked}
+            onChange={setIsDeclarationChecked}
             disabled={isApplicationLocked}
-            type="checkbox"
-            /><p className='declaration-text'>I declare that the information contained in this application is true to the best of my knowledge and belief, and belive that I have not ommitted any information requested.</p>
-          </div>
+          >
+            I declare that the information contained in this application is true to the best of my knowledge and belief, and believe that I have not omitted any information requested.
+          </Declaration>
       
           </>
         }
-        <div className="page-details-row-small">
+        <div className="page-details-row">
         {!isApplicationLocked ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
         ) : (
