@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
       response_type: 'code',
       client_id: BCSC_CLIENT_ID,
       redirect_uri: `${API_BASE}/auth/callback`,
-      scope: 'openid profile email',
+      scope: 'openid profile',
       state: state,
       prompt: 'login'
     });
