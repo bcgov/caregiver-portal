@@ -27,6 +27,7 @@ import { useState, useCallback } from 'react';
         const data = await response.json();
         
         setApplicationForms(data);
+        //console.log(`setting application formsssss to ${data}`)
         //setApplicationPackages(hasFosterApp);
 
       } catch (err) {
@@ -37,6 +38,35 @@ import { useState, useCallback } from 'react';
         setIsLoading(false);
       }
     }, []);
+
+  const getApplicationFormsByHouseholdMember = useCallback(async (householdMemberId) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch(
+        `${API_BASE_URL}/application-forms/household/${householdMemberId}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data; // Returns array of forms for this specific household member
+
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
     // mark a screening form as having user-attached documents
     const markFormAsAttached = useCallback(async (applicationFormId) => {
@@ -74,6 +104,7 @@ import { useState, useCallback } from 'react';
       isLoading,
       error,
       getApplicationForms,
+      getApplicationFormsByHouseholdMember,
       markFormAsAttached
     };
   };
