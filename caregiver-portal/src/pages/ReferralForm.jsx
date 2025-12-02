@@ -10,11 +10,11 @@ import Application from '../components/Application';
 const ReferralForm = () => {
   const { applicationPackageId, applicationFormId } = useParams();
   const navigate = useNavigate();
-  //const [isSubmitting, setIsSubmitting] = React.useState(false);
-  //const { submitApplicationPackage } = useApplicationPackage();  
+  const back = `/foster-application/${applicationPackageId}`
+
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/${applicationPackageId}` },
+    { label: 'Back', path: back },
   ];
 
 
@@ -43,8 +43,7 @@ const ReferralForm = () => {
         <div className="page-details-row-breadcrumb">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
-        <Application applicationFormId={applicationFormId} />
-        
+        <Application applicationFormId={applicationFormId} onSubmitComplete={back} submitPackage={true} />
         </div>
     </div>
   );

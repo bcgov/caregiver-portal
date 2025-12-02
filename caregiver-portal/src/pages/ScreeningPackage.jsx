@@ -26,7 +26,7 @@ const ScreeningPackage = () => {
       };
 
       const handleContinue = (item) => {
-          navigate(`/screening-form/${item.applicationFormId}`);
+          navigate(`/screening-package/${householdMemberId}/screening-form/${item.applicationFormId}`);
           return;
       }
 
@@ -79,19 +79,17 @@ const ScreeningPackage = () => {
         <div className='page-details-row-small'>
           <h1 className="page-title">Application to provide foster family care</h1>
         </div>
-        <div className='page-details-row-small'>
-          <p className="caption">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
-            under Section 26(c) and will be used for the purposes of your Caregiver Application. The information collected on these forms will be strictly used by 
-            MCFD for Caregiver Application and Assessment activities. If you have questions about the collection of your information for this purpose, please contact 
-            the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
-        </div>
+        <div className='page-details-row'>
+        <div className="section-description">
+              You have been named as the spouse/co-applicant on an application. You must submit this application.</div>
+              </div>        
         <div className='page-details-row-small'>
           <div className="application-package">
             {forms.map((step, index) => (
               step.type !== 'Referral' && // Exclude 'Referral' type steps
-               <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
+               <ApplicationPackageStep key={index} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
-        </div>
+          </div>
         </div>
         
         <div className="page-details-row-footer">
@@ -108,9 +106,13 @@ const ScreeningPackage = () => {
           >
             I declare that the information contained in this application is true to the best of my knowledge and belief, and believe that I have not omitted any information requested.
           </Declaration>
+
+
       
           </>
         }
+
+        <Button variant={isDeclarationChecked ? "primary" : "disabled"}>Submit</Button>
 
         </div>
       </div>
