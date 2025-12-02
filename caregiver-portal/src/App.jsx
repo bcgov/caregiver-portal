@@ -51,7 +51,7 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/screening-package/:householdMemberId" element={<ProtectedRoute><ScreeningPackage /></ProtectedRoute>}/>
-        <Route path="/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
+        <Route path="/screening-package/:householdMemberId/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
 
       </Routes>
     </main>
