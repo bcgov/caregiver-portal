@@ -25,11 +25,12 @@ const ConsentOverview = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const { loadHouseholdMember } = useHousehold({ applicationPackageId });
-  const { markFormAsAttached } = useApplications();
+  const { markScreeningDocumentsAttached } = useApplications();
+  const  back = `/foster-application/application-package/${applicationPackageId}/consent-summary`
 
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}/consent-summary` },
+    { label: 'Back', path: back },
   ];
 
   const getCurrentStep = () => {
@@ -135,9 +136,14 @@ const ConsentOverview = () => {
 
     const handleSubmitConsentForms = async () => {
       try {
-        await markFormAsAttached(screeningFormId);
-        // proceed with navigation or other actions
-        navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`)
+        if(!householdMemberId || !applicationPackageId) {
+          console.error('Missing required IDs');
+          return;
+        }
+        
+        const result = await markScreeningDocumentsAttached(applicationPackageId, householdMemberId);
+        console.log(`Marked ${result.formsUpdated} screening form(s) as attached`);
+        navigate(back)
       } catch (error) {
         console.error('Failed to mark form as attached:', error);
       }
