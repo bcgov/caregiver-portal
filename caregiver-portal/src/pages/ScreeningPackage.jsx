@@ -15,10 +15,11 @@ const ScreeningPackage = () => {
   const [forms, setForms] = React.useState([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
-  const { getApplicationFormsByHouseholdMember } = useApplications();
+  const { getApplicationFormsByHouseholdMember, confirmScreeningPackage } = useApplications();
+  const back = `/dashboard`
 
     const breadcrumbItems = [
-        { label: 'Back', path: `/dashboard` },
+        { label: 'Back', path: back },
       ];
 
       const handleBackClick = (item) => {
@@ -43,12 +44,22 @@ const ScreeningPackage = () => {
       };
 
       const handleSubmit = async () => {
+
+        if(!isDeclarationChecked) {
+          return;
+        }
+
         setIsSubmitting(true);
         try {
-          navigate(`/dashboard`);
+          const applicationPackageId = forms[0]?.applicationPackageId;
+          if (!applicationPackageId) {
+            throw new Error('Application package ID not found');
+          }
+          const result = await confirmScreeningPackage(applicationPackageId, householdMemberId);
+          console.log('Screening package confirmed', result);
+          navigate(back);
         } catch (error) {
-          console.error('submission:', error);
-          
+          console.error('screening package confirmation failed:', error);
         } finally {
           setIsSubmitting(false);
         }
@@ -112,7 +123,7 @@ const ScreeningPackage = () => {
           </>
         }
 
-        <Button variant={isDeclarationChecked ? "primary" : "disabled"}>Submit</Button>
+        <Button variant={isDeclarationChecked ? "primary" : "disabled"} onClick={handleSubmit} disabled={!isDeclarationChecked || isSubmitting}>Submit</Button>
 
         </div>
       </div>
