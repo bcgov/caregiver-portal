@@ -4,7 +4,7 @@ import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
-const Application = ({ applicationFormId, onClose }) => {
+const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -68,34 +68,29 @@ const Application = ({ applicationFormId, onClose }) => {
 
     useEffect(() => {
       async function handleMessage(event) {
-        console.log("Form update >> ", event.data);
-        console.log("applicationForm:", applicationForm);
-        console.log("applicationPackageId:", applicationForm?.applicationPackageId);
-
+        //console.log("Form update >> ", event.data);
+        //console.log("applicationForm:", applicationForm);
+        //console.log("applicationPackageId:", applicationForm?.applicationPackageId);
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
-          //const targetUrl = `/foster-application/${applicationForm?.applicationPackageId}`;
-          //console.log("Attempting to navigate to:", targetUrl);
-          //navigate(targetUrl);
-
-
           setIsSubmitting(true);
 
-          if (applicationForm.type !== "Referral" && applicationForm.type !== "Screening") {
+          if (!submitPackage) {
             setIsSubmitting(true);
-            navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+            if( onSubmitComplete ) {
+              navigate(onSubmitComplete);
+            } else {
+              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+            }
           } else {
-
-          
-  
-          
+       
           try {
             const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
             console.log('Submission successful:', result);
-            if(applicationForm?.type === 'Screening') {
-              navigate(`/dashboard`);              
+            if( onSubmitComplete ) {
+              navigate(onSubmitComplete);
             } else {
-            navigate(`/foster-application/${applicationForm?.applicationPackageId}`);
+              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
             }
           } catch (error) {
             console.error('Submit failed:', error);

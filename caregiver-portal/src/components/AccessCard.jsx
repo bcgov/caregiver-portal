@@ -26,7 +26,7 @@ const AccessCard = () => {
             console.log("Access code associated, result:", result);
             // navigate to the application page using the returned applicationId
             setTimeout(() => {
-                navigate(`/screening-form/${result.applicationFormId}`);
+                navigate(`/screening-package/${result.householdMemberId}`);
             }, 1500);
         } catch (err) {
             

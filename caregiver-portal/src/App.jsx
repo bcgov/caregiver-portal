@@ -24,6 +24,7 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import ScreeningForm from './pages/ScreeningForm';
+import ScreeningPackage from './pages/ScreeningPackage';
 
 const App = () => {
 
@@ -49,7 +50,8 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
-        <Route path="/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
+        <Route path="/screening-package/:householdMemberId" element={<ProtectedRoute><ScreeningPackage /></ProtectedRoute>}/>
+        <Route path="/screening-package/:householdMemberId/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
 
       </Routes>
     </main>

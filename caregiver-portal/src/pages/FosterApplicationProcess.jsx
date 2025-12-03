@@ -12,7 +12,6 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  //const [forms, setForms] = React.useState([]);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const navigate = useNavigate();
@@ -169,7 +168,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && applicationPackage?.srStage === 'Screening') {
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || applicationPackage?.status === 'Submitted')) {
 
         return {
           ...step,

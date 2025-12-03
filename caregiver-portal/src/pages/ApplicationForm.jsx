@@ -8,9 +8,10 @@ import Application from '../components/Application';
 const ApplicationForm = () => {
   const { applicationPackageId, applicationFormId } = useParams();
   const navigate = useNavigate();
+  const back = `/foster-application/application-package/${applicationPackageId}`;
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}` },
+    { label: 'Back', path: back},
   ];
 
   const handleBackClick = (item) => {
@@ -23,7 +24,7 @@ const ApplicationForm = () => {
         <div className="page-details-row-breadcrumb">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
-        <Application applicationFormId={applicationFormId} />
+        <Application applicationFormId={applicationFormId} onSubmitComplete={back} submitPackage={false}/>
     </div>
     </div>
   );

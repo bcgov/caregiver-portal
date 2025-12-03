@@ -6,11 +6,12 @@ import Application from '../components/Application';
 
 
 const ScreeningForm = () => {
-  const { applicationFormId } = useParams();
+  const { householdMemberId, applicationFormId } = useParams();
   const navigate = useNavigate();
+  const back = `/screening-package/${householdMemberId}`
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/dashboard` },
+    { label: 'Back', path: back},
   ];
 
   const handleBackClick = (item) => {
@@ -22,7 +23,7 @@ const ScreeningForm = () => {
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
-        <Application applicationFormId={applicationFormId} />
+        <Application applicationFormId={applicationFormId} onSubmitComplete={back}/>
     </div>
     </div></div>
   );
