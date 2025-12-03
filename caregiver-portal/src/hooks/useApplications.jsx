@@ -69,19 +69,19 @@ import { useState, useCallback } from 'react';
   }, []);
 
     // mark a screening form as having user-attached documents
-    const markFormAsAttached = useCallback(async (applicationFormId) => {
+    const markScreeningDocumentsAttached = useCallback(async (applicationPackageId, householdMemberId) => {
       try {
         setIsLoading(true);
         setError(null);
 
         const response = await fetch(
-          `${API_BASE_URL}/application-forms/${applicationFormId}/mark-attached`,
+          `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/mark-screening-documents-attached`,
           {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' }
           }
-        );
+        )
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -98,6 +98,36 @@ import { useState, useCallback } from 'react';
       }
     }, []);
 
+    const confirmScreeningPackage = useCallback(async (applicationPackageId, householdMemberId) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+  
+        const response = await fetch(
+          `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/confirm-screening-package`,
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+  
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+        return data; // Returns { success: boolean, message: string }
+  
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    }, []);
+
 
     return {
       applicationForms,
@@ -105,6 +135,7 @@ import { useState, useCallback } from 'react';
       error,
       getApplicationForms,
       getApplicationFormsByHouseholdMember,
-      markFormAsAttached
+      markScreeningDocumentsAttached,
+      confirmScreeningPackage
     };
   };
