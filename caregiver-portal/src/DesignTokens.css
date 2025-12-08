@@ -208,6 +208,18 @@ p {
   line-height: 150%; /* 24px */
 }
 
+li {
+  color: var(--typography-color-primary, #2D2D2D);
+
+  /* regular/body */
+  font-family: "BC Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+ 
+}
+
 .page-wrapper {
   min-height: 100vh;
   display: flex;
