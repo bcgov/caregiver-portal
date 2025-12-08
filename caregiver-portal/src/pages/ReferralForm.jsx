@@ -14,25 +14,9 @@ const ReferralForm = () => {
 
 
   const breadcrumbItems = [
-    { label: 'Back', path: back },
+    { label: 'Become a foster caregiver', path: back },
   ];
 
-
-  /*
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      const result = await submitApplicationPackage(applicationPackageId);
-      console.log('Submission successful:', result);
-      navigate(`/foster-application/${applicationPackageId}`);
-    } catch (error) {
-      console.error('Submit failed:', error);
-      alert('Failed to submit application. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-    */
   const handleBackClick = (item) => {
     navigate(item.path);
   };
@@ -43,7 +27,27 @@ const ReferralForm = () => {
         <div className="page-details-row-breadcrumb">
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
-        <Application applicationFormId={applicationFormId} onSubmitComplete={back} submitPackage={true} />
+        <div className="page-details-row-small">
+         <h1 className="page-title">Attend an information session</h1>
+        
+        </div>
+        <div className="page-details-row">
+        <div className="section-description">
+          <p>Information sessions are design to help prospective foster caregivers make the decision about fostering.</p>
+
+          <p>Topics include:</p>
+          <ul>
+            <li>How to become a foster caregiver</li>
+            <li>What's involved in being a foster caregiver</li>
+            <li>An overview of BC's foster care system</li>
+          </ul>
+
+          <p>After receiving your request, we will contact you with information on the next information session in your area.</p>
+
+          
+        </div>
+        </div>
+
         </div>
     </div>
   );
