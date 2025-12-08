@@ -1138,6 +1138,38 @@ line-height: 54px; /* 225% */
     border: 1px solid var(--Web-Border-input, #8D8D8D);
   }
 
+  .form-control-readonly {
+    display: flex;
+    height: 22px;
+    padding: 11px 16px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    font-family: "BC Sans";
+    font-size: 16px;
+
+    border: 1px solid #fff;
+    background: var(--Web-Background-webpage, #FBFBFB);
+  }
+
+  .form-control-multiline-readonly {
+    display: block;
+    height: auto;        /* Change from 22px to auto */
+    min-height: 60px;    /* Minimum height for 2 lines */
+    padding: 16px;
+    flex: 1 0 0;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    font-family: "BC Sans";
+    font-size: 16px;
+
+    border: 1px solid #fff;
+    background: var(--Web-Background-webpage, #FBFBFB);
+    
+    resize: none;
+  }
+
   .access-form-control {
     display: flex;
     height: 22px;
@@ -1182,6 +1214,7 @@ line-height: 54px; /* 225% */
     align-items: flex-start;
     gap: 8px;
     align-self: stretch;
+    padding-top: 32px;
   }
 
   .radio-button-group {
