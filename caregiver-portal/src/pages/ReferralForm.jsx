@@ -16,8 +16,8 @@ const ReferralForm = () => {
   const { userProfile, loading: profileLoading, error: profileError } = useUserProfile();  
   const { requestInfoSession, loading } = useApplicationPackage();
 
-  const [homePhone, setHomePhone] = React.useState(userProfile?.home_phone || '');
-  const [alternatePhone, setAlternatePhone] = React.useState(userProfile?.alternate_phone || '');
+  const [home_phone, setHomePhone] = React.useState(userProfile?.home_phone || '');
+  const [alternate_phone, setAlternatePhone] = React.useState(userProfile?.alternate_phone || '');
   const [email, setEmail] = React.useState(userProfile?.email || '');
   const [emailError, setEmailError] = React.useState('');
   const [primaryPhoneError, setPrimaryPhoneError] = React.useState('');
@@ -101,7 +101,7 @@ const ReferralForm = () => {
 
     // Validate all required fields
     const isEmailValid = validateEmail(email);
-    const isPhoneValid = validatePrimaryPhone(homePhone);
+    const isPhoneValid = validatePrimaryPhone(home_phone);
 
     if (!isEmailValid || !isPhoneValid) {
       setSubmitError('Please fix the errors above before submitting');
@@ -115,7 +115,7 @@ const ReferralForm = () => {
       return;
     }
 
-    if (!homePhone || !homePhone.trim()) {
+    if (!home_phone || !home_phone.trim()) {
       setPrimaryPhoneError('Primary phone is required');
       setSubmitError('Please complete all required fields');
       return;
@@ -124,8 +124,8 @@ const ReferralForm = () => {
     try {
       const contactData = {
         email,
-        homePhone,
-        alternatePhone: alternatePhone || undefined, // Only include if provided
+        home_phone,
+        alternate_phone: alternate_phone || undefined, // Only include if provided
       };
 
       await requestInfoSession(applicationPackageId, contactData);
@@ -222,9 +222,9 @@ const ReferralForm = () => {
                   </label>
                   <IMaskInput
                     mask="(000) 000-0000"
-                    value={homePhone}
+                    value={home_phone}
                     onAccept={(value) => {setHomePhone(value); validatePrimaryPhone(value);}}
-                    onBlur={() => validatePrimaryPhone(homePhone)}
+                    onBlur={() => validatePrimaryPhone(home_phone)}
                     placeholder="e.g. (604) 112-1010"
                     type="tel"
                     id="user-primaryPhone"
@@ -238,9 +238,9 @@ const ReferralForm = () => {
                   </label>
                   <IMaskInput
                     mask="(000) 000-0000"
-                    value={alternatePhone}
+                    value={alternate_phone}
                     onAccept={(value) => {setAlternatePhone(value); validateSecondaryPhone(value);}}
-                    onBlur={() => validateSecondaryPhone(alternatePhone)}
+                    onBlur={() => validateSecondaryPhone(alternate_phone)}
                     placeholder="e.g. (604) 112-1010"
                     type="tel"
                     id="user-secondaryPhone"
@@ -260,7 +260,7 @@ const ReferralForm = () => {
             {submitError}
           </div>
         )}
-        <Button type="submit" disabled={loading || !email || !homePhone || primaryPhoneError || emailError} onClick={handleSubmit} variant={!email || !homePhone || primaryPhoneError || emailError? "disabled" : "primary"}>
+        <Button type="submit" disabled={loading || !email || !home_phone || primaryPhoneError || emailError} onClick={handleSubmit} variant={!email || !home_phone || primaryPhoneError || emailError? "disabled" : "primary"}>
           {loading ? 'Requesting...' : 'Request Information Session'}
         </Button>
         </div>
