@@ -9,15 +9,15 @@ import { useUserProfile } from '../hooks/useUserProfile';
 
 
 const ReferralForm = () => {
-  const { applicationPackageId, applicationFormId } = useParams();
+  const { applicationPackageId } = useParams();
   const navigate = useNavigate();
   const back = `/foster-application/${applicationPackageId}`
 
   const { userProfile, loading: profileLoading, error: profileError } = useUserProfile();  
-  const { requestInfoSession, loading, error } = useApplicationPackage();
+  const { requestInfoSession, loading } = useApplicationPackage();
 
-  const [homePhone, setHomePhone] = React.useState(userProfile?.homePhone || '');
-  const [alternatePhone, setAlternatePhone] = React.useState(userProfile?.alternatePhone || '');
+  const [homePhone, setHomePhone] = React.useState(userProfile?.home_phone || '');
+  const [alternatePhone, setAlternatePhone] = React.useState(userProfile?.alternate_phone || '');
   const [email, setEmail] = React.useState(userProfile?.email || '');
   const [emailError, setEmailError] = React.useState('');
   const [primaryPhoneError, setPrimaryPhoneError] = React.useState('');
@@ -27,8 +27,8 @@ const ReferralForm = () => {
   React.useEffect(() => {
     if (userProfile) {
       setEmail(userProfile.email || '');
-      setHomePhone(userProfile.homePhone || '');
-      setAlternatePhone(userProfile.alternatePhone || '');
+      setHomePhone(userProfile.home_phone || '');
+      setAlternatePhone(userProfile.alternate_phone || '');
     }
   }, [userProfile]);  
 
@@ -260,7 +260,7 @@ const ReferralForm = () => {
             {submitError}
           </div>
         )}
-        <Button type="submit" disabled={loading} onClick={handleSubmit}>
+        <Button type="submit" disabled={loading || !email || !homePhone || primaryPhoneError || emailError} onClick={handleSubmit} variant={!email || !homePhone || primaryPhoneError || emailError? "disabled" : "primary"}>
           {loading ? 'Requesting...' : 'Request Information Session'}
         </Button>
         </div>
