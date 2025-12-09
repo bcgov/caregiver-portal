@@ -320,6 +320,16 @@ li {
     margin-top: 24px;
   }
 
+  .page-details-row-bottom {
+    display: flex;
+    width: 1120px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 0px;
+    margin-top: 24px;
+    border-top: 1px solid var(--surface-color-border-medium, #898785);
+  }
+
   .page-details-content {
     display: flex;
     width: 1120px;
@@ -1138,6 +1148,10 @@ line-height: 54px; /* 225% */
     border: 1px solid var(--Web-Border-input, #8D8D8D);
   }
 
+  .form-control-error {
+    border-color: #D8292F; /* BC Gov error red */
+  }
+
   .form-control-readonly {
     display: flex;
     height: 22px;
@@ -1168,6 +1182,13 @@ line-height: 54px; /* 225% */
     background: var(--Web-Background-webpage, #FBFBFB);
     
     resize: none;
+  }
+
+  .error-message{
+
+  color: #B4231E;
+  font-size: 14px;
+
   }
 
   .access-form-control {
