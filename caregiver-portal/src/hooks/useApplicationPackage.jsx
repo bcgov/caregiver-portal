@@ -148,6 +148,41 @@ export const useApplicationPackage = () => {
     }
   };
 
+    // Submit referral request with contact information for info session
+    const requestInfoSession = async (applicationPackageId, contactData) => {
+      setLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/application-package/${applicationPackageId}/request-info-session`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(contactData),
+          }
+        );
+  
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message || `Failed to request info session: ${response.status}`
+          );
+        }
+  
+        const result = await response.json();
+        return result;
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
+
   // lock, and potentially finalize, an application package
   // will enable household consent forms to be collected, if applicable
   const lockApplicationPackage = async (applicationPackageId) => {
@@ -209,6 +244,7 @@ export const useApplicationPackage = () => {
     lockApplicationPackage,
     getApplicationForm,
     submitApplicationPackage,
+    requestInfoSession,
     validateHouseholdCompletion,
     loading,
     error,

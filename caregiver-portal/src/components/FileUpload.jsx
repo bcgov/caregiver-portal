@@ -7,7 +7,7 @@ const FileUpload = ({
     onUpload, 
     onDelete,
     uploadedFiles = [],
-    acceptedTypes = ['.pdf', '.jpg', '.jpeg', '.png', '.doc', '.docx'],
+    acceptedTypes = ['.pdf', '.jpg', '.jpeg', '.png'],
     maxSizeMB = 10,
     applicationPackageId,
     isLocked = false,
@@ -105,13 +105,17 @@ const FileUpload = ({
           try {
           const base64String = reader.result.split(',')[1]; // Remove data:image/jpeg;base64, prefix
 
+          const fileNameParts = fileToUpload.name.split('.');
+          const fileExtension = fileNameParts.length > 1 ? '.' + fileNameParts.pop().toLowerCase() : '';
+          const fileNameWithoutExt = fileNameParts.join('.');
+
           const uploadData = {
             applicationPackageId,
             applicationFormId,
             householdMemberId,
             attachmentType,
-            fileName: fileToUpload.name,
-            fileType: fileToUpload.type,
+            fileName: fileNameWithoutExt,
+            fileType: fileExtension,
             fileData: base64String,
             description,
           };

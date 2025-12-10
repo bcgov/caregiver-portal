@@ -208,6 +208,18 @@ p {
   line-height: 150%; /* 24px */
 }
 
+li {
+  color: var(--typography-color-primary, #2D2D2D);
+
+  /* regular/body */
+  font-family: "BC Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 24px */
+ 
+}
+
 .page-wrapper {
   min-height: 100vh;
   display: flex;
@@ -306,6 +318,16 @@ p {
     align-items: flex-start;
     padding: 24px 0px;
     margin-top: 24px;
+  }
+
+  .page-details-row-bottom {
+    display: flex;
+    width: 1120px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 0px;
+    margin-top: 24px;
+    border-top: 1px solid var(--surface-color-border-medium, #898785);
   }
 
   .page-details-content {
@@ -1126,6 +1148,49 @@ line-height: 54px; /* 225% */
     border: 1px solid var(--Web-Border-input, #8D8D8D);
   }
 
+  .form-control-error {
+    border-color: #D8292F; /* BC Gov error red */
+  }
+
+  .form-control-readonly {
+    display: flex;
+    height: 22px;
+    padding: 11px 16px;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    font-family: "BC Sans";
+    font-size: 16px;
+
+    border: 1px solid #fff;
+    background: var(--Web-Background-webpage, #FBFBFB);
+  }
+
+  .form-control-multiline-readonly {
+    display: block;
+    height: auto;        /* Change from 22px to auto */
+    min-height: 60px;    /* Minimum height for 2 lines */
+    padding: 16px;
+    flex: 1 0 0;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+    font-family: "BC Sans";
+    font-size: 16px;
+
+    border: 1px solid #fff;
+    background: var(--Web-Background-webpage, #FBFBFB);
+    
+    resize: none;
+  }
+
+  .error-message{
+
+  color: #B4231E;
+  font-size: 14px;
+
+  }
+
   .access-form-control {
     display: flex;
     height: 22px;
@@ -1170,6 +1235,7 @@ line-height: 54px; /* 225% */
     align-items: flex-start;
     gap: 8px;
     align-self: stretch;
+    padding-top: 32px;
   }
 
   .radio-button-group {
