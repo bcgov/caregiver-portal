@@ -23,6 +23,7 @@ import HouseholdForm from './pages/HouseholdForm';
 import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
+import MedicalForms from './pages/MedicalForms';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
 
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId/household-form/:applicationFormId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
+        <Route path="/foster-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         <Route path="/screening-package/:householdMemberId" element={<ProtectedRoute><ScreeningPackage /></ProtectedRoute>}/>
         <Route path="/screening-package/:householdMemberId/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
