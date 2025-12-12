@@ -9,7 +9,7 @@ const Declaration = ({
   return (
     <div className="declaration">
       <input 
-        className="declaration-checkbox" 
+        className={`declaration-checkbox${disabled ? "-disabled" : ""}`}
         type="checkbox"
         checked={checked} 
         onChange={(e) => onChange(e.target.checked)}

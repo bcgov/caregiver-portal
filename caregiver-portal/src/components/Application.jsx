@@ -4,6 +4,7 @@ import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
+
 const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
@@ -122,7 +123,21 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
         setIframeUrl('');
         //loadApplication();
       };
-    
+/*
+      const sendSave = () => {
+        if (iframeRef.current?.contentWindow) {
+          iframeRef.current.contentWindow.postMessage({
+            type: "CLICK_BUTTON_BY_TEXT",
+            text: "Continue"   
+          },
+          "*")
+        }          
+      }
+
+      const sendComplete = () => {
+        
+      }
+  */  
       if (loading) {
         return (
           <div className="submission-overlay">

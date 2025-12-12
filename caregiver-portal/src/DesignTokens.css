@@ -438,6 +438,23 @@ border-bottom: 1px solid currentColor;
     display: inline-block;
   }
   
+  .declaration-checkbox-disabled {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #cccccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #CCCCCC;
+    position: relative;
+    margin-top: 16px;       /* adjusted so it aligns better with text */
+    margin-right: 8px;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
   /* Hover state */
   .declaration-checkbox:hover {
     background-color: #f0f0f0;
@@ -994,6 +1011,25 @@ a {
   text-underline-offset: auto;
   text-underline-position: from-font;
   font-family: "BC Sans";
+}
+
+.bright {
+  color: var(--typography-color-primary, #2D2D2D);
+
+  /* regular/smallBody */
+
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 150% */
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+  font-family: "BC Sans";
+  color:#2563eb;
 }
 
   /* Modal styles */
