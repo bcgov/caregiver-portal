@@ -197,7 +197,7 @@ const ConsentOverview = () => {
                   <p>{householdMember?.householdMember?.firstName} has not yet logged in to complete their application information.</p>
                   <p>Once they have logged into the portal with their BC Services Card, they can use acccess code: <strong>ABCDE</strong> to complete their application activities. This access code was provided in the email we sent.</p>
                   <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
-                  <p>Please fill out and sign this <a href="#">Consent form</a>.</p>
+                  <p>Please fill out and sign this <a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent form <ExternalLink/></a>.</p>
 
                   </>
               )}
