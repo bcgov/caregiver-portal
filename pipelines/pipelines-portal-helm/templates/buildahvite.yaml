@@ -48,6 +48,7 @@ spec:
           --build-arg VITE_API_URL=$VITE_API_URL \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
           --build-arg VITE_KILN_URL=$VITE_KILN_URL \
+          --build-arg VITE_USE_KONG_OIDC=$VITE_USE_KONG_OIDC \
           --build-arg VITE_BCSC_AUTHORITY=$VITE_BCSC_AUTHORITY \
           -f $(params.DOCKERFILE) \
           -t $(params.IMAGE_REGISTRY)/$(params.IMAGE):$(params.BRANCH_NAME) \
@@ -80,7 +81,11 @@ spec:
             secretKeyRef:
               name: $(params.VITE_SECRET_NAME)
               key: VITE_KILN_URL
-
+        - name: VITE_USE_KONG_OIDC
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_USE_KONG_OIDC
     - name: push
       image: $(params.BUILDAH_IMAGE)
       script: |
