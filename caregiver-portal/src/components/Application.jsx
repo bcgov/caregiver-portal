@@ -1,23 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, Loader2, RefreshCw, Send } from 'lucide-react';
+import { AlertCircle, Loader2, RefreshCw, Send, ArrowRight } from 'lucide-react';
 import { useGetFormAccessToken } from '../hooks/useGetFormAccessToken';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import Button from './Button';
+import Breadcrumb from '../components/Breadcrumb';
+import BreadcrumbBar from './BreadcrumbBar';
 
 
-const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
+const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isIframeLoaded, setIsIframeLoaded] = useState(false);
     const [applicationForm, setApplicationForm] = useState(null);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [allForms, setAllForms] = React.useState([])
+    const [nextUrl, setNextUrl] = React.useState('');
     
     const iframeRef = useRef(null);
 
     const navigate = useNavigate();
 
-    const { getApplicationForm, submitApplicationPackage } = useApplicationPackage();
+    const home = `/foster-application/application-package/${applicationPackageId}`;
+      
+    const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
     useEffect(() => {
       if (applicationFormId) {
@@ -34,6 +41,42 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
         });
       }
     }, [applicationFormId, getApplicationForm]);
+
+    // Load all forms to determine next form in sequence
+  useEffect(() => {
+    if (applicationPackageId) {
+      getApplicationForms(applicationPackageId)
+        .then(formsArray => {
+          setAllForms(formsArray);
+
+          // Find current form index
+          const currentIndex = formsArray.findIndex(
+            form => form.applicationFormId === applicationFormId
+          );
+
+          // Get next form (skip Referral types)
+          if (currentIndex !== -1 && currentIndex < formsArray.length - 1) {
+            let nextIndex = currentIndex + 1;
+            while (nextIndex < formsArray.length &&
+                   formsArray[nextIndex].type === 'Referral') {
+              nextIndex++;
+            }
+
+            if (nextIndex < formsArray.length) {
+              const nextForm = formsArray[nextIndex];
+
+              // Build URL based on form type (household vs regular)
+              if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+                setNextUrl(`/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`);
+              } else {
+                setNextUrl(`/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`);
+              }
+            }
+          }
+        })
+        .catch(err => console.error('Error fetching forms:', err));
+    }
+  }, [applicationPackageId, applicationFormId, getApplicationForms]);
 
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
@@ -69,20 +112,20 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
 
     useEffect(() => {
       async function handleMessage(event) {
-        //console.log("Form update >> ", event.data);
-        //console.log("applicationForm:", applicationForm);
-        //console.log("applicationPackageId:", applicationForm?.applicationPackageId);
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
 
           if (!submitPackage) {
-            setIsSubmitting(true);
+            //setIsSubmitting(true);
             if( onSubmitComplete ) {
               navigate(onSubmitComplete);
+            } else if (nextUrl) {
+              navigate(nextUrl);
             } else {
-              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`);
             }
+            setIsSubmitting(false); // Reset before navigation completes
           } else {
        
           try {
@@ -111,6 +154,19 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
         window.removeEventListener('message', handleMessage);
       };
     }, [applicationForm, navigate]);
+
+    useEffect(() => {
+      if(!isIframeLoaded) return;
+
+      const autoSaveInterval = setInterval(() => {
+        console.log('Auto-saving form...');
+        sendSave();
+      }, 10000); // every 10 seconds
+
+      return () => {
+        clearInterval(autoSaveInterval); // cleanup interval on unmount
+      };
+    }, [isIframeLoaded]);
     
       const handleIframeLoad = () => {
         setIsIframeLoaded(true);
@@ -123,21 +179,18 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
         setIframeUrl('');
         //loadApplication();
       };
-/*
+
       const sendSave = () => {
         if (iframeRef.current?.contentWindow) {
           iframeRef.current.contentWindow.postMessage({
             type: "CLICK_BUTTON_BY_TEXT",
-            text: "Continue"   
+            text: "Save"   
           },
           "*")
         }          
       }
 
-      const sendComplete = () => {
-        
-      }
-  */  
+  
       if (loading) {
         return (
           <div className="submission-overlay">
@@ -183,8 +236,10 @@ const Application = ({ applicationFormId, onClose, onSubmitComplete, submitPacka
     
       return (
         <>
+
         <div className="iframe-container">
           {/* iFrame Container */}
+          <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef}/>
           <div className="iframe-content">
             {iframeUrl && (
               <iframe
