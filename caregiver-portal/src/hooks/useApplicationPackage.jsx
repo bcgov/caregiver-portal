@@ -103,7 +103,7 @@ export const useApplicationPackage = () => {
     return await response.json();
   }, []);
 
-  const getApplicationForms = async (applicationPackageId) => {
+  const getApplicationForms = useCallback(async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
     console.log('Request URL:', url);
@@ -117,7 +117,7 @@ export const useApplicationPackage = () => {
         throw new Error(`Failed to fetch application forms: ${response.status}`)
       }
       return await response.json();
-  };
+  }, []);
 
   // initial submission of an application package for the referral step
   const submitApplicationPackage = async (applicationPackageId) => {
