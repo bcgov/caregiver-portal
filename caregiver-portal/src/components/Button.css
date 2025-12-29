@@ -114,6 +114,28 @@
     border: 2px solid white;
   }
 
+  .btn-next {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: none;
+    border: none;
+    color: #000000;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-decoration: none;
+    padding: 3px 0;
+  }
+
+  .btn-next:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb-next-button svg {
+    width: 16px;
+    height: 16px;
+  }
+
   .btn-nav {
     display: flex;
     height: 40px;

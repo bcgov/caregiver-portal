@@ -292,6 +292,7 @@ li {
     height: 40px;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding-top: 24px
   }
 
