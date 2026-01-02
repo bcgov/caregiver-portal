@@ -45,36 +45,43 @@ export const AuthProvider = ({ children }) => {
 
   const login = () => {
     // Get environment variables with fallbacks
-    const BCSC_CLIENT_ID = import.meta.env.VITE_BCSC_CLIENT_ID;
-    const BCSC_AUTHORITY = import.meta.env.VITE_BCSC_AUTHORITY;
 
-    if (!BCSC_CLIENT_ID || !BCSC_AUTHORITY) {
-      console.error('Missing required environment variables for BC Services Card');
-      return;
+    const USE_KONG_OIDC = import.meta.env.VITE_USE_KONG_OIDC === 'true';
+
+    if (USE_KONG_OIDC) { 
+      console.log('KONG')
+      window.location.href = `${API_BASE}/auth/login`;
+    } else {
+
+      const BCSC_CLIENT_ID = import.meta.env.VITE_BCSC_CLIENT_ID;
+      const BCSC_AUTHORITY = import.meta.env.VITE_BCSC_AUTHORITY;
+      if (!BCSC_CLIENT_ID || !BCSC_AUTHORITY) {
+        console.error('Missing required environment variables for BC Services Card');
+        return;
+      }
+    
+
+      // Generate and store state for security
+      const state = generateRandomState();
+      sessionStorage.setItem('oauth_state', state);
+
+      console.log('Generated state:', state);
+      console.log('Session state before redirect:', sessionStorage.getItem('oauth_state'));
+
+      // Redirect to BC Services Card authorization
+      const params = new URLSearchParams({
+        response_type: 'code',
+        client_id: BCSC_CLIENT_ID,
+        redirect_uri: `${window.location.origin}/auth/callback`,
+        scope: 'openid profile email',
+        state: state,
+        prompt: 'login'
+      });
+
+      const authUrl = `${BCSC_AUTHORITY}/protocol/openid-connect/auth?${params}`;
+      console.log('authURL:', authUrl)
+      window.location.href = authUrl;
     }
-
-    console.log(BCSC_AUTHORITY)
-
-    // Generate and store state for security
-    const state = generateRandomState();
-    sessionStorage.setItem('oauth_state', state);
-
-    console.log('Generated state:', state);
-    console.log('Session state before redirect:', sessionStorage.getItem('oauth_state'));
-
-    // Redirect to BC Services Card authorization
-    const params = new URLSearchParams({
-      response_type: 'code',
-      client_id: BCSC_CLIENT_ID,
-      redirect_uri: `${window.location.origin}/auth/callback`,
-      scope: 'openid profile email',
-      state: state,
-      prompt: 'login'
-    });
-
-    const authUrl = `${BCSC_AUTHORITY}/protocol/openid-connect/auth?${params}`;
-    console.log('authURL:', authUrl)
-    window.location.href = authUrl;
   };
 
   const logout = async () => {
