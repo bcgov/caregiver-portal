@@ -103,7 +103,7 @@ export const useApplicationPackage = () => {
     return await response.json();
   }, []);
 
-  const getApplicationForms = async (applicationPackageId) => {
+  const getApplicationForms = useCallback(async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
     console.log('Request URL:', url);
@@ -117,7 +117,7 @@ export const useApplicationPackage = () => {
         throw new Error(`Failed to fetch application forms: ${response.status}`)
       }
       return await response.json();
-  };
+  }, []);
 
   // initial submission of an application package for the referral step
   const submitApplicationPackage = async (applicationPackageId) => {
@@ -147,6 +147,41 @@ export const useApplicationPackage = () => {
       setLoading(false);
     }
   };
+
+    // Submit referral request with contact information for info session
+    const requestInfoSession = async (applicationPackageId, contactData) => {
+      setLoading(true);
+      setError(null);
+  
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/application-package/${applicationPackageId}/request-info-session`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(contactData),
+          }
+        );
+  
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.message || `Failed to request info session: ${response.status}`
+          );
+        }
+  
+        const result = await response.json();
+        return result;
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
 
   // lock, and potentially finalize, an application package
   // will enable household consent forms to be collected, if applicable
@@ -209,6 +244,7 @@ export const useApplicationPackage = () => {
     lockApplicationPackage,
     getApplicationForm,
     submitApplicationPackage,
+    requestInfoSession,
     validateHouseholdCompletion,
     loading,
     error,

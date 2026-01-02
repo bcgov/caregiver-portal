@@ -23,13 +23,15 @@ const ConsentOverview = () => {
   const { uploadAttachment, getAttachmentsByHouseholdId, deleteAttachment } = useAttachments();
   const [uploadedFiles, setUploadedFiles ] = React.useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [accessCode, setAccessCode] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
-  const { loadHouseholdMember } = useHousehold({ applicationPackageId });
-  const { markFormAsAttached } = useApplications();
+  const { loadHouseholdMember, getAccessCode } = useHousehold({ applicationPackageId });
+  const { markScreeningDocumentsAttached } = useApplications();
+  const  back = `/foster-application/application-package/${applicationPackageId}/consent-summary`
 
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/application-package/${applicationPackageId}/consent-summary` },
+    { label: 'Back', path: back },
   ];
 
   const getCurrentStep = () => {
@@ -59,6 +61,9 @@ const ConsentOverview = () => {
                   const hasCompletedScreening = member.applicationForms.some(form => form.type === "Screening" && form.status === "Complete");
                   setScreeningStatus(hasCompletedScreening);
                 }
+
+                const accessCodeData = await getAccessCode(householdMemberId);
+                setAccessCode(accessCodeData);
                 //console.log('loaded household member:', member);
             } catch (error) {
                 console.error('Failed to load household member:', error);
@@ -135,9 +140,14 @@ const ConsentOverview = () => {
 
     const handleSubmitConsentForms = async () => {
       try {
-        await markFormAsAttached(screeningFormId);
-        // proceed with navigation or other actions
-        navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`)
+        if(!householdMemberId || !applicationPackageId) {
+          console.error('Missing required IDs');
+          return;
+        }
+        
+        const result = await markScreeningDocumentsAttached(applicationPackageId, householdMemberId);
+        console.log(`Marked ${result.formsUpdated} screening form(s) as attached`);
+        navigate(back)
       } catch (error) {
         console.error('Failed to mark form as attached:', error);
       }
@@ -189,8 +199,10 @@ const ConsentOverview = () => {
                   <>
                   <p>We sent an invitation to <strong>{householdMember?.householdMember?.email}</strong> on {householdMember?.householdMember?.invitationLastSent}</p>
                   <p>{householdMember?.householdMember?.firstName} has not yet logged in to complete their application information.</p>
-                  <p>Once they have logged into the portal with their BC Services Card, they can use acccess code: <strong>ABCDE</strong> to complete their application activities. This access code was provided in the email we sent.</p>
+                  <p>Once they have logged into the portal with their BC Services Card, they can use acccess code: <strong>{accessCode?.accessCode || 'Loading...'}</strong> to complete their application activities. This access code was provided in the email we sent.</p>
                   <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
+                  <p>Please fill out and sign this <a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent form <ExternalLink/></a>.</p>
+
                   </>
               )}
               { householdMember?.householdMember?.userId !== null && (

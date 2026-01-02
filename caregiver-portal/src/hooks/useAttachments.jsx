@@ -112,9 +112,43 @@ export const useAttachments = () => {
     }
   }, []);
 
+  const uploadMedicalAssessment = useCallback(async (applicationPackageId) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/upload-medical-assessments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Failed to upload medical assessments: ${response.status}`,
+        );
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
     uploadAttachment,
     getAttachmentsByHouseholdId,
+    uploadMedicalAssessment,
     downloadAttachment,
     deleteAttachment,
     isLoading,

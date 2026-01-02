@@ -12,9 +12,9 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  //const [forms, setForms] = React.useState([]);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
+  const [householdMemberId, setHouseholdMemberId] = React.useState(null);
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
@@ -63,6 +63,7 @@ const FosterApplicationProcess = () => {
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
           setReferralApplicationFormId(referralForm?.applicationFormId || null);
+          setHouseholdMemberId(referralForm?.householdMemberId || null);
         } catch (error) {
           console.error('Failed to load forms:', error);
         }
@@ -78,6 +79,9 @@ const FosterApplicationProcess = () => {
         break;
       case "consent":
         navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
+        break;
+      case "screening":
+        navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
       default: 
         navigate(`/foster-application/application-package/${applicationPackageId}`);
@@ -101,6 +105,8 @@ const FosterApplicationProcess = () => {
       console.error('Failed to cancel:', err);
     }
   }
+
+  const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
 
   
   const getSteps = (applicationPackage) => {
@@ -169,15 +175,26 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && applicationPackage?.srStage === 'Screening') {
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || applicationPackage?.status === 'Submitted') && !hasMedicalAssessment) {
 
         return {
           ...step,
-          description: 'Screening process is underway.',
+          description: 'Screening process is underway. You may proceed to complete your medical forms with the assistance of an authorized healthcare practitioner.',
+          disabled: false,
+          iconType: 'start',
+        }
+      }
+
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || applicationPackage?.status === 'Submitted') && hasMedicalAssessment) {
+
+        return {
+          ...step,
+          description: 'You have submitted your medical assessment forms. The screening process is underway..',
           disabled: true,
           iconType: 'waiting',
         }
       }
+
       
 
       return step;

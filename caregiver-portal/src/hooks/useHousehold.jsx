@@ -89,7 +89,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     genderType: existingPartner.genderType || '',
                     householdMemberId: existingPartner.householdMemberId,
                     requireScreening: existingPartner.requireScreening,
-                    screeningProvided: existingPartner.screeningProvided,
+                    screeningInfoProvided: existingPartner.screeningInfoProvided,
                     userId: existingPartner.userId,
                 });
             }
@@ -105,7 +105,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     relationship: member.relationshipToPrimary,
                     genderType: member.genderType || '',
                     requireScreening: member.requireScreening,
-                    screeningProvided: member.screeningProvided,
+                    screeningInfoProvided: member.screeningInfoProvided,
                     userId: member.userId,
 
                 }));
@@ -313,6 +313,37 @@ export const useHousehold = ({applicationPackageId}) => {
         }
     }, [applicationPackageId]);
 
+    const getAccessCode = useCallback(async (householdMemberId) => {
+        if (!householdMemberId) {
+            console.error('No householdMemberId provided for access code retrieval');
+            return null;
+        }
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/access-code`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+            if (!response.ok) {
+                // If 404, there's no access code yet
+                if (response.status === 404) {
+                    return null;
+                }
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+  
+            const data = await response.json();
+            return data; // Returns { accessCode, expiresAt, isUsed, attemptCount }
+        } catch (error) {
+            console.error('Error fetching access code:', error);
+            return null;
+        }
+    }, [applicationPackageId]);
+
 
     const calculateAge = useCallback((dob) => {
         if (!dob) return 0;
@@ -358,6 +389,7 @@ export const useHousehold = ({applicationPackageId}) => {
         loadHousehold,
         loadHouseholdMember,
         loadApplicationPackage,
+        getAccessCode,
       };
 
 };

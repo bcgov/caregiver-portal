@@ -24,7 +24,7 @@ const HouseholdForm = () => {
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className="page-details-row-small">
-        <h1 className="page-title">My household and support network</h1>
+        <h1 className="page-title">My household</h1>
         </div>
         
         <div className="page-details-row">

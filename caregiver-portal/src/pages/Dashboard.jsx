@@ -2,7 +2,6 @@ import React, { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
-//import { useCreateApplication } from '../hooks/useCreateApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import OOCApplicationStart from '../components/OOCApplicationStart';
@@ -23,15 +22,7 @@ const Dashboard = () => {
     //error
   } = useApplicationPackage();
 
-  //const {
-  //  getApplicationForms
-  //} = useApplicationForms();
-
-  //const { applications, isLoading, hasFosterApp, loadApplications } = getApplicationPackages();
-
   const [applicationPackages, setApplicationPackages] = React.useState([]);
- // const [screeningForms, setScreeningForms] = React.useState([]);
-  const [hasFCHApp, setHasFCHApp] = React.useState(false);
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
@@ -41,7 +32,6 @@ const Dashboard = () => {
     try {
       const apps = await getApplicationPackages();
       setApplicationPackages(apps);
-      setHasFCHApp(apps.some(app => app.subtype === "FCH"));
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
@@ -54,18 +44,12 @@ const Dashboard = () => {
     isLoading: formsLoading
   } = useApplications();
 
+  console.log('screeningforms:',screeningForms);
+
   const loadApplicationForms = useCallback(() => {
     getApplicationForms();
   }, [getApplicationForms]);
-  /*
-    try {
-      const forms = await getApplicationForms();
-      setScreeningForms(forms || []);
-    } catch (err) {
-      console.error('Failed to load screening forms');
-    }
-  }, [getApplicationForms])
-*/
+
   const handleCreateApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
@@ -85,7 +69,6 @@ const Dashboard = () => {
     }
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
 
-  //if (auth.loading) {
     if (auth.loading) {
     return (            
         <div className="submission-overlay">
@@ -133,9 +116,9 @@ const Dashboard = () => {
             )}
           </div>
         ))}
-        {screeningForms?.map((app) => (
-          <div key={app.applicationFormId}>
-            <ScreeningTaskCard applicationForm={app} />
+        {screeningForms?.map((app, index) => (
+          <div key={app[0]?.householdMemberId || index}>
+            <ScreeningTaskCard applicationFormSet={app} />
           </div>
         ))}
         <AccessCard />
