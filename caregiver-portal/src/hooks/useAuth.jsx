@@ -86,13 +86,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
 
-    const USE_KONG_OIDC = import.meta.env.VITE_USE_KONG_OIDC === 'true';
 
-      if(USE_KONG_OIDC) {
-        window.location.href = '/logout';
-      } else {
       window.location.href = `${API_BASE}/auth/logout`;
-      }
+
   };
 
   const value = {
