@@ -1,5 +1,5 @@
 caregiver portal helm chart
-NOTE: Ensure APS is deployed
+NOTE: Ensure APS is deployed.
 
 
 
