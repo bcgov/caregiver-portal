@@ -13,7 +13,7 @@ export const AuthCallback = () => {
   useEffect(() => {
     if(hasRun.current) return; // prevent double execution
     hasRun.current = true;
-    
+
     const handleCallback = async () => {
 
       if(USE_KONG_OIDC) {
