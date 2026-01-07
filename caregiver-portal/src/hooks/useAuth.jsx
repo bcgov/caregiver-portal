@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     const USE_KONG_OIDC = import.meta.env.VITE_USE_KONG_OIDC === 'true';
 
       if(USE_KONG_OIDC) {
-        window.location.herf = '/logout';
+        window.location.href = '/logout';
       } else {
       window.location.href = `${API_BASE}/auth/logout`;
       }
@@ -108,4 +108,9 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+const generateRandomState = () => {
+  return Math.random().toString(36).substring(2, 15) +
+         Math.random().toString(36).substring(2, 15);
 };
