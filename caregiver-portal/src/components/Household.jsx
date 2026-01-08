@@ -202,6 +202,58 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     updatePartner(field, value);
   };
 
+  const handleUpdateHouseholdMember = (memberId, field, value) => {
+    const member = householdMembers.find(m => m.householdMemberId === memberId);
+    if (!member) return;
+
+    // Field length validation
+    if (field === 'firstName' || field === 'lastName') {
+      if (!validateFieldLength(value, MAX_NAME_LENGTH, field === 'firstName' ? 'First name' : 'Last name', `member-${memberId}-${field}`)) {
+        return;
+      }
+    }
+
+    if (field === 'email') {
+      if (value && value.length > MAX_EMAIL_LENGTH) {
+        setFieldLengthErrors(prev => ({
+          ...prev,
+          [`member-${memberId}-email`]: `Email cannot exceed ${MAX_EMAIL_LENGTH} characters`
+        }));
+        return;
+      }
+      validateEmail(value, `member-${memberId}-email`);
+    }
+
+    // Duplicate check for DOB changes
+    if (field === 'dob' && value && member.firstName && member.lastName) {
+      const dupCheck = checkForDuplicate(member.firstName, member.lastName, value, memberId);
+      if (dupCheck.isDuplicate) {
+        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
+        updateHouseholdMember(memberId, field, value);
+        return;
+      } else {
+        setDuplicateError('');
+      }
+    }
+
+    // Duplicate check for name changes
+    if ((field === 'firstName' || field === 'lastName') && member.dob) {
+      const firstName = field === 'firstName' ? value : member.firstName;
+      const lastName = field === 'lastName' ? value : member.lastName;
+      const dupCheck = checkForDuplicate(firstName, lastName, member.dob, memberId);
+
+      if (dupCheck.isDuplicate) {
+        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
+        updateHouseholdMember(memberId, field, value);
+        return;
+      } else {
+        setDuplicateError('');
+      }
+    }
+
+    updateHouseholdMember(memberId, field, value);
+  };
+
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
