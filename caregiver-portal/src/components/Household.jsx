@@ -30,8 +30,102 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     //const [hasPartner, setHasPartner] = useState(null);
     //const [hasHousehold, setHasHousehold] = useState(null);
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
-    const [partnerEmailValidationError] = useState('');
+    const [partnerEmailValidationError, setPartnerEmailValidationError] = useState('');
+    const [memberEmailValidationErrors, setMemberEmailValidationErrors] = useState({});
+    const [fieldLengthErrors, setFieldLengthErrors] = useState({});
+    const [duplicateError, setDuplicateError] = useState('');
     const savingMembersRef = useRef(new Set());
+
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const MAX_NAME_LENGTH = 50;
+    const MAX_EMAIL_LENGTH = 255;
+
+      // Validate email format
+    const validateEmail = (email, fieldKey) => {
+      if (!email) {
+        setEmailValidationErrors(prev => ({ ...prev, [fieldKey]: '' }));
+        return true;
+      }
+
+      if (!EMAIL_REGEX.test(email)) {
+        setEmailValidationErrors(prev => ({
+          ...prev,
+          [fieldKey]: 'Please enter a valid email address'
+        }));
+        return false;
+      }
+
+      setEmailValidationErrors(prev => ({ ...prev, [fieldKey]: '' }));
+      return true;
+    };
+
+    // Validate field length
+    const validateFieldLength = (value, maxLength, fieldName, fieldKey) => {
+    if (value && value.length > maxLength) {
+      setFieldLengthErrors(prev => ({
+        ...prev,
+        [fieldKey]: `${fieldName} cannot exceed ${maxLength} characters`
+      }));
+      return false;
+    }
+
+    setFieldLengthErrors(prev => ({ ...prev, [fieldKey]: '' }));
+    return true;
+    };
+
+      // Check for duplicate household member
+  const checkForDuplicate = (firstName, lastName, dob, currentMemberId = null) => {
+    if (!firstName || !lastName || !dob) {
+      return false;
+    }
+
+    const firstInitial = firstName.charAt(0).toUpperCase();
+    const normalizedLastName = lastName.toLowerCase().trim();
+
+    // Check partner
+    if (hasPartner && partner.firstName && partner.lastName && partner.dob) {
+      if (currentMemberId !== 'partner') {
+        const partnerFirstInitial = partner.firstName.charAt(0).toUpperCase();
+        const partnerLastName = partner.lastName.toLowerCase().trim();
+
+        if (
+          partnerFirstInitial === firstInitial &&
+          partnerLastName === normalizedLastName &&
+          partner.dob === dob
+        ) {
+          return {
+            isDuplicate: true,
+            name: `${partner.firstName} ${partner.lastName}`,
+          };
+        }
+      }
+    }
+
+    // Check other household members
+    for (const member of householdMembers) {
+      if (currentMemberId && member.householdMemberId === currentMemberId) {
+        continue; // Skip self
+      }
+
+      if (member.firstName && member.lastName && member.dob) {
+        const memberFirstInitial = member.firstName.charAt(0).toUpperCase();
+        const memberLastName = member.lastName.toLowerCase().trim();
+
+        if (
+          memberFirstInitial === firstInitial &&
+          memberLastName === normalizedLastName &&
+          member.dob === dob
+        ) {
+          return {
+            isDuplicate: true,
+            name: `${member.firstName} ${member.lastName}`,
+          };
+        }
+      }
+    }
+
+    return { isDuplicate: false };
+  };
 
     // set initial UI state based on loaded data
 
@@ -43,24 +137,6 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
       console.log('Radio button states:', { hasPartner, hasHousehold });
     }, [hasPartner, hasHousehold]);
 
-    /*
-    useEffect(() => {
-      if (partner && (partner.firstName || partner.lastName || partner.dob || partner.email || partner.relationship)) {
-        setHasPartner(true);
-      } else {
-        setHasPartner(false);
-      }
-    }, [partner]);
-
-    useEffect(() => {
-      if (householdMembers && householdMembers.length > 0) {
-        setHasHousehold(true);
-      } else {
-        setHasHousehold(false);
-      }
-    }, [householdMembers]);
-    */
-
     useEffect(() => {
       if (hasHousehold && householdMembers.length === 0) {
         addHouseholdMember(); // Ensure at least one member is present
@@ -69,17 +145,62 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
 
     // updatePartner with age validation
     const handleUpdatePartner = (field, value) => {
-      if (field === 'dob' && value) {
-          const age = calculateAge(value);
-          if (age < 19) {
-              setPartnerAgeValidationError('Caregivers must be 19 years of age or older.');
-              return;
-          } else {
-              setPartnerAgeValidationError('');
-          }
+      // Field length validation
+      if (field === 'firstName' || field === 'lastName') {
+        if (!validateFieldLength(value, MAX_NAME_LENGTH, field === 'firstName' ? 'First name' : 'Last name', `partner-${field}`)) {
+          return; // Don't update if too long
+        }
       }
-      updatePartner(field, value);
-    };
+      // field length check for email
+      if (field === 'email') {
+        if (value && value.length > MAX_EMAIL_LENGTH) {
+          setFieldLengthErrors(prev => ({
+            ...prev,
+            'partner-email': `Email cannot exceed ${MAX_EMAIL_LENGTH} characters`
+          }));
+          return;
+        }
+        validateEmail(value, 'partner-email');
+      }
+
+    // Age validation for DOB
+    if (field === 'dob' && value) {
+      const age = calculateAge(value);
+      if (age < 19) {
+        setPartnerAgeValidationError('Caregivers must be 19 years of age or older.');
+        updatePartner(field, value);
+        return;
+      } else {
+        setPartnerAgeValidationError('');
+      }
+
+      // Duplicate check
+      const dupCheck = checkForDuplicate(partner.firstName, partner.lastName, value, 'partner');
+      if (dupCheck.isDuplicate) {
+        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
+        return;
+      } else {
+        setDuplicateError('');
+      }
+    }
+
+    // Check for duplicates when name changes
+    if ((field === 'firstName' || field === 'lastName') && partner.dob) {
+      const firstName = field === 'firstName' ? value : partner.firstName;
+      const lastName = field === 'lastName' ? value : partner.lastName;
+      const dupCheck = checkForDuplicate(firstName, lastName, partner.dob, 'partner');
+
+      if (dupCheck.isDuplicate) {
+        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
+        updatePartner(field, value);
+        return;
+      } else {
+        setDuplicateError('');
+      }
+    }
+
+    updatePartner(field, value);
+  };
 
     // auto save partner data
     useEffect(() => {
