@@ -21,7 +21,7 @@ export const useHousehold = ({applicationPackageId}) => {
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
  
-    const [saveStatus, setSaveStatus] = useState('saved'); // 'saving', 'saved', 'error'
+    const [saveStatus, setSaveStatus] = useState(''); // 'saving', 'saved', 'error'
     const [lastSaved, setLastSaved] = useState(null);
 
       // Add function to load application package
@@ -125,7 +125,7 @@ export const useHousehold = ({applicationPackageId}) => {
     }, [applicationPackageId]);
 
     const saveHouseholdMember = useCallback(async (memberData) => {
-        setSaveStatus('saving');
+        setSaveStatus('Updating household records.');
         try {
 
             const requestBody = {
@@ -152,28 +152,33 @@ export const useHousehold = ({applicationPackageId}) => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+
+                // Check if it's a duplicate error from backend
+                if (errorData.message && errorData.message.includes('duplicate')) {
+                    throw new Error('DUPLICATE:' + errorData.message);
+                }
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
 
             const savedMember = await response.json();
             // update the appropriate state based on relationship type
-            if (memberData.relationship === 'Spouse') { // TODO: Add 'Common-law', 'Partner' when available in dropdown
+            if (memberData.relationship === 'Spouse' || memberData.relationship === 'Partner' || memberData.relationship === 'Common law') { 
                 if(!memberData.householdMemberId && savedMember.householdMemberId) {
                     setPartner(prev => ({...prev, householdMemberId: savedMember.householdMemberId}));
                 }
-            } //else {
+            } else {
                 // update householdMembers state
-              //  if(!memberData.householdMemberId && savedMember.householdMemberId) {
-              //      setHouseholdMembers(prev => ([...prev, {...memberData, householdMemberId: savedMember.householdMemberId}]));
-              //  }
-            //}
+                if(!memberData.householdMemberId && savedMember.householdMemberId) {
+                    setHouseholdMembers(prev => ([...prev, {...memberData, householdMemberId: savedMember.householdMemberId}]));
+                }
+            }
 
-            setSaveStatus('saved');
+            setSaveStatus('Household record updated.');
             setLastSaved(new Date().toLocaleString());
-            console.log(`${memberData.relationship} saved:`);
+            //console.log(`${memberData.relationship} saved:`);
             return savedMember;
         } catch(error) {
-            setSaveStatus('error');
+            setSaveStatus('There are errors with the form that are preventing it from being saved.');
             console.error('Error saving household member:', error);
             throw error;
         }
@@ -289,6 +294,51 @@ export const useHousehold = ({applicationPackageId}) => {
         return true;
     }, [partner.householdMemberId, deleteHouseholdMember]);
 
+  // Check if household data is complete
+  const isHouseholdComplete = useCallback(() => {
+    // If user said no partner and no household, that's complete
+    if (hasPartner === false && hasHousehold === false) {
+      return true;
+    }
+
+    // Check partner if they have one
+    if (hasPartner === true) {
+      if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
+  !partner.relationship) {
+        return false;
+      }
+    }
+
+    // Check household members if they have any
+    if (hasHousehold === true) {
+      if (householdMembers.length === 0) {
+        return false;
+      }
+
+      for (const member of householdMembers) {
+        const age = calculateAge(member.dob);
+        const isAdult = age >= 19;
+
+        // Check required fields
+        if (!member.firstName || !member.lastName || !member.dob || !member.relationship) {
+          return false;
+        }
+
+        // Adults need email
+        if (isAdult && !member.email) {
+          return false;
+        }
+
+        // Children need gender
+        if (!isAdult && !member.genderType) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [hasPartner, hasHousehold, partner, householdMembers]);    
+
     const loadHouseholdMember = useCallback(async (householdMemberId) => {
         if (!householdMemberId) {
             console.error('No householdMemberId provided for deletion.');
@@ -390,6 +440,7 @@ export const useHousehold = ({applicationPackageId}) => {
         loadHouseholdMember,
         loadApplicationPackage,
         getAccessCode,
+        isHouseholdComplete,
       };
 
 };
