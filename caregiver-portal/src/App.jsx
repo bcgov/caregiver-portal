@@ -1,6 +1,6 @@
 // App.jsx 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import "@bcgov/bc-sans/css/BC_Sans.css"
 
 // Components
@@ -26,6 +26,16 @@ import ConsentOverview from './pages/ConsentOverview';
 import MedicalForms from './pages/MedicalForms';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
+
+// Component to conditionally render Footer
+const ConditionalFooter = () => {
+  const location = useLocation();
+  const showFooter = location.pathname === '/' ||
+                      location.pathname === '/login' ||
+                      location.pathname === '/dashboard';
+
+  return showFooter ? <Footer /> : null;
+};
 
 const App = () => {
 
@@ -57,7 +67,7 @@ const App = () => {
 
       </Routes>
     </main>
-    <Footer></Footer>
+    <ConditionalFooter />
     </div>
     </Router>
     

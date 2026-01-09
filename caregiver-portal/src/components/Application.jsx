@@ -8,6 +8,7 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import BreadcrumbBar from './BreadcrumbBar';
 
 
+
 const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
@@ -238,8 +239,14 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         <>
 
         <div className="iframe-container">
-          {/* iFrame Container */}
-          <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef}/>
+
+        {/* Top breadcrumb - aligned with page content */}
+        <div className="breadcrumb-top">
+          <div className="breadcrumb-top-content">
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} 
+  iframeRef={iframeRef}/>
+          </div>
+        </div>
           <div className="iframe-content">
             {iframeUrl && (
               <iframe
@@ -252,6 +259,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
                 // Add additional security attributes as needed
               />
             )}
+           
           </div>
             {/* Submission Overlay - appears over entire page including iframe */}
             {isSubmitting && (

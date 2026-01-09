@@ -43,7 +43,8 @@ const FosterApplicationProcess = () => {
   console.log(`Foster Application Process with: ${applicationPackageId} `);
 
   const breadcrumbItems = [
-    { label: 'Home', path: '/dashboard' },
+    { label: 'Dashboard', path: '/dashboard' },
+    { label: 'Become a foster caregiver', path: '/dashboard' },
   ];
 
   const handleBackClick = (item) => {

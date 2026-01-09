@@ -20,12 +20,10 @@ const ScreeningForm = () => {
 
   return (
     <div className="page">
-      <div className="page-details">
-        <div className="page-details-row-breadcrumb">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
-        <Application applicationFormId={applicationFormId} onSubmitComplete={back}/>
+    <div className="page-details">
+      <Application applicationFormId={applicationFormId} onSubmitComplete={back}/>
     </div>
-    </div></div>
+    </div>
   );
 
 };

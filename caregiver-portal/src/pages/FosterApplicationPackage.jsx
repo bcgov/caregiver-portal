@@ -23,7 +23,8 @@ const FosterApplicationPackage = () => {
   const { formatSubmissionDate } = useDates();
 
     const breadcrumbItems = [
-        { label: 'Back', path: `/foster-application/${applicationPackageId}` },
+        { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
+        { label: 'Application to provide foster family care' },
       ];
 
       const handleBackClick = (item) => {
