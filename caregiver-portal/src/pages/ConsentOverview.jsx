@@ -32,7 +32,8 @@ const ConsentOverview = () => {
 
 
   const breadcrumbItems = [
-    { label: 'Back', path: back },
+    { label: 'Consents from household members', path: back },
+    { label: `${householdMember?.householdMember?.firstName} ${householdMember?.householdMember?.lastName} consent for screening status`, path: back },
   ];
 
   const getCurrentStep = () => {
