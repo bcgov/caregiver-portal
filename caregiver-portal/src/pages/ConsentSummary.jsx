@@ -10,7 +10,8 @@ const ConsentSummary = () => {
   const navigate = useNavigate();
 
   const breadcrumbItems = [
-    { label: 'Back', path: `/foster-application/${applicationPackageId}` },
+    { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
+    { label: 'Consents from household members' },
   ];
 
   const handleBackClick = (item) => {
