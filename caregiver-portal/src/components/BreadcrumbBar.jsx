@@ -5,7 +5,7 @@ import Button from './Button';
 import Breadcrumb from '../components/Breadcrumb';
 
 
-const BreadcrumbBar = ({home, next, applicationForm, iframeRef}) => {
+const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef}) => {
     const navigate = useNavigate();
 
     const handleBackClick = (item) => {
@@ -14,7 +14,7 @@ const BreadcrumbBar = ({home, next, applicationForm, iframeRef}) => {
 
     const breadcrumbItems = [
         { label: 'Foster Caregiver Application Package', path: home},
-        { label: applicationForm?.type, path: next}
+        { label: label ? label : applicationForm?.type, path: next}
     ];
 
 
