@@ -25,6 +25,7 @@ const ConsentOverview = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [accessCode, setAccessCode] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
+  const [isSpouse, setIsSpouse] = useState(false);
   const { loadHouseholdMember, getAccessCode } = useHousehold({ applicationPackageId });
   const { markScreeningDocumentsAttached } = useApplications();
   const  back = `/foster-application/application-package/${applicationPackageId}/consent-summary`
@@ -60,6 +61,9 @@ const ConsentOverview = () => {
                    }
                   const hasCompletedScreening = member.applicationForms.some(form => form.type === "Screening" && form.status === "Complete");
                   setScreeningStatus(hasCompletedScreening);
+                }
+                if( member?.householdMember?.relationshipToPrimary === 'Common law' || member?.householdMember?.relationshipToPrimary === 'Partner' || member?.householdMember?.relationshipToPrimary === 'Spouse') {
+                  setIsSpouse(true);
                 }
 
                 const accessCodeData = await getAccessCode(householdMemberId);
@@ -167,7 +171,6 @@ const ConsentOverview = () => {
         <div className="page-details-row-small">
           <h1>{householdMember?.householdMember?.firstName} {householdMember?.householdMember?.lastName} consent for screening status</h1>
         </div>
-        
         { !manualScreeningStatus && (
           <>
           <div className="page-details-row-small">
@@ -200,10 +203,14 @@ const ConsentOverview = () => {
                   <p>We sent an invitation to <strong>{householdMember?.householdMember?.email}</strong> on {householdMember?.householdMember?.invitationLastSent}</p>
                   <p>{householdMember?.householdMember?.firstName} has not yet logged in to complete their application information.</p>
                   <p>Once they have logged into the portal with their BC Services Card, they can use acccess code: <strong>{accessCode?.accessCode || 'Loading...'}</strong> to complete their application activities. This access code was provided in the email we sent.</p>
-                  <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
-                  <p>Please fill out and sign this <a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent form <ExternalLink/></a>.</p>
-
                   </>
+              )}
+
+              { !isSpouse && (
+                <>
+                <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
+                <p>Please fill out and sign this <a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent form <ExternalLink/></a>.</p>
+                </>                
               )}
               { householdMember?.householdMember?.userId !== null && (
                   <>
@@ -215,7 +222,7 @@ const ConsentOverview = () => {
           </>
         )}
 
-        {manualScreeningStatus && (
+        {manualScreeningStatus && !isSpouse && (
           <div className="page-details-row">
             <div className="section-description">
               <p>You have uploaded one or more files on behalf of {householdMember?.householdMember?.firstName}</p>
@@ -238,6 +245,8 @@ const ConsentOverview = () => {
           </div>
         )}
 
+    {!isSpouse && (
+
        <div className="page-details-row-small">       
         <div className="page-details-col">          
           <FileUpload
@@ -255,6 +264,7 @@ const ConsentOverview = () => {
           />   
        </div>
       </div>
+    )}
 
        
        </div>
