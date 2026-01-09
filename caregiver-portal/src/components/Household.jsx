@@ -10,7 +10,6 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     partner,
     householdMembers,
     saveStatus,
-    lastSaved,
     hasHousehold,
     hasPartner,
     updatePartner,
@@ -27,16 +26,13 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     } = useHousehold({ applicationPackageId, applicationFormId });
 
     // UI state only (not data state)
-    //const [hasPartner, setHasPartner] = useState(null);
-    //const [hasHousehold, setHasHousehold] = useState(null);
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
-    const [partnerEmailValidationError, setPartnerEmailValidationError] = useState('');
-    const [memberEmailValidationErrors, setMemberEmailValidationErrors] = useState({});
+    const [emailValidationErrors, setEmailValidationErrors] = useState({});
     const [fieldLengthErrors, setFieldLengthErrors] = useState({});
-    const [duplicateError, setDuplicateError] = useState('');
+    const [duplicateErrors, setDuplicateErrors] = useState({});
     const savingMembersRef = useRef(new Set());
 
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const MAX_NAME_LENGTH = 50;
     const MAX_EMAIL_LENGTH = 255;
 
@@ -59,6 +55,36 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
       return true;
     };
 
+  // Validate age is within acceptable range
+  const validateAge = (dob, fieldKey) => {
+    if (!dob) {
+      return true;
+    }
+
+    const age = calculateAge(dob);
+
+    if (age > 95) {
+      setFieldLengthErrors(prev => ({
+        ...prev,
+        [fieldKey]: 'Age cannot exceed 95 years'
+      }));
+      return false;
+    }
+
+    setFieldLengthErrors(prev => ({ ...prev, [fieldKey]: '' }));
+    return true;
+  }; 
+
+    // Check if a required field is empty
+    const isFieldEmpty = (value) => {
+      return !value || value.trim() === '';
+    };
+  
+  // Get error class for empty required fields
+  const getFieldErrorClass = (value) => {
+    return isFieldEmpty(value) ? 'form-control-error' : '';
+  };
+
     // Validate field length
     const validateFieldLength = (value, maxLength, fieldName, fieldKey) => {
     if (value && value.length > maxLength) {
@@ -78,6 +104,8 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     if (!firstName || !lastName || !dob) {
       return false;
     }
+
+    //console.log("checking for duplicate")
 
     const firstInitial = firstName.charAt(0).toUpperCase();
     const normalizedLastName = lastName.toLowerCase().trim();
@@ -133,15 +161,95 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
       loadApplicationPackage();
     }, [loadApplicationPackage]);
 
-    useEffect(() => {
-      console.log('Radio button states:', { hasPartner, hasHousehold });
-    }, [hasPartner, hasHousehold]);
+    //useEffect(() => {
+    //  console.log('Radio button states:', { hasPartner, hasHousehold });
+    //}, [hasPartner, hasHousehold]);
 
     useEffect(() => {
       if (hasHousehold && householdMembers.length === 0) {
         addHouseholdMember(); // Ensure at least one member is present
       }
     }, [hasHousehold, householdMembers.length, addHouseholdMember]);
+
+// Re-validate all duplicates when household data changes
+useEffect(() => {
+  const newDuplicateErrors = {};
+
+  // Validate partner against household members
+  if (hasPartner && partner.firstName && partner.lastName && partner.dob) {
+    const firstInitial = partner.firstName.charAt(0).toUpperCase();
+    const normalizedLastName = partner.lastName.toLowerCase().trim();
+
+    for (const member of householdMembers) {
+      if (member.firstName && member.lastName && member.dob) {
+        const memberFirstInitial = member.firstName.charAt(0).toUpperCase();
+        const memberLastName = member.lastName.toLowerCase().trim();
+
+        if (
+          memberFirstInitial === firstInitial &&
+          memberLastName === normalizedLastName &&
+          member.dob === partner.dob
+        ) {
+          newDuplicateErrors['partner'] = `This person (${member.firstName} ${member.lastName}) is 
+already in your household; they can be removed.`;
+          break;
+        }
+      }
+    }
+  }
+
+  // Validate each household member
+  if (hasHousehold && householdMembers.length > 0) {
+    householdMembers.forEach((member, index) => {
+      if (!member.firstName || !member.lastName || !member.dob) {
+        return;
+      }
+
+      const memberId = member.householdMemberId || index;
+      const firstInitial = member.firstName.charAt(0).toUpperCase();
+      const normalizedLastName = member.lastName.toLowerCase().trim();
+
+      // Check against partner
+      if (hasPartner && partner.firstName && partner.lastName && partner.dob) {
+        const partnerFirstInitial = partner.firstName.charAt(0).toUpperCase();
+        const partnerLastName = partner.lastName.toLowerCase().trim();
+
+        if (
+          partnerFirstInitial === firstInitial &&
+          partnerLastName === normalizedLastName &&
+          partner.dob === member.dob
+        ) {
+          newDuplicateErrors[`member-${memberId}`] = `This person (${partner.firstName} 
+${partner.lastName}) is already in your household; they can be removed.`;
+          return;
+        }
+      }
+
+      // Check against other household members
+      for (let i = 0; i < householdMembers.length; i++) {
+        if (i === index) continue;
+
+        const otherMember = householdMembers[i];
+        if (otherMember.firstName && otherMember.lastName && otherMember.dob) {
+          const otherFirstInitial = otherMember.firstName.charAt(0).toUpperCase();
+          const otherLastName = otherMember.lastName.toLowerCase().trim();
+
+          if (
+            otherFirstInitial === firstInitial &&
+            otherLastName === normalizedLastName &&
+            otherMember.dob === member.dob
+          ) {
+            newDuplicateErrors[`member-${memberId}`] = `This person (${otherMember.firstName} 
+${otherMember.lastName}) is already in your household; they can be removed.`;
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  setDuplicateErrors(newDuplicateErrors);
+}, [householdMembers, hasHousehold, hasPartner, partner.firstName, partner.lastName, partner.dob]);
 
     // updatePartner with age validation
     const handleUpdatePartner = (field, value) => {
@@ -174,13 +282,20 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
         setPartnerAgeValidationError('');
       }
 
+      if (!validateAge(value, 'partner-dob')) {
+        updatePartner(field, value);
+        return;
+      }
       // Duplicate check
       const dupCheck = checkForDuplicate(partner.firstName, partner.lastName, value, 'partner');
       if (dupCheck.isDuplicate) {
-        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
-        return;
+        setDuplicateErrors(prev => ({
+          ...prev,
+          'partner': `This person (${dupCheck.name}) is already in your household; they can be removed.`
+        }));
+        // Don't return - allow the DOB to be saved and show the warning
       } else {
-        setDuplicateError('');
+        setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
       }
     }
 
@@ -191,11 +306,15 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
       const dupCheck = checkForDuplicate(firstName, lastName, partner.dob, 'partner');
 
       if (dupCheck.isDuplicate) {
-        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
+        setDuplicateErrors(prev => ({
+          ...prev,
+          'partner': `This person (${dupCheck.name}) is already in your household; they can be removed.`
+        }));
+        setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
         updatePartner(field, value);
         return;
       } else {
-        setDuplicateError('');
+        setDuplicateErrors('');
       }
     }
 
@@ -203,36 +322,124 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
   };
 
   const handleUpdateHouseholdMember = (memberId, field, value) => {
-    const member = householdMembers.find(m => m.householdMemberId === memberId);
-    if (!member) return;
+    // find member either by householdMemberId or by index
+    let member = householdMembers.find(m => m.householdMemberId === memberId);
+    let memberIndex = memberId;
 
-    // Field length validation
-    if (field === 'firstName' || field === 'lastName') {
-      if (!validateFieldLength(value, MAX_NAME_LENGTH, field === 'firstName' ? 'First name' : 'Last name', `member-${memberId}-${field}`)) {
+    if (!member) {
+      // If member not found by ID, try finding by index (for new members)
+      const index = typeof memberId === 'number' ? memberId : parseInt(memberId);
+      if (index >= 0 && index < householdMembers.length) {
+        member = householdMembers[index];
+        memberIndex = index;
+      } else {
         return;
       }
     }
 
+    // Field length validation - show error
+    if (field === 'firstName' || field === 'lastName') {
+      validateFieldLength(
+        value,
+        MAX_NAME_LENGTH,
+        field === 'firstName' ? 'First name' : 'Last name',
+        `member-${memberId}-${field}`
+      );
+    }
+
+    // Email validation - ONLY for adults (19+)
     if (field === 'email') {
-      if (value && value.length > MAX_EMAIL_LENGTH) {
-        setFieldLengthErrors(prev => ({
-          ...prev,
-          [`member-${memberId}-email`]: `Email cannot exceed ${MAX_EMAIL_LENGTH} characters`
-        }));
-        return;
+      const age = member.dob ? calculateAge(member.dob) : null;
+      const isAdult = age !== null && age >= 19;
+
+      if (isAdult) {
+        // Validate email length
+        if (value && value.length > MAX_EMAIL_LENGTH) {
+          setFieldLengthErrors(prev => ({
+            ...prev,
+            [`member-${memberId}-email`]: `Email cannot exceed ${MAX_EMAIL_LENGTH} characters`
+          }));
+        }
+        // Validate email format
+        validateEmail(value, `member-${memberId}-email`);
+
+        // Duplicate check when email is entered (for adults)
+        if (value && member.firstName && member.lastName && member.dob) {
+          //console.log('Running duplicate check on email change');
+          const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
+          if (dupCheck.isDuplicate) {
+            setDuplicateErrors(prev => ({
+              ...prev, [`member-${memberId}`]: `This person (${dupCheck.name}) is already in your household; they can be removed.`
+            }));
+          } else {
+            setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
+          }
+        }
+      } else {
+        // Clear email validation errors for children
+        setEmailValidationErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
+        setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
       }
-      validateEmail(value, `member-${memberId}-email`);
+    }
+
+
+
+    // Duplicate check for relationship changes
+    if (field === 'relationship') {
+      if (value && member.firstName && member.lastName && member.dob) {
+        //console.log('Running duplicate check on relationship change');
+        const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
+        if (dupCheck.isDuplicate) {
+          setDuplicateErrors(prev => ({
+            ...prev,
+            [`member-${memberId}`]: `This person (${dupCheck.name}) is already in your household; they can be removed.`
+          }));
+        } else {
+          setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
+        }
+      }
+    }
+
+    // duplicate check for gender changes
+    if (field === 'genderType') {
+      if (value && member.firstName && member.lastName && member.dob) {
+        //console.log('Running duplicate check on gender change');
+        const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
+        if (dupCheck.isDuplicate) {
+          setDuplicateErrors(prev => ({
+            ...prev,
+            [`member-${memberId}`]: `This person (${dupCheck.name}) is already in your household; they 
+    can be removed.`
+          }));
+        } else {
+          setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
+        }
+      }
     }
 
     // Duplicate check for DOB changes
     if (field === 'dob' && value && member.firstName && member.lastName) {
+      // Validate age range first
+      if (!validateAge(value, `member-${memberId}-dob`)) {
+        updateHouseholdMember(memberIndex, field, value);
+        return;
+      }
+
+      // Clear email validation errors if member becomes a child
+      const age = calculateAge(value);
+      if (age < 19) {
+        setEmailValidationErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
+        setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
+      }
+
       const dupCheck = checkForDuplicate(member.firstName, member.lastName, value, memberId);
       if (dupCheck.isDuplicate) {
-        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
-        updateHouseholdMember(memberId, field, value);
-        return;
+        setDuplicateErrors(prev => ({
+          ...prev,
+          [`member-${memberId}`]: `This person (${dupCheck.name}) is already in your household; they can be removed.`
+        }));
       } else {
-        setDuplicateError('');
+        setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
       }
     }
 
@@ -243,22 +450,24 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
       const dupCheck = checkForDuplicate(firstName, lastName, member.dob, memberId);
 
       if (dupCheck.isDuplicate) {
-        setDuplicateError(`This person (${dupCheck.name}) has already been added to your household.`);
-        updateHouseholdMember(memberId, field, value);
-        return;
+        setDuplicateErrors(prev => ({
+          ...prev,
+          [`member-${memberId}`]: `This person (${dupCheck.name}) is already in your household; they can be removed.`
+        }));
       } else {
-        setDuplicateError('');
+        setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
       }
     }
 
-    updateHouseholdMember(memberId, field, value);
+    // update the state at the end
+    updateHouseholdMember(memberIndex, field, value);
   };
 
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
         if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship) {
-          console.log('Auto-saving partner data:', partner);
+          //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
     }, 2000); // 2 seconds delay      
@@ -274,15 +483,24 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
           for (const member of householdMembers) {
             const age = calculateAge(member.dob);
             const isAdult = age >= 19;
-            const isComplete = member.firstName && member.lastName && member.dob && member.relationship;
+            const isComplete = member.firstName && member.lastName && member.dob && member.relationship && member.genderType;
             const hasEmailIfAdult = !isAdult || (isAdult && member.email);
-            const hasGenderIfNotAdult = isAdult || (!isAdult && member.genderType);
 
-            if (isComplete && hasEmailIfAdult && hasGenderIfNotAdult && member.isDirty) {
+            // check for validation errors
+            const memberId = member.householdMemberId || householdMembers.indexOf(member);
+            const hasEmailError = emailValidationErrors[`member-${memberId}-email`];
+            const hasFieldLengthError = fieldLengthErrors[`member-${memberId}-firstName`] ||
+              fieldLengthErrors[`member-${memberId}-lastName`] ||
+              fieldLengthErrors[`member-${memberId}-email`] ||
+              fieldLengthErrors[`member-${memberId}-dob`];
+            const hasDuplicateError = duplicateErrors[`member-${memberId}`];              
+  
+            // only save if complete, valid and durty
+            if (isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty) {
               const memberId = member.householdMemberId || `temp-${member.index}`;
           
               if (!savingMembersRef.current.has(memberId)) {
-                console.log('Auto-saving household member:', member);
+                //console.log('Auto-saving household member:', member);
                 savingMembersRef.current.add(memberId);
           
                 saveHouseholdMember(member)
@@ -292,6 +510,11 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                   })
                   .catch((error) => {
                     console.error(error);
+
+                    // Check if it's a duplicate error from backend
+                    if (error.message && error.message.startsWith('DUPLICATE:')) {
+                      setDuplicateErrors(`This person is already in your household; they can be removed.`);
+                    }
                     savingMembersRef.current.delete(memberId);
                   });
               }
@@ -315,6 +538,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
   }, [loadHousehold]);
 
     return (
+        
         <div className="form-container">
 
         <form>
@@ -364,13 +588,13 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                     id={`partner-relationship`}
                     value={partner.relationship}
                     onChange={(e) => handleUpdatePartner('relationship', e.target.value)}
+                    className={getFieldErrorClass(partner.relationship)}
                   >
                     <option value="">Select relationship</option>
                     <option value="Common law">Common law</option>
                     <option value="Partner">Partner</option>
                     <option value="Spouse">Spouse</option>
                   </select>
-                <div className="field-control">
                 <label htmlFor="partner-firstName" className="form-control-label">
                   First Name<span className="required">*</span>
                 </label>
@@ -379,10 +603,14 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                   id="partner-firstName"
                   value={partner.firstName}
                   onChange={(e) => handleUpdatePartner('firstName', e.target.value)}
-                  className="form-control"
+                  className={`form-control ${getFieldErrorClass(partner.firstName)}`}
+                  maxLength={MAX_NAME_LENGTH}
                 />
-                </div>
-                <div className="field-control">
+                {fieldLengthErrors['partner-firstName'] && (
+                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    {fieldLengthErrors['partner-firstName']}
+                  </label>
+                )}
                 <label htmlFor="partner-lastName" className="form-control-label">
                   Last Name<span className="required">*</span>
                 </label>
@@ -391,10 +619,14 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                   id="partner-lastName"
                   value={partner.lastName}
                   onChange={(e) => handleUpdatePartner('lastName', e.target.value)}
-                  className="form-control"
+                  className={`form-control ${getFieldErrorClass(partner.lastName)}`}                  
+                  maxLength={MAX_NAME_LENGTH}
                 />
-                </div>
-                <div className="field-control">
+                {fieldLengthErrors['partner-lastName'] && (
+                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                  {fieldLengthErrors['partner-lastName']}
+                  </label>
+                )}
                 <label htmlFor="partner-dob" className="form-control-label">
                       Date of Birth<span className="required">*</span>
                 </label>
@@ -408,8 +640,11 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerAgeValidationError}
                 </label>
-                </div>
-                <div className="field-control">
+                {fieldLengthErrors['partner-dob'] && (
+                  <label className="form-control-validation-label">
+                  {fieldLengthErrors['partner-dob']}
+                  </label>
+                )}
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
@@ -418,12 +653,27 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                   id="partner-email"
                   value={partner.email}
                   onChange={(e) => handleUpdatePartner('email', e.target.value)}
-                  className="form-control"
+                  className={`form-control ${getFieldErrorClass(partner.email)}`}
+                  maxLength={MAX_EMAIL_LENGTH}
                 />
-                <label htmlFor="partner-dob" className="form-control-validation-label">
-                  {partnerEmailValidationError}
-                </label>
+                {(emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']) && (
+                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    {emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']}
+                  </label>
+                )}                
+                {duplicateErrors['partner'] && (
+                <div style={{
+                  padding: '12px 16px',
+                  background: '#FEE',
+                  border: '1px solid #D8292F',
+                  borderRadius: '4px',
+                  marginBottom: '20px',
+                  color: '#D8292F'
+                }}>
+                  <AlertCircle size={16} style={{ display: 'inline', marginRight: '8px' }} />
+                  {duplicateErrors['partner']}
                 </div>
+              )}
                </div> 
         </>
         )}
@@ -499,7 +749,8 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                   <select
                     id={`member-${member.householdMemberId}-relationship`}
                     value={member.relationship}
-                    onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'relationship', e.target.value)}
+                    onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'relationship', e.target.value)}
+                    className={getFieldErrorClass(member.relationship)}                    
                   >
                     <option value="">Select relationship</option>
                     <option value="Child">Child</option>
@@ -518,9 +769,15 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                     type="text"
                     id={`member-${member.householdMemberId}-firstName`}
                     value={member.firstName}
-                    onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'firstName', e.target.value)}
-                    className="form-control"
+                    onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'firstName', e.target.value)}
+                    className={`form-control ${getFieldErrorClass(member.firstName)}`}
+                    maxLength={MAX_NAME_LENGTH}
                   />
+                  {fieldLengthErrors[`member-${member.householdMemberId || index}-firstName`] && (
+                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                      {fieldLengthErrors[`member-${member.householdMemberId || index}-firstName`]}
+                    </label>
+                  )}
                   
                   <label htmlFor={`member-${member.householdMemberId}-lastName`} className="form-control-label">
                     Last Name<span className="required">*</span>
@@ -529,9 +786,15 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                     type="text"
                     id={`member-${member.householdMemberId}-lastName`}
                     value={member.lastName}
-                    onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'lastName', e.target.value)}
-                    className="form-control"
+                    onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'lastName', e.target.value)}
+                    className={`form-control ${getFieldErrorClass(member.lastName)}`}
+                    maxLength={MAX_NAME_LENGTH}
                   />
+                  {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`] && (
+                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                      {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`]}
+                    </label>
+                  )}
 
                   <label htmlFor={`member-${member.householdMemberId}-dob`} className="form-control-label">
                     Date of Birth<span className="required">*</span>
@@ -541,10 +804,13 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                     variant='past'
                     value={member.dob}
                     required
-                    onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'dob', e.target.value)}
+                    onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'dob', e.target.value)}
                   />
-                  {calculateAge(member.dob) < 19 && member.dob && (
-                      <div className="field-control">
+                  {fieldLengthErrors[`member-${member.householdMemberId || index}-dob`] && (
+                  <label className="form-control-validation-label">
+                    {fieldLengthErrors[`member-${member.householdMemberId || index}-dob`]}
+                  </label>
+                  )}
                         <div className="radio-button-group">
                           <div className="radio-button-header">Gender<span className="required">*</span></div>
                           <label>
@@ -553,7 +819,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                               name={`member-${member.householdMemberId || index}-gender`}
                               value="Man/Boy"
                               checked={member.genderType === "Man/Boy"}
-                              onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
+                              onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
                             />
                             Man/Boy
                           </label>
@@ -563,7 +829,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                               name={`member-${member.householdMemberId || index}-gender`}
                               value="Woman/Girl"
                               checked={member.genderType === "Woman/Girl"}
-                              onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
+                              onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
                             />
                             Woman/Girl
                           </label>
@@ -573,7 +839,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                               name={`member-${member.householdMemberId || index}-gender`}
                               value="Non-Binary"
                               checked={member.genderType === "Non-Binary"}
-                              onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
+                              onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
                             />
                             Non-Binary
                           </label>
@@ -583,15 +849,14 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                               name={`member-${member.householdMemberId || index}-gender`}
                               value="Prefer not to say"
                               checked={member.genderType === "Prefer not to say"}
-                              onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
+                              onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
                             />
                             Prefer not to say
                           </label>
                         </div>
-                      </div>
-                    )}
+
                   {calculateAge(member.dob) >= 19 && (
-                    <div className="field-control">
+                    <>
                   <label htmlFor={`member-${member.householdMemberId}-email`} className="form-control-label">
                     Email<span className="required">*</span>
                   </label>
@@ -599,15 +864,37 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
                     type="text"
                     id={`member-${member.householdMemberId}-email`}
                     value={member.email}
-                    onChange={(e) => updateHouseholdMember(member.householdMemberId || index, 'email', e.target.value)}
-                    className="form-control"
-                  />    
-                  </div>
+                    onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'email', e.target.value)}
+                    className={`form-control ${getFieldErrorClass(member.email)}`}
+                    maxLength={MAX_EMAIL_LENGTH}
+                  />
+                  {(emailValidationErrors[`member-${member.householdMemberId || index}-email`] ||
+                    fieldLengthErrors[`member-${member.householdMemberId || index}-email`]) && (
+                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                      {emailValidationErrors[`member-${member.householdMemberId || index}-email`] ||
+                      fieldLengthErrors[`member-${member.householdMemberId || index}-email`]}
+                    </label>
+                  )}  
+                  </>
                   )}
                 </div>
+
+                {duplicateErrors[`member-${member.householdMemberId || index}`] && (
+                    <div style={{
+                      padding: '12px 16px',
+                      background: '#FEE',
+                      border: '1px solid #D8292F',
+                      borderRadius: '4px',
+                      marginTop: '12px',
+                      color: '#D8292F'
+                    }}>
+                      <AlertCircle size={16} style={{ display: 'inline', marginRight: '8px' }} />
+                      {duplicateErrors[`member-${member.householdMemberId || index}`]}
+                    </div>
+                  )}
         
               </div>
-            ))}
+              ))}
               <div className="section-header">
               <Button type="button" variant="primary" onClick={addHouseholdMember}>
                 <Plus size={16} />
@@ -621,10 +908,11 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
         )}
         </fieldset>
         
-        <div style={{color: 'red', padding: '10px', background: '#fee'}}>
-        {saveStatus}
-        {lastSaved}
-        </div>
+        {saveStatus !== '' && (
+          <div style={{color: 'red', padding: '10px', background: '#fee'}}>
+            {saveStatus}
+          </div>
+        )}
 
         </form>
       </div>
