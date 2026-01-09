@@ -228,7 +228,7 @@ li {
 
 .main-content{
     padding: 0px;
-    margin: 0px;
+    margin: 0px 0px;
     flex: 1;
 
 }
@@ -1072,6 +1072,10 @@ margin-bottom: 6px;
   display: flex;
   justify-content: space-between;
   font-family: "BC Sans";
+}
+
+.footer-container{
+  margin-top: 32px;
 }
 
 .footer-copyright {
