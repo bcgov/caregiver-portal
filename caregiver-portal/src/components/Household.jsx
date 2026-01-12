@@ -4,7 +4,10 @@ import Button from './Button';
 import DateField from './Date'; 
 import { useHousehold } from '../hooks/useHousehold';
 
-const Household = ({ applicationPackageId, applicationFormId }) => {
+const Household = ({ applicationPackageId, applicationFormId, householdHook }) => {
+
+  const ownHook = useHousehold({applicationPackageId, applicationFormId});
+  const hook = householdHook || ownHook;
 
   const {
     partner,
@@ -23,7 +26,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     setHasHousehold,
     setHasPartner,
     loadApplicationPackage,
-    } = useHousehold({ applicationPackageId, applicationFormId });
+    } = hook;
 
     // UI state only (not data state)
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
@@ -190,8 +193,7 @@ useEffect(() => {
           memberLastName === normalizedLastName &&
           member.dob === partner.dob
         ) {
-          newDuplicateErrors['partner'] = `This person (${member.firstName} ${member.lastName}) is 
-already in your household; they can be removed.`;
+          newDuplicateErrors['partner'] = `This person (${member.firstName} ${member.lastName}) is already in your household; they can be removed.`;
           break;
         }
       }
@@ -219,8 +221,7 @@ already in your household; they can be removed.`;
           partnerLastName === normalizedLastName &&
           partner.dob === member.dob
         ) {
-          newDuplicateErrors[`member-${memberId}`] = `This person (${partner.firstName} 
-${partner.lastName}) is already in your household; they can be removed.`;
+          newDuplicateErrors[`member-${memberId}`] = `This person (${partner.firstName} ${partner.lastName}) is already in your household; they can be removed.`;
           return;
         }
       }
@@ -239,8 +240,7 @@ ${partner.lastName}) is already in your household; they can be removed.`;
             otherLastName === normalizedLastName &&
             otherMember.dob === member.dob
           ) {
-            newDuplicateErrors[`member-${memberId}`] = `This person (${otherMember.firstName} 
-${otherMember.lastName}) is already in your household; they can be removed.`;
+            newDuplicateErrors[`member-${memberId}`] = `This person (${otherMember.firstName} ${otherMember.lastName}) is already in your household; they can be removed.`;
             break;
           }
         }
@@ -493,38 +493,67 @@ ${otherMember.lastName}) is already in your household; they can be removed.`;
               fieldLengthErrors[`member-${memberId}-lastName`] ||
               fieldLengthErrors[`member-${memberId}-email`] ||
               fieldLengthErrors[`member-${memberId}-dob`];
-            const hasDuplicateError = duplicateErrors[`member-${memberId}`];              
+            const hasDuplicateError = duplicateErrors[`member-${memberId}`];      
+          
+          /*
+          // Debug logging
+          console.log('Auto-save check for member:', {
+            memberId,
+            name: `${member.firstName} ${member.lastName}`,
+            age,
+            isAdult,
+            isComplete,
+            hasEmailIfAdult,
+            hasEmailError,
+            hasFieldLengthError,
+            hasDuplicateError,
+            isDirty: member.isDirty,
+            email: member.email,
+            genderType: member.genderType,
+            willSave: isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty
+          });
+          */               
   
-            // only save if complete, valid and durty
-            if (isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty) {
-              const memberId = member.householdMemberId || `temp-${member.index}`;
-          
-              if (!savingMembersRef.current.has(memberId)) {
-                //console.log('Auto-saving household member:', member);
-                savingMembersRef.current.add(memberId);
-          
-                saveHouseholdMember(member)
-                  .then(() => {
-                    updateHouseholdMember(member.householdMemberId || householdMembers.indexOf(member), 'isDirty', false);
-                    savingMembersRef.current.delete(memberId);
-                  })
-                  .catch((error) => {
-                    console.error(error);
+          // only save if complete, valid and dirty
+          if (isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty) {
+            const saveId = member.householdMemberId || `temp-${member.index}`;
 
-                    // Check if it's a duplicate error from backend
-                    if (error.message && error.message.startsWith('DUPLICATE:')) {
-                      setDuplicateErrors(`This person is already in your household; they can be removed.`);
-                    }
-                    savingMembersRef.current.delete(memberId);
-                  });
-              }
-            }
+            if (!savingMembersRef.current.has(saveId)) {
+              console.log('Auto-saving household member:', member);
+              savingMembersRef.current.add(saveId);
 
+              saveHouseholdMember(member)
+              .then((savedMember) => {
+                const memberIndex = householdMembers.indexOf(member);
+                // Update the householdMemberId if this was a new member
+                if (savedMember.householdMemberId && !member.householdMemberId) {
+                  updateHouseholdMember(memberIndex, 'householdMemberId', savedMember.householdMemberId);
+                }
+                // Mark as not dirty
+                updateHouseholdMember(member.householdMemberId || memberIndex, 'isDirty', false);
+                savingMembersRef.current.delete(saveId);
+              })
+                .catch((error) => {
+                  console.error(error);
+
+                  // Check if it's a duplicate error from backend
+                  if (error.message && error.message.startsWith('DUPLICATE:')) {
+                    setDuplicateErrors(prev => ({
+                      ...prev,
+                      [`member-${memberId}`]: 'This person is already in your household; they can be removed.'
+                    }));
+                  }
+                  savingMembersRef.current.delete(saveId);
+                });
+            } else {
+              console.log('Already saving this member, skipping:', saveId);
             }
-          //setLastSaved(new Date().toLocaleString());
-        }}, 2000);
-      return () => clearTimeout(timer);
-    }, [householdMembers, saveHouseholdMember, calculateAge, updateHouseholdMember]);
+          }
+        }
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [householdMembers, saveHouseholdMember, calculateAge, updateHouseholdMember, emailValidationErrors, fieldLengthErrors, duplicateErrors]);
 
     const handleRemovePartner = async () => {
       if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email) {
@@ -724,8 +753,7 @@ ${otherMember.lastName}) is already in your household; they can be removed.`;
               <div className="empty-state">
                 <p>No household members added yet. Click "Add Member" to start.</p>
               </div>
-            )}
-            
+            )}            
             {householdMembers.map((member, index) => (
               <div key={member.householdMemberId || `new-member-${index}`} className="household-member-form">
                 <div className="member-header">
@@ -909,7 +937,7 @@ ${otherMember.lastName}) is already in your household; they can be removed.`;
         </fieldset>
         
         {saveStatus !== '' && (
-          <div style={{color: 'red', padding: '10px', background: '#fee'}}>
+          <div className="debug-message">
             {saveStatus}
           </div>
         )}

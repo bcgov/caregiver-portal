@@ -20,6 +20,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     const [nextUrl, setNextUrl] = React.useState('');
     
     const iframeRef = useRef(null);
+    const iframeUrlRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -83,6 +84,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
   useEffect(() => {
     if (applicationForm && applicationFormId) {
+
+      // skip if we already generated a URL for this form
+      if (iframeUrlRef.current === applicationFormId) {
+        return;
+      }
       console.log('getting form access token for form:', applicationForm);
 
       getFormAccessToken()
@@ -94,6 +100,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
           console.log('Setting iframe URL:', url);
           setIframeUrl(url);
           setLoading(false);
+          iframeUrlRef.current = applicationFormId;
         })
         .catch(err => {
           console.error('Error fetching form access token:', err);
@@ -114,9 +121,20 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     useEffect(() => {
       async function handleMessage(event) {
 
+        console.log('Received message:', event.data);
+
+        if (event.data === '{"event":"errorOnSave"}') {
+          //alert("ERROR!");
+
+          setApplicationForm(prev => ({
+            ...prev,
+            status: 'Error'
+          }));
+        }
+
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
-
+          
           if (!submitPackage) {
             //setIsSubmitting(true);
             if( onSubmitComplete ) {
@@ -162,7 +180,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       const autoSaveInterval = setInterval(() => {
         console.log('Auto-saving form...');
         sendSave();
-      }, 10000); // every 10 seconds
+      }, 2000); // every 10 seconds
 
       return () => {
         clearInterval(autoSaveInterval); // cleanup interval on unmount
@@ -183,11 +201,13 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
       const sendSave = () => {
         if (iframeRef.current?.contentWindow) {
-          iframeRef.current.contentWindow.postMessage({
+          const message = iframeRef.current.contentWindow.postMessage({
             type: "CLICK_BUTTON_BY_TEXT",
             text: "Save"   
           },
           "*")
+
+          console.log(message);
         }          
       }
 
@@ -243,8 +263,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         {/* Top breadcrumb - aligned with page content */}
         <div className="breadcrumb-top">
           <div className="breadcrumb-top-content">
-            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} 
-  iframeRef={iframeRef}/>
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef}/>
           </div>
         </div>
           <div className="iframe-content">

@@ -1078,6 +1078,10 @@ margin-bottom: 6px;
   margin-top: 32px;
 }
 
+.debug-message {
+  color: #ccc;
+}
+
 .footer-copyright {
   display: flex;
   max-width: 1120px;
