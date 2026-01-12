@@ -134,7 +134,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
-
+          
           if (!submitPackage) {
             //setIsSubmitting(true);
             if( onSubmitComplete ) {
