@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import { useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import BreadcrumbBar from '../components/BreadcrumbBar';
 import Household from '../components/Household';
 import {useApplicationPackage} from '../hooks/useApplicationPackage';
+import { useHousehold } from '../hooks/useHousehold';
 
 const HouseholdForm = () => {
   const { applicationPackageId, applicationFormId } = useParams();
@@ -11,8 +12,28 @@ const HouseholdForm = () => {
 
   const [nextUrl, setNextUrl] = useState('');
   const { getApplicationForms } = useApplicationPackage();  
+  // Single source of truth for household data (the component page uses it as well)
+  const householdHook = useHousehold({applicationPackageId});
+
 
   const home = `/foster-application/application-package/${applicationPackageId}`;
+
+    // Mock applicationForm object for the breadcrumb
+    const householdFormStatus = useMemo(() => {
+      const isComplete = householdHook.isHouseholdComplete();
+      console.log('Recalculating household status:', {
+        hasPartner: householdHook.hasPartner,
+        hasHousehold: householdHook.hasHousehold,
+        isComplete
+      });
+
+      return {
+        type: 'My household',
+        status: isComplete && householdHook.hasHousehold !== null && householdHook.hasPartner !== null ? 'Complete' : 'Draft'
+      };
+    }, [householdHook]);
+
+    console.log('Current status:', householdFormStatus.status);
 
   // Load all forms to determine next form in sequence
   useEffect(() => {
@@ -53,7 +74,7 @@ const HouseholdForm = () => {
     {/* Top breadcrumb - aligned with page content */}
     <div className="breadcrumb-top">
       <div className="breadcrumb-top-content">
-        <BreadcrumbBar home={home} next={nextUrl} label={"My household"}/>
+        <BreadcrumbBar home={home} next={nextUrl} applicationForm={householdFormStatus}/>
       </div>
     </div>
 
@@ -65,7 +86,7 @@ const HouseholdForm = () => {
         </div>
 
         <div className="page-details-row">
-          <Household applicationPackageId={applicationPackageId} applicationFormId={applicationFormId} />
+          <Household applicationPackageId={applicationPackageId} applicationFormId={applicationFormId} householdHook={householdHook} />
         </div>
       </div>
     </div>
