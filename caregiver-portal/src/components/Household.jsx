@@ -934,7 +934,7 @@ useEffect(() => {
         </fieldset>
         
         {saveStatus !== '' && (
-          <div style={{color: 'red', padding: '10px', background: '#fee'}}>
+          <div className="debug-message">
             {saveStatus}
           </div>
         )}
