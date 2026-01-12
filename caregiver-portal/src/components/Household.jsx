@@ -4,7 +4,10 @@ import Button from './Button';
 import DateField from './Date'; 
 import { useHousehold } from '../hooks/useHousehold';
 
-const Household = ({ applicationPackageId, applicationFormId }) => {
+const Household = ({ applicationPackageId, applicationFormId, householdHook }) => {
+
+  const ownHook = useHousehold({applicationPackageId, applicationFormId});
+  const hook = householdHook || ownHook;
 
   const {
     partner,
@@ -23,7 +26,7 @@ const Household = ({ applicationPackageId, applicationFormId }) => {
     setHasHousehold,
     setHasPartner,
     loadApplicationPackage,
-    } = useHousehold({ applicationPackageId, applicationFormId });
+    } = hook;
 
     // UI state only (not data state)
     const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
