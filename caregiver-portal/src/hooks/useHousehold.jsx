@@ -166,12 +166,7 @@ export const useHousehold = ({applicationPackageId}) => {
                 if(!memberData.householdMemberId && savedMember.householdMemberId) {
                     setPartner(prev => ({...prev, householdMemberId: savedMember.householdMemberId}));
                 }
-            } else {
-                // update householdMembers state
-                if(!memberData.householdMemberId && savedMember.householdMemberId) {
-                    setHouseholdMembers(prev => ([...prev, {...memberData, householdMemberId: savedMember.householdMemberId}]));
-                }
-            }
+            } 
 
             setSaveStatus('Household record updated.');
             setLastSaved(new Date().toLocaleString());
