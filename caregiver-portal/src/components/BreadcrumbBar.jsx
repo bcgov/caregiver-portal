@@ -14,18 +14,20 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef}) => {
 
     const breadcrumbItems = [
         { label: 'Foster Caregiver Application Package', path: home},
-        { label: label ? label : applicationForm?.type, path: next}
+        { label: label ? label : applicationForm?.type + ` (${applicationForm?.status})`, path: next}
     ];
 
 
     const sendComplete = () => {
-        if (iframeRef.current?.contentWindow) {
+        if (iframeRef && iframeRef.current?.contentWindow) {
         iframeRef.current.contentWindow.postMessage({
             type: "CLICK_BUTTON_BY_TEXT",
             text: "Complete"   
         },
         "*")
-        }  
+        }  else {
+            navigate(next);
+        }
     }
 
   return (
