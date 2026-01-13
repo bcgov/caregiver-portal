@@ -729,7 +729,17 @@ useEffect(() => {
                 name="hasHousehold"
                 value="no"
                 checked={hasHousehold === false}
-                onChange={() => setHasHousehold(false)}
+                onChange={async () => {
+                  // if switching from yes to no, remove all household members
+                  if (hasHousehold === true && householdMembers.length > 0) {
+                    await Promise.all(
+                      householdMembers.map(member =>
+                        member.householdMemberId ? removeHouseholdMember(member.householdMemberId) : Promise.resolve()
+                      )
+                    );
+                  }
+                  setHasHousehold(false);
+                }}
               />
               No
             </label>
@@ -875,8 +885,8 @@ useEffect(() => {
                             <input
                               type="radio"
                               name={`member-${member.householdMemberId || index}-gender`}
-                              value="Prefer not to say"
-                              checked={member.genderType === "Prefer not to say"}
+                              value="Unknown"
+                              checked={member.genderType === "Unknown"}
                               onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'genderType', e.target.value)}
                             />
                             Prefer not to say
