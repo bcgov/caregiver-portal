@@ -14,8 +14,11 @@ const ApplicationProcessStep = ({step, index, last, onContinue}) => {
                         <div className="application-step-indicator">
                             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="18" cy="18" r="18" fill="#013366"/> {/* Blue color for waiting */}
-                                <Clock transform="translate(6,6)" color="white" />
+        
                             </svg>
+                            <div className="application-step-icon" style={{paddingLeft: '1px'}}>
+                            <Clock size={20} color="white" />
+                            </div>
                         </div>
                     );
                 case 'complete':
@@ -23,8 +26,11 @@ const ApplicationProcessStep = ({step, index, last, onContinue}) => {
                         <div className="application-step-indicator">
                             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="18" cy="18" r="18" fill="#42814A"/>
-                                <Check transform="translate(6,6)" />
+
                             </svg>
+                            <div className="application-step-icon">
+                            <Check size={20} color="white" />
+                            </div>
                         </div>
                     );
                 default:
@@ -32,8 +38,11 @@ const ApplicationProcessStep = ({step, index, last, onContinue}) => {
                         <div className="application-step-indicator">
                             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
-                                <ArrowRight transform="translate(6,6)" />
+
                             </svg>
+                            <div className="application-step-icon">
+                            <ArrowRight size={20} color="white" />
+                            </div>
                         </div>
                     );
             }
