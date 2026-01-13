@@ -606,6 +606,16 @@ border-bottom: 1px solid currentColor;
   column-gap: 12px;
 }
 
+.application-step-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .application-step-left {
   position: relative;
   width: 36px;
@@ -620,6 +630,9 @@ border-bottom: 1px solid currentColor;
 display: flex;
 align-items: center;
 justify-content: center;
+position: relative;
+width: 36px;
+height: 36px;
 }
 
 .application-step-later {

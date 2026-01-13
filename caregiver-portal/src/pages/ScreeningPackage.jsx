@@ -19,7 +19,8 @@ const ScreeningPackage = () => {
   const back = `/dashboard`
 
     const breadcrumbItems = [
-        { label: 'Back', path: back },
+        { label: 'Dashboard', path: back },
+        { label: 'Application to provide foster family care', path: back },
       ];
 
       const handleBackClick = (item) => {
