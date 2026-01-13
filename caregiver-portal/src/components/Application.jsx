@@ -9,7 +9,7 @@ import BreadcrumbBar from './BreadcrumbBar';
 
 
 
-const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
+const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, isScreeningContext }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,7 +24,9 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
     const navigate = useNavigate();
 
-    const home = `/foster-application/application-package/${applicationPackageId}`;
+    const home = isScreeningContext && householdMemberId
+    ? `/screening-package/${householdMemberId}`
+    : `/foster-application/application-package/${applicationPackageId}`;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
@@ -46,15 +48,24 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
     // Load all forms to determine next form in sequence
   useEffect(() => {
+
+    console.log('=== FORMS USEEFFECT TRIGGERED ===', {
+      applicationPackageId,
+      applicationFormId,
+      hasGetApplicationForms: !!getApplicationForms
+    });
     if (applicationPackageId) {
       getApplicationForms(applicationPackageId)
         .then(formsArray => {
           setAllForms(formsArray);
 
+          console.log('All forms:', formsArray.map(f => ({ id: f.applicationFormId, type: f.type })));
           // Find current form index
           const currentIndex = formsArray.findIndex(
             form => form.applicationFormId === applicationFormId
           );
+
+          console.log('Current form index:', currentIndex, 'applicationFormId:', applicationFormId);          
 
           // Get next form (skip Referral types)
           if (currentIndex !== -1 && currentIndex < formsArray.length - 1) {
@@ -64,16 +75,30 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               nextIndex++;
             }
 
+            console.log('Final nextIndex:', nextIndex, 'formsArray.length:', formsArray.length);
+
             if (nextIndex < formsArray.length) {
               const nextForm = formsArray[nextIndex];
+              console.log('Next form found:', { id: nextForm.applicationFormId, type: nextForm.type });
 
-              // Build URL based on form type (household vs regular)
-              if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
-                setNextUrl(`/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`);
+              let nextFormUrl;
+              if (isScreeningContext && householdMemberId) {
+                nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
+              } else if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+                // Build URL based on form type (household vs regular)
+                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
               } else {
-                setNextUrl(`/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`);
+                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`;
               }
+              setNextUrl(nextFormUrl);
+            } else {
+              console.log('No next form - this is the last form');
+              setNextUrl('');
             }
+          } else {
+            // This is the last form in the array
+            console.log('Last form - clearing nextUrl');
+            setNextUrl('');
           }
         })
         .catch(err => console.error('Error fetching forms:', err));
@@ -134,7 +159,9 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
-          
+
+          console.log('Submit handler - nextUrl:', nextUrl, 'onSubmitComplete:', onSubmitComplete, 'submitPackage:', submitPackage);
+
           if (!submitPackage) {
             //setIsSubmitting(true);
             if( onSubmitComplete ) {
@@ -142,7 +169,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
             } else if (nextUrl) {
               navigate(nextUrl);
             } else {
-              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`);
+              navigate(home);
             }
             setIsSubmitting(false); // Reset before navigation completes
           } else {
@@ -153,7 +180,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
             if( onSubmitComplete ) {
               navigate(onSubmitComplete);
             } else {
-              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+              navigate(home)
             }
           } catch (error) {
             console.error('Submit failed:', error);
