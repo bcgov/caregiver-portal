@@ -3,7 +3,7 @@ import Button from './Button';
 import Family from '../assets/foster-hero2.png';
 import { ExternalLink } from "lucide-react";
 
-const FosterApplicationStart = ({onClick, disabled = false}) => {
+const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) => {
     const [isStarting, setIsStarting] = React.useState(false);
 
     const handleStartClick = async () => {
@@ -19,18 +19,24 @@ const FosterApplicationStart = ({onClick, disabled = false}) => {
     return (
 
             <div className="page-details-frame">
+
                 <div className="image-frame">
+                {showImage && (
                     <img src={Family} alt="Become a foster caregiver" className="hero-image" />
+                )}
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Foster caregiving</h2>
                 </div>
+                
                 <p className="page-content">Foster caregiving is about opening your home and sharing your love, nurturing and caring for children and youth in B.C. who are under the age of 19 and who temporarily cannot live with their own families.</p>
                 <div className="buttonGroup">
+                <Button onClick={() => {window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving"}} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
                     {!disabled && (
-                    <Button onClick={handleStartClick} 
-                      variant={isStarting ? "disabled" : "primary"}>Start application</Button>
+                      <><Button onClick={handleStartClick} 
+                        variant={isStarting ? "disabled" : "primary"}>Apply to become a foster caregiver</Button>
+                      </>
                     )}
-                    <Button onClick={() => {window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving"}} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
+                    
                 </div>
             </div>
     )
