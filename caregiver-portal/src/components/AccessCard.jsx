@@ -4,7 +4,7 @@ import { useAccessCode } from '../hooks/useAccessCode';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
-const AccessCard = () => {
+const AccessCard = ({login, active = true}) => {
     const [accessCode, setAccessCode] = React.useState('');
     const [message, setMessage] = React.useState('');
     const [showSuccess, setShowSuccess] = React.useState('');
@@ -58,6 +58,8 @@ const AccessCard = () => {
                                 </h2>
                             </div>    
                         <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
+                        {active && (
+                            <>
                         <p className="task-card-content">
                         Access code
                         </p>
@@ -86,8 +88,18 @@ const AccessCard = () => {
                             <ArrowRight className="minor"></ArrowRight>
                             </Button>                    
 
+                            </>
+                        )}
+
+                        {!active && (
+                        <Button 
+                        variant="primary" 
+                        onClick={login}
+                        >
+                        {isLoading ? 'Verifying...' : 'Create Account / Log In'}
+                        </Button>                    
+                        )}
                         
-                    
                         {/* Access Code Verification Overlay */}
                         {isLoading && !showSuccess && (
                             <div className="submission-overlay">
