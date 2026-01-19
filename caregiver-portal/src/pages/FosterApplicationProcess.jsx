@@ -112,9 +112,9 @@ const FosterApplicationProcess = () => {
   
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'referral', label: 'Information Session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start'},
-      {key: 'application', label: 'Caregiver Application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
-      {key: 'consent', label: 'Household Screening Forms and Consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
+      {key: 'referral', label: 'Attend an information session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start'},
+      {key: 'application', label: 'Submit caregiver application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
+      {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
       {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
       {key: 'training', label: 'Training', description: 'Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
       {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
