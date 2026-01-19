@@ -86,7 +86,16 @@ const ApplicationProcessStep = ({step, index, last, onContinue}) => {
             <div className="application-step-content">
                 <p className="application-step-label">Step {index + 1}</p>
                 <h2 className="application-step-title">{`${step.label}`}</h2>
+                {/* Support both string and array descriptions */}
+                {Array.isArray(step.description) ? (
+                <ul className="application-step-description">
+                    {step.description.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                    ))}
+                </ul>
+                ) : (
                 <p className="application-step-description">{step.description}</p>
+                )}
                 {onContinue && !step.disabled && (
                 <Button onClick={() => onContinue()} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
                 )}
