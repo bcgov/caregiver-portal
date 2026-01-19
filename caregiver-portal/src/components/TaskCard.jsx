@@ -57,7 +57,7 @@ const TaskCard = ({applicationPackage}) => {
         <div className="task-card" onClick={() => handleClick()}>
         <div className="task-card-content">
                 
-            <div className="task-card-title">Application to become a foster caregiver</div>
+            <div className="task-card-title">Become a foster caregiver</div>
             <Button variant="primary">Continue<ArrowRight></ArrowRight></Button>
         </div>
       </div>
