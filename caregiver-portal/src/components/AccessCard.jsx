@@ -51,12 +51,18 @@ const AccessCard = () => {
 
     return (
                 
-                        <div className="task-card-minor-container">
+                        <div className="access-code-container">
+                            <div className="access-code-title-header-container">
+                                <h2 className='access-code-title-header'>
+                                    Did you receive an access code?
+                                </h2>
+                            </div>    
+                        <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
                         <p className="task-card-content">
                         Access code
                         </p>
                         <input type="text" 
-                        placeholder="Enter Access Code" 
+                        placeholder="e.g. XY74N9" 
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
@@ -73,10 +79,10 @@ const AccessCard = () => {
                         
                     
                         <Button 
-                            variant="lowkey" 
+                            variant="primary" 
                             onClick={handleClick}
                             >
-                            {isLoading ? 'Verifying...' : 'Submit'}
+                            {isLoading ? 'Verifying...' : 'Continue'}
                             <ArrowRight className="minor"></ArrowRight>
                             </Button>                    
 
