@@ -46,7 +46,7 @@ const ConfirmationModal = ({
         <div className="confirmation-actions">
           <Button 
             variant="secondary" 
-            onClick={handleConfirm}
+            onClick={handleClose}
             disabled={isLoading}
           >
             {cancelText}
