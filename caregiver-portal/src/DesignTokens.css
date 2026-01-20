@@ -217,6 +217,8 @@ li {
   font-style: normal;
   font-weight: 400;
   line-height: 150%; /* 24px */
+
+  margin: 16px 0;
  
 }
 
@@ -755,10 +757,17 @@ height: 36px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 12px 0px;
+  padding: 12px;
   border: 1px solid transparent;
   border-bottom: 1px solid var(--theme-gray-40, #E0DEDC);
   background-color: transparent;
+
+}
+
+.application-package-step:hover {
+
+    background: var(--surface-color-menus-hover);
+    cursor: pointer;
 
 }
 
@@ -1299,22 +1308,24 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
+    padding-top: 1.5rem;
   }
 
   .modal-title {
     margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
+    text-align:center;
+    width: 100%;
+    line-height: normal;
   }
 
   .modal-body {
-    padding: 1.5rem;
+    padding: 24px;
   }
 
   .confirmation-modal {
-    padding: 1rem 0;
+    padding: 0;
   }
 
   .confirmation-message {
@@ -1324,10 +1335,20 @@ a {
     line-height: 1.5;
   }
 
+  .confirmation-modal-text {
+    color: var(--typography-color-primary, #2D2D2D);
+    font-family: "BC Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 23px; /* 143.75% */    
+  }
+
   .confirmation-actions {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    flex-direction: column;
   }
 
   .form-container{
