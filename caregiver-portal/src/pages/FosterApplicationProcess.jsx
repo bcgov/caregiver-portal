@@ -130,7 +130,7 @@ const FosterApplicationProcess = () => {
   
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'referral', label: 'Attend an information session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start'},
+      {key: 'referral', label: 'Attend an information session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start', buttonLabel: 'Submit request to attend info session'},
       {key: 'application', label: 'Submit caregiver application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
       {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
       {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
@@ -242,7 +242,7 @@ return (
         <div className="application-package">
             {dynamicSteps.map((step, index) => (
             <div key={step.key}>
-               <ApplicationProcessStep step={step} index={index} last={index === dynamicSteps.length - 1} onContinue={ step.disabled ? undefined : () => handleContinue(step)} />
+               <ApplicationProcessStep step={step} index={index} last={index === dynamicSteps.length - 1} onContinue={ step.disabled ? undefined : () => handleContinue(step)} buttonLabel={step.buttonLabel} />
             </div>
             ))}
         </div>
