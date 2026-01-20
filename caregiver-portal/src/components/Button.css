@@ -149,6 +149,11 @@
     background: var(--surface-color-secondary-button-default, #FFF);
   }
 
+  .btn-nav:hover {
+    background: var(--surface-color-menus-hover);
+    cursor: pointer;
+  }
+
   .btn-section-header {
     background-color:transparent;
     font-weight: normal;
