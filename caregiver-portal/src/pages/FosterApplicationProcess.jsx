@@ -12,6 +12,7 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 const FosterApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [showReferralModal, setShowReferralModal] = React.useState(false);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const [householdMemberId, setHouseholdMemberId] = React.useState(null);
@@ -74,10 +75,17 @@ const FosterApplicationProcess = () => {
   }, []);
 
   const handleContinue = (step) => {
+
+    // show confirmation modal for referral step
+    if (step.key === "referral") {
+      setShowReferralModal(true);
+      return;
+    }
+
     switch(step.key) {
-      case "referral":
-        navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
-        break;
+      //case "referral":
+      //  navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
+      //  break;
       case "consent":
         navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
         break;
@@ -97,7 +105,7 @@ const FosterApplicationProcess = () => {
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
   };
-  
+
   const handleConfirmDelete = async () => {
     try { 
       await cancelApplicationPackage(applicationPackageId);
@@ -105,6 +113,16 @@ const FosterApplicationProcess = () => {
     } catch (err) {
       console.error('Failed to cancel:', err);
     }
+  }
+
+
+  const handleCancelReferral = () => {
+    setShowReferralModal(false);
+  };
+
+  const handleConfirmReferral = () => {
+    setShowReferralModal(false);
+    navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
   }
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
@@ -239,14 +257,35 @@ return (
                     isOpen={showDeleteModal}
                     onClose={handleCancelDelete}
                     onConfirm={handleConfirmDelete}
-                    title="Cancel Application"
-                    message="Are you sure you want to cancel your application? This action cannot be undone and all associated data will be permanently deleted."
-                    confirmText="Yes, Cancel Application"
-                    cancelText="Keep Application"
+                    title="Delete Application"
+                    message="Are you sure you want to delete your application to become a foster caregiver? All the work you've done so far will be lost. This cannot be undone."
+                    confirmText="Delete my application"
+                    cancelText="Cancel"
                     confirmVariant="danger"
                     isLoading={isDeleting}
                     />
+
+                  <ConfirmationModal
+                      isOpen={showReferralModal}
+                      onClose={handleCancelReferral}
+                      onConfirm={handleConfirmReferral}
+                      title="Before you apply"                      
+                      confirmText="I understand"
+                      cancelText="Cancel"
+                      confirmVariant="primary-bold"
+                      isLoading={false}
+                    >
+                      <p className="confirmation-modal-text">Foster caregiving is about opening your home and caring for children and youth in B.C who are under the age of 19 and who temporarily cannot live with their own families.</p>
+                      <p>To provide foster family care in B.C.:</p>
+                      <ul>
+                        <li>You understand that Indigenous children and youth are entitled to learn about and practice their Indigenous traditions, customs, and languages, and to belong to their Indigenous communities</li>
+                        <li>You understand the need to support a child or youth's sense of self, including cultural, racial, religious, gender, sexual identity</li>
+                        <li>You understand that the support needs of children and youth in care are diverse and complex and you understand or are willing to learn about trauma informed care</li>
+                      </ul>
+                    </ConfirmationModal>
                     {error && <div className="error-message">{error}</div>}
+
+
 
         </div>
 
