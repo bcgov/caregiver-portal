@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import "../DesignTokens.css";
 import Button from "../components/Button";
 import FosterApplicationStart from "../components/FosterApplicationStart";
-import OOCApplicationStart from "../components/OOCApplicationStart";
 import WelcomeCard from "../components/WelcomeCard";
 import AccessCard from "../components/AccessCard";
 
@@ -54,7 +53,6 @@ export default function Home() {
           <div className="page-details-row">
             <div className="page-details-content">
           <FosterApplicationStart onClick={login} disabled={true}/>
-          <OOCApplicationStart onClick={login} disabled={true}/>
           <AccessCard login={login} active={false}/>
           </div>
         </div>
