@@ -36,7 +36,7 @@ const OOCApplicationStart = ({onClick, disabled = false}) => {
                             "_blank",
                             "noopener,noreferrer"
                         )
-                        }} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
+                        }} variant="learnmore">Learn more <ExternalLink className="buttonIcon" /></Button>
                 </div>
             </div>
     )
