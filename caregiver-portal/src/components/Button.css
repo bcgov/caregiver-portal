@@ -17,6 +17,13 @@
   .btn-primary {
     background-color: #013366;
     color: white;
+    
+  }
+
+  .btn-primary-bold {
+    background-color: #013366;
+    color: white;
+    font-weight: 700;
   }
   
   .btn-primary:hover {
@@ -57,15 +64,14 @@
     font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 27.008px; /* 168.8% */
-    text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
     text-decoration-thickness: auto;
     text-underline-offset: auto;
     text-underline-position: from-font;
-    border: 1px solid  transparent;
+    border: 1px solid  var(--typography-color-link, #255A90);
   }
 
   .btn-white {
@@ -83,8 +89,8 @@
   }
 
   .btn-danger {
-    background-color: transparent;
-    color: #B4231E;
+    background-color: #B4231E;
+    color: white;
     border: 1px solid  #B4231E;
     font-weight: 400;
   }
