@@ -6,6 +6,7 @@ import Button from '../components/Button';
 import { IMaskInput} from 'react-imask';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
+import { Loader2 } from 'lucide-react';
 
 
 const ReferralForm = () => {
@@ -148,6 +149,19 @@ const ReferralForm = () => {
   }
 
   return (
+
+    <>
+          {/* Submission Overlay */}
+          {loading && (
+            <div className="submission-overlay">
+              <div className="submission-modal">
+                <Loader2 className="submission-spinner" />
+                <p className="submission-title">Submitting Request</p>
+                <p className="submission-text">Please wait while we process your information session request...</p>
+              </div>
+            </div>
+          )}
+
     <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
@@ -267,6 +281,7 @@ const ReferralForm = () => {
 
         </div>
     </div>
+    </>
   );
 
 };
