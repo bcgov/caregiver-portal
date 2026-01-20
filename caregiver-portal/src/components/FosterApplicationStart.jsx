@@ -36,7 +36,7 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
                         "_blank",
                         "noopener,noreferrer"
                     )
-                    }} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
+                    }} variant="learnmore">Learn more <ExternalLink className="buttonIcon" /></Button>
                     {!disabled && (
                       <><Button onClick={handleStartClick} 
                         variant={isStarting ? "disabled" : "primary"}>Apply to become a foster caregiver</Button>
