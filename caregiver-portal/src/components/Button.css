@@ -74,6 +74,27 @@
     border: 1px solid  var(--typography-color-link, #255A90);
   }
 
+  .btn-learnmore {
+    background-color:transparent;
+    color: var(--typography-color-link, #255A90);
+    text-align: center;
+    
+    padding: 0px;
+    
+    /* regular/body */
+    font-family: "BC Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27.008px; /* 168.8% */
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+  }
+
   .btn-white {
     display: flex;
     height: 40px;
