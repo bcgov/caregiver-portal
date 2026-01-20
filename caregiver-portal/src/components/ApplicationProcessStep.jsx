@@ -3,7 +3,7 @@ import { ArrowRight, CircleAlert, Check, CircleArrowRight, ChevronRight, Clock }
 import Button from "./Button";
 
 
-const ApplicationProcessStep = ({step, index, last, onContinue}) => {
+const ApplicationProcessStep = ({step, index, last, onContinue, buttonLabel = 'Continue'}) => {
 
       // Function to render the appropriate icon
       const renderStepIcon = () => {
@@ -97,7 +97,7 @@ const ApplicationProcessStep = ({step, index, last, onContinue}) => {
                 <p className="application-step-description">{step.description}</p>
                 )}
                 {onContinue && !step.disabled && (
-                <Button onClick={() => onContinue()} variant="primary">Continue <ArrowRight className="buttonIcon" /></Button>
+                <Button onClick={() => onContinue()} variant="primary">{buttonLabel} <ArrowRight className="buttonIcon" /></Button>
                 )}
             </div>
 

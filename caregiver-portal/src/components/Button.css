@@ -17,6 +17,13 @@
   .btn-primary {
     background-color: #013366;
     color: white;
+    
+  }
+
+  .btn-primary-bold {
+    background-color: #013366;
+    color: white;
+    font-weight: 700;
   }
   
   .btn-primary:hover {
@@ -57,15 +64,35 @@
     font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 27.008px; /* 168.8% */
-    text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
     text-decoration-thickness: auto;
     text-underline-offset: auto;
     text-underline-position: from-font;
-    border: 1px solid  transparent;
+    border: 1px solid  var(--typography-color-link, #255A90);
+  }
+
+  .btn-learnmore {
+    background-color:transparent;
+    color: var(--typography-color-link, #255A90);
+    text-align: center;
+    
+    padding: 0px;
+    
+    /* regular/body */
+    font-family: "BC Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 27.008px; /* 168.8% */
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
   }
 
   .btn-white {
@@ -83,8 +110,8 @@
   }
 
   .btn-danger {
-    background-color: transparent;
-    color: #B4231E;
+    background-color: #B4231E;
+    color: white;
     border: 1px solid  #B4231E;
     font-weight: 400;
   }
@@ -147,6 +174,11 @@
     border-radius: var(--layout-borderRadius-medium, 4px);
     border: 1px solid var(--surface-color-border-dark, #353433);
     background: var(--surface-color-secondary-button-default, #FFF);
+  }
+
+  .btn-nav:hover {
+    background: var(--surface-color-menus-hover);
+    cursor: pointer;
   }
 
   .btn-section-header {

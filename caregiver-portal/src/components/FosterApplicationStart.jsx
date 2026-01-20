@@ -30,7 +30,13 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
                 
                 <p className="page-content">Foster caregiving is about opening your home and sharing your love, nurturing and caring for children and youth in B.C. who are under the age of 19 and who temporarily cannot live with their own families.</p>
                 <div className="buttonGroup">
-                <Button onClick={() => {window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving"}} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
+                <Button onClick={() => {
+                    window.open(
+                        "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving",
+                        "_blank",
+                        "noopener,noreferrer"
+                    )
+                    }} variant="learnmore">Learn more <ExternalLink className="buttonIcon" /></Button>
                     {!disabled && (
                       <><Button onClick={handleStartClick} 
                         variant={isStarting ? "disabled" : "primary"}>Apply to become a foster caregiver</Button>
