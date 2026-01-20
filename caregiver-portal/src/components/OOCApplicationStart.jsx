@@ -30,7 +30,13 @@ const OOCApplicationStart = ({onClick, disabled = false}) => {
                     <Button onClick={handleStartClick} 
                       variant={isStarting ? "disabled" : "primary"}>Start application</Button>
                     )}
-                    <Button onClick={() => {window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/kinshipcare"}} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
+                    <Button onClick={() => {
+                        window.open(
+                            "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/kinshipcare",
+                            "_blank",
+                            "noopener,noreferrer"
+                        )
+                        }} variant="secondary">Learn more <ExternalLink className="buttonIcon" /></Button>
                 </div>
             </div>
     )
