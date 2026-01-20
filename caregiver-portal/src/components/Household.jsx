@@ -66,10 +66,10 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
 
     const age = calculateAge(dob);
 
-    if (age > 95) {
+    if (age > 122) {
       setFieldLengthErrors(prev => ({
         ...prev,
-        [fieldKey]: 'Age cannot exceed 95 years'
+        [fieldKey]: 'Age cannot exceed 122 years'
       }));
       return false;
     }
