@@ -21,10 +21,13 @@ body {
     background: #FFF;
     display: flex;
     height: 66px;
-    padding: 0 40px;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
+    padding: 0 var(--layout-padding-medium);
+    @media (min-width: 820px) {
+    padding: 0 var(--layout-padding-xlarge);
+    }
 }
 
 .nav-bar {
@@ -70,7 +73,6 @@ body {
 .hamburger-container {
     position: relative;
     display: flex;
-    padding: 4px;
     align-items: center;
     gap: 10px;
     border-radius: 4px;
@@ -249,7 +251,10 @@ li {
   flex-direction: column;
   align-items: center;
   background: url(./assets/welcome-banner2.jpeg) lightgray 50% / cover no-repeat;
-  padding: 0 40px;
+  padding: 0 var(--layout-padding-medium);
+  @media (min-width: 820px) {
+    padding: var(--layout-padding-xlarge);
+  }
 }
 
 .task-content {
@@ -406,9 +411,7 @@ gap: 10px;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
-    max-width: calc((100% - 32px) * 2 / 3 + 32px);  /* Span 2 of 3 columns plus gap */
-    width: calc((100% - 32px) * 2 / 3 + 32px);  /* Span 2 of 3 columns plus gap */
-
+    max-width: 100% 
     border-radius: 4px;
     border-left: 8px solid var(--theme-primaryGold, #FCBA19);
     background: rgba(1, 51, 102, 0.70);
@@ -955,7 +958,10 @@ iframe {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 40px;
+  padding: var(--layout-padding-large) var(--layout-padding-medium);
+  @media (min-width: 820px) {
+    padding: var(--layout-padding-xlarge);
+  }
 }
 
 .task-card-minor-container {
@@ -1123,7 +1129,6 @@ margin-bottom: 6px;
 
 .footer-banner {
   display: flex;
-  padding: 32px 0px;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -1131,12 +1136,15 @@ margin-bottom: 6px;
   border-top: var(--layout-borderRadius-medium, 4px) solid var(--theme-gold-60, #FBD389);
   border-bottom: var(--layout-borderRadius-medium, 4px) solid var(--theme-gold-60, #FBD389);
   background: var(--theme-gray-110, #252423);
+  padding: var(--layout-padding-medium);
+  @media (min-width: 820px) {
+    padding: var(--layout-padding-xlarge);
+  }
 }
 
 .footer-banner-content {
   width: 100%;
   max-width: 1120px;
-  padding: 0 20px;
 
   color: var(--typography-color-primaryInvert, #FFF);
 
@@ -1207,7 +1215,6 @@ margin-bottom: 6px;
   display: flex;
   width: 100%;
   max-width: 1120px;
-  padding: 32px 20px 0px 20px;
   flex-direction: column;
   
   gap: 32px;
@@ -1223,6 +1230,10 @@ margin-bottom: 6px;
   font-style: normal;
   font-weight: 400;
   line-height: 21px; /* 150% */
+  padding: var(--layout-padding-medium) 0 0;
+  @media (min-width: 820px) {
+    padding: var(--layout-padding-xlarge);
+  }
 }
 
 a {
@@ -2233,12 +2244,6 @@ line-height: 54px; /* 225% */
   
     }
 
-    .welcome-card-container {
-      max-width: 100%;
-      padding: 20px;
-      width: 90%;
-    }
-
     .task-list {
       width: 90%;
   
@@ -2253,21 +2258,9 @@ line-height: 54px; /* 225% */
       line-height: 12px;
     }
 
-    .top-nav {
-      padding: 0 16px;
-    }
-
     .page-content {
       width: 100%;
       max-width: 100%;
-    }
-
-    .task-frame-image {
-      padding: 0 0;
-    }
-
-    .task-frame-main-body {
-      padding: 40px 16px;
     }
 
     .task-card {
@@ -2341,9 +2334,4 @@ line-height: 54px; /* 225% */
         gap: 24px;
       }
   
-      .task-frame-main-body {
-        padding: 40px 20px;  /* Reduce horizontal padding on mobile */
-      }
-  
-
     }
