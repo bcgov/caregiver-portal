@@ -396,7 +396,7 @@ gap: 10px;
     background: rgba(1, 51, 102, 0.70);
     padding: var(--layout-padding-xlarge);
     width: fit-content;
-    max-width: 430px;    
+    max-width: 430px;   
   }
 
   .welcome-card-header {
