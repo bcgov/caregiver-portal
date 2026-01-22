@@ -161,6 +161,7 @@ body {
     border: none;
     text-align: left;
     cursor: pointer;
+    font-family: 'BC Sans', sans-serif;
     font-size: 14px;
     color: #333;
     transition: background-color 0.2s ease;
@@ -303,9 +304,9 @@ gap: 10px;
   }
 
   .page-details {
-    padding: var(--layout-padding-medium);
+    padding: 0 var(--layout-padding-medium) var(--layout-padding-medium);
     @media (min-width: 820px) {
-      padding: var(--layout-padding-xlarge);
+      padding: 0 var(--layout-padding-xlarge) var(--layout-padding-xlarge);
     }
   }
 
@@ -349,7 +350,7 @@ gap: 10px;
     max-width: 1120px;
     flex-direction: column;
     align-items: flex-start;
-    margin: var(--layout-margin-large);
+    margin: var(--layout-margin-large) auto auto;
   }
 
   .page-details-row-bottom {
@@ -391,7 +392,7 @@ gap: 10px;
 
   .welcome-card-container {
     border-radius: var(--layout-border-radius-medium);
-    border-left: 8px solid var(--theme-primaryGold);
+    border-left: 8px solid var(--theme-primary-gold);
     background: rgba(1, 51, 102, 0.70);
     padding: var(--layout-padding-xlarge);
     width: fit-content;
@@ -757,6 +758,7 @@ height: 36px;
 }
 
 .application-package-label {
+  font-family: 'BC Sans', sans-serif;
   font-weight: 700;
   font-size: 18px;
   line-height: 28px;
@@ -831,12 +833,15 @@ iframe {
     position: relative;
     background: white;
     z-index: 200;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid var(--surface-color-border-default);
     border-top: 2px solid #D8D8D8;
     flex-shrink: 0;
     display: flex;
     justify-content: center;
-    padding: 0 40px;
+    padding: 0 var(--layout-padding-medium);
+    @media (min-width: 820px) {
+      padding: 0 var(--layout-padding-xlarge);
+    }
   }
 
   .breadcrumb-top-content {
@@ -844,6 +849,8 @@ iframe {
     max-width: 1120px;
     display: flex;
     align-items: center;
+    margin: auto;
+    padding-left: 8px; /* offset to line up with bc gov logo in top-nav */
   }
 
 .breadcrumb-bottom {
@@ -1039,12 +1046,11 @@ margin-bottom: 6px;
 }
 
 .breadcrumb-nav {
-  margin-bottom: 1rem;
+  padding: var(--layout-padding-small) 0;
 }
 
 .breadcrumb-container {
   display: flex;
-  padding: 3px 0;
   align-items: center;
   gap: 6px;
 }
@@ -1055,14 +1061,17 @@ margin-bottom: 6px;
   gap: 0.25rem;
   background: none;
   border: none;
-  color: #000000;
-  cursor: pointer;
-  font-size: 0.875rem;
-  text-decoration: none;
+  color: var(--typography-color-link);
+  font-family: 'BC Sans', sans-serif;
+  font-size: 1rem;
+  text-decoration: underline;
+  padding: var(--layout-padding-small);
+  border-radius: var(--layout-border-radius-small);
 }
 
 .breadcrumb-back-link:hover {
-  text-decoration: underline;
+  cursor: pointer;
+  background: var(--surface-color-menus-hover);
 }
 
 .breadcrumb-separator {
@@ -1070,8 +1079,9 @@ margin-bottom: 6px;
 }
 
 .breadcrumb-current {
-  color: #495057;
-  font-size: 0.875rem;
+  color: var(--typography-color-secondary);
+  font-size: 1rem;
+  padding: var(--layout-padding-small);
 }
 
 
