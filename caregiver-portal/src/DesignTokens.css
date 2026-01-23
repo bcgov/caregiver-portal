@@ -44,6 +44,12 @@ body {
     align-items: center;
     cursor: pointer;
 }
+
+.formError {
+  font-size: 12px;
+  color: #ccc;
+  margin-left: 6px;
+}
    
 .app-title {
   color: var(--typography-color-primary, #2D2D2D);
