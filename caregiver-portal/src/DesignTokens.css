@@ -856,7 +856,6 @@ iframe {
     display: flex;
     align-items: center;
     margin: auto;
-    padding-left: 8px; /* offset to line up with bc gov logo in top-nav */
   }
 
 .breadcrumb-bottom {
