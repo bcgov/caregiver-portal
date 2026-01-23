@@ -312,6 +312,7 @@ gap: 10px;
   .page-details-row {
     width: 100%;
     max-width: 1120px;
+    margin: auto;
     padding-top: var(--layout-margin-medium);
     @media (min-width: 820px) {
       padding-top: var(--layout-margin-xlarge);
