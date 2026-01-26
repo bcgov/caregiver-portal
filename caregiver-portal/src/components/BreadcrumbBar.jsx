@@ -11,17 +11,6 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message})
     const handleBackClick = () => {
         navigate(home);
     };
-
-    const getFormMessage = () => {
-
-        if(message) {
-            return message;
-        } else {
-            return ""
-        }
-
-    };
-
     // Check if form is complete
     const isFormComplete = true; //applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
