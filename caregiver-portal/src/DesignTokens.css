@@ -320,6 +320,10 @@ gap: 10px;
     width: 100%;
     max-width: 1120px;
     margin: auto;
+    padding-top: var(--layout-margin-medium);
+    @media (min-width: 820px) {
+      padding-top: var(--layout-margin-xlarge);
+    }
   }
   .page-details-row-breadcrumb {
     display: flex;
