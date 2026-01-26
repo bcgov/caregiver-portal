@@ -194,7 +194,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || applicationPackage?.status === 'Submitted') && !hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && !hasMedicalAssessment) {
 
         return {
           ...step,
@@ -204,13 +204,47 @@ const FosterApplicationProcess = () => {
         }
       }
 
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || applicationPackage?.status === 'Submitted') && hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && hasMedicalAssessment) {
 
         return {
           ...step,
           description: 'You have submitted your medical assessment forms. The screening process is underway..',
           disabled: true,
           iconType: 'waiting',
+        }
+      }
+
+      if (step.key === 'screening' && applicationPackage?.srStage === 'Assessment') {
+
+        return {
+          ...step,
+          description: 'The foster caregiver screening has been completed.',
+          disabled: true,
+          iconType: 'complete',
+        }
+      }
+
+      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment')) {
+
+        return {
+          ...step,
+          description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
+          disabled: true,
+          iconType: 'waiting',
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
+
+        }
+      }
+
+      if (step.key === 'homevisits' && (applicationPackage?.srStage === 'Assessment')) {
+
+        return {
+          ...step,
+          description: 'A resource worker will complete several in-home interviews with prospective caregivers. Once the home study is complete, it will be reviewed and signed off by the applicants.',
+          disabled: true,
+          iconType: 'waiting',
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
+
         }
       }
 
