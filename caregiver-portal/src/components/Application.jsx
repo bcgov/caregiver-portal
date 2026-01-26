@@ -18,6 +18,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [allForms, setAllForms] = React.useState([])
     const [nextUrl, setNextUrl] = React.useState('');
+    const [formMessage, setFormMessage] = React.useState('');
     
     const iframeRef = useRef(null);
     const iframeUrlRef = useRef(null);
@@ -151,9 +152,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       async function handleMessage(event) {
 
         console.log('Received message:', event.data);
+        
 
         if (event.data === '{"event":"errorOnSave"}') {
           //alert("ERROR!");
+          setFormMessage("The form is missing required information.");
 
           setApplicationForm(prev => ({
             ...prev,
@@ -223,7 +226,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       const autoSaveInterval = setInterval(() => {
         console.log('Auto-saving form...');
         sendSave();
-      }, 2000); // every 10 seconds
+      }, 50000); // every 10 seconds
 
       return () => {
         clearInterval(autoSaveInterval); // cleanup interval on unmount
@@ -250,7 +253,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
           },
           "*")
 
-          console.log(message);
+          console.log("Sending save:",message);
         }          
       }
 
@@ -306,7 +309,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         {/* Top breadcrumb - aligned with page content */}
         <div className="breadcrumb-top">
           <div className="breadcrumb-top-content">
-            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef}/>
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef} message={formMessage}/>
           </div>
         </div>
           <div className="iframe-content">

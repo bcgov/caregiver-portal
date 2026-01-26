@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, CircleAlert, Check, CircleArrowRight, ChevronRight, Clock } from "lucide-react";
+import { ArrowRight, CircleAlert, Check, CircleArrowRight, ChevronRight, Clock, ExternalLink } from "lucide-react";
 import Button from "./Button";
 
 
@@ -21,6 +21,18 @@ const ApplicationProcessStep = ({step, index, last, onContinue, buttonLabel = 'C
                             </div>
                         </div>
                     );
+                    case 'alert':
+                        return (
+                            <div className="application-step-indicator">
+                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
+            
+                                </svg>
+                                <div className="application-step-icon" style={{paddingLeft: '1px'}}>
+                                <CircleAlert size={20} color="white" />
+                                </div>
+                            </div>
+                        );                    
                 case 'complete':
                     return (
                         <div className="application-step-indicator">
@@ -95,6 +107,16 @@ const ApplicationProcessStep = ({step, index, last, onContinue, buttonLabel = 'C
                 </ul>
                 ) : (
                 <p className="application-step-description">{step.description}</p>
+                )}
+                {step.learnMoreLink && (
+                    <Button onClick={() => {
+                        window.open(
+                            step.learnMoreLink,
+                            "_blank",
+                            "noopener,noreferrer"
+                        )
+                        }} variant="learnmore">Learn more <ExternalLink className="buttonIcon" /></Button>
+
                 )}
                 {onContinue && !step.disabled && (
                 <Button onClick={() => onContinue()} variant="primary">{buttonLabel} <ArrowRight className="buttonIcon" /></Button>

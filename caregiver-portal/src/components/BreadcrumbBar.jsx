@@ -5,13 +5,12 @@ import Button from './Button';
 import Breadcrumb from '../components/Breadcrumb';
 
 
-const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef}) => {
+const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message}) => {
     const navigate = useNavigate();
 
-    const handleBackClick = (item) => {
+    const handleBackClick = () => {
         navigate(home);
     };
-
     // Check if form is complete
     const isFormComplete = true; //applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
@@ -79,6 +78,12 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef}) => {
                     ) : (
                         <AlertCircle size={16} />
                     )}
+
+                   { message && (
+                    <p className='formError'>{message}</p>
+                    )}
+                     
+                    
                 </span>
             </span>
         );

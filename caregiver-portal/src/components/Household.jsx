@@ -936,7 +936,7 @@ useEffect(() => {
               <div className="section-header">
               <Button type="button" variant="primary" onClick={addHouseholdMember}>
                 <Plus size={16} />
-                Add another person
+                Add a household member
               </Button>
 
             </div>

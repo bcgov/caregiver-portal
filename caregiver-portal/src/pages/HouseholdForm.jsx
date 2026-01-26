@@ -14,6 +14,7 @@ const HouseholdForm = () => {
   const { getApplicationForms } = useApplicationPackage();  
   // Single source of truth for household data (the component page uses it as well)
   const householdHook = useHousehold({applicationPackageId});
+  const [formMessage, setFormMessage] = React.useState('');
 
 
   const home = `/foster-application/application-package/${applicationPackageId}`;
@@ -27,12 +28,14 @@ const HouseholdForm = () => {
         isComplete
       });
 
+
       return {
         type: 'My household',
         status: isComplete && householdHook.hasHousehold !== null && householdHook.hasPartner !== null ? 'Complete' : 'Draft'
       };
     }, [householdHook]);
 
+    
     console.log('Current status:', householdFormStatus.status);
 
   // Load all forms to determine next form in sequence
@@ -69,12 +72,23 @@ const HouseholdForm = () => {
   }
 }, [applicationPackageId, applicationFormId, getApplicationForms]);
 
+  // Update message when household status changes
+  useEffect(() => {
+    if (householdFormStatus.status === 'Complete') {
+      setFormMessage('Information complete.');
+    } else if (householdFormStatus.status === 'Draft') {
+      setFormMessage('Household information is incomplete.');
+    } else {
+      setFormMessage('');
+    }
+  }, [householdFormStatus.status]);
+
   return (
     <div className="household-container">
     {/* Top breadcrumb - aligned with page content */}
     <div className="breadcrumb-top">
       <div className="breadcrumb-top-content">
-        <BreadcrumbBar home={home} next={nextUrl} applicationForm={householdFormStatus}/>
+        <BreadcrumbBar home={home} next={nextUrl} applicationForm={householdFormStatus} message={formMessage}/>
       </div>
     </div>
 
