@@ -226,7 +226,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       const autoSaveInterval = setInterval(() => {
         console.log('Auto-saving form...');
         sendSave();
-      }, 50000); // every 10 seconds
+      }, 2000); // every 10 seconds
 
       return () => {
         clearInterval(autoSaveInterval); // cleanup interval on unmount
