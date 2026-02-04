@@ -19,9 +19,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     const [allForms, setAllForms] = React.useState([])
     const [nextUrl, setNextUrl] = React.useState('');
     const [formMessage, setFormMessage] = React.useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
     
     const iframeRef = useRef(null);
     const iframeUrlRef = useRef(null);
+    const navigationTargetRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -148,6 +150,15 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       }
     }, [tokenError]);
 
+
+
+/**
+ * handleMessage responds to messages from the iFrame, which we can trigger interactively
+ * save is being run on a timer set below ~ every 2 seconds
+ * it will return errorOnSave or successOnSave; if successOnSave it means that all required information is provided on the form.
+ * submit is run when we want to mark the form as complete, it should be run whenever we're leaving the page;
+ * if there are errors on the page it will return errorOnComplete otherwise it will return 'submit' as a success
+ */
     useEffect(() => {
       async function handleMessage(event) {
 
@@ -157,30 +168,35 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         if (event.data === '{"event":"errorOnSave"}') {
           //alert("ERROR!");
           setFormMessage("The form is missing required information.");
+          setIsFormValid(false);
 
+          
           setApplicationForm(prev => ({
             ...prev,
-            status: 'Error'
+            status: 'Draft'
           }));
+          
+        }
+
+
+        if (event.data === '{"event":"successOnSave"}') {
+          setFormMessage(""); // clear error message
+          setIsFormValid(true);
+
+          
+          setApplicationForm(prev => ({
+            ...prev,
+            status: 'Complete'
+          }));
+          
         }
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
 
-          //console.log('Submit handler - nextUrl:', nextUrl, 'onSubmitComplete:', onSubmitComplete, 'submitPackage:', submitPackage);
-
           if (!submitPackage) {
-/*
-            console.log('About to navigate - checking conditions:');
-            console.log('  onSubmitComplete:', onSubmitComplete);
-            console.log('  nextUrl:', nextUrl);
-            console.log('  home:', home);
-*/      
-      
-            //setIsSubmitting(true);
+            /*
             if (nextUrl) {
-              //console.log('Navigating to nextUrl:', nextUrl);
-              //console.log('navigate function:', navigate);
               navigate(nextUrl);
               //console.log('navigate() called');
             } else if( onSubmitComplete ) {
@@ -191,6 +207,12 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               navigate(home);
             }
             setIsSubmitting(false); // Reset before navigation completes
+            */
+            // Check if navigation was triggered from breadcrumb actions first
+            const targetUrl = navigationTargetRef.current || nextUrl || onSubmitComplete || home;
+            navigationTargetRef.current = null; // Reset after reading
+            navigate(targetUrl);
+            setIsSubmitting(false);
           } else {
        
           try {
@@ -309,7 +331,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         {/* Top breadcrumb - aligned with page content */}
         <div className="breadcrumb-top">
           <div className="breadcrumb-top-content">
-            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef} message={formMessage}/>
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} isFormValid={isFormValid} iframeRef={iframeRef} message={formMessage} navigationTargetRef={navigationTargetRef}/>
           </div>
         </div>
           <div className="iframe-content">

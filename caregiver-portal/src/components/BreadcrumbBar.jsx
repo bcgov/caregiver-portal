@@ -5,14 +5,56 @@ import Button from './Button';
 import Breadcrumb from '../components/Breadcrumb';
 
 
-const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message}) => {
-    const navigate = useNavigate();
+const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, isFormValid, navigationTargetRef}) => {
+   const navigate = useNavigate();
+
+    // Check if form is complete
+    const isFormComplete = isFormValid || applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
     const handleBackClick = () => {
+        console.log("Back: isFormComplete()", isFormComplete);
+        if (iframeRef && navigationTargetRef) {
+            if (isFormComplete) {
+                navigationTargetRef.current = home;
+                sendComplete();
+            } else {
+                navigate(home);
+            }
+        } else {
+        // for household-form or other non-FF forms
         navigate(home);
+        }
     };
-    // Check if form is complete
-    const isFormComplete = true; //applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
+
+    const handleNextClick = () => {
+        //console.log("Next: isFormComplete()", isFormComplete);
+        if (iframeRef && navigationTargetRef) {
+            if (isFormComplete) {
+                navigationTargetRef.current = next || home;
+                sendComplete();
+            } else {
+                navigate(next || home);
+            }
+        } else {
+        navigate(next);
+        }
+    }
+
+
+    const sendComplete = () => {
+
+        if (!isFormComplete) {
+            return; // Do nothing if form is not complete
+        }
+
+        if (iframeRef && iframeRef.current?.contentWindow) {
+        iframeRef.current.contentWindow.postMessage({
+            type: "CLICK_BUTTON_BY_TEXT",
+            text: "Complete"   
+        },
+        "*")
+    }
+    }
 
     // Get status message for tooltip
     const getStatusMessage = (status) => {
@@ -96,22 +138,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message})
     ];
 
 
-    const sendComplete = () => {
-
-        if (!isFormComplete) {
-            return; // Do nothing if form is not complete
-        }
-
-        if (iframeRef && iframeRef.current?.contentWindow) {
-        iframeRef.current.contentWindow.postMessage({
-            type: "CLICK_BUTTON_BY_TEXT",
-            text: "Complete"   
-        },
-        "*")
-        }  else {
-            navigate(next);
-        }
-    }
+    
 
     return (
         <div className="page-details-row-breadcrumb">
@@ -119,7 +146,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message})
   
             <Button 
                 variant='next' 
-                onClick={sendComplete}
+                onClick={handleNextClick}
                 disabled={!isFormComplete && applicationForm?.status}
                 style={{
                     opacity: (!isFormComplete && applicationForm?.status) ? 0.5 : 1,
