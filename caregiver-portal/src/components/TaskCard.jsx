@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CircleCheck } from 'lucide-react';
 
 const TaskCard = ({applicationPackage}) => {
     const navigate = useNavigate();
@@ -11,6 +11,8 @@ const TaskCard = ({applicationPackage}) => {
         navigate(`/foster-application/${applicationPackage.applicationPackageId}`);
         }
     };
+
+    const {srStage} = applicationPackage;
 
     const getStatusInfo = () => {
       if (!applicationPackage){
@@ -54,11 +56,18 @@ const TaskCard = ({applicationPackage}) => {
     const statusInfo = getStatusInfo();
 
     return (
-        <div className="task-card" onClick={() => handleClick()}>
+        <div className="task-card" onClick={() => srStage !== 'Compleed' ? handleClick() : null}>
         <div className="task-card-content">
-                
-            <div className="task-card-title">Application to become a foster caregiver</div>
-            <Button variant="primary">Continue<ArrowRight></ArrowRight></Button>
+
+            {srStage !== 'Completed' && (
+            <div className="task-card-title">Become a foster caregiver</div>
+          )}    
+            {srStage === 'Completed' && ( 
+              <div className="task-card-text">
+              <CircleCheck size={50} className="success-icon"/> Approved Foster Caregiver
+              </div>
+              )}
+            {srStage !== 'Completed' && (<Button variant="primary">Continue<ArrowRight></ArrowRight></Button>)}
         </div>
       </div>
     );

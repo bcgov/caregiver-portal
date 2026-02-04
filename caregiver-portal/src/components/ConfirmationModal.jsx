@@ -9,6 +9,7 @@ const ConfirmationModal = ({
   onConfirm,
   title = "Confirm Action",
   message,
+  children,
   confirmText = "Confirm",
   cancelText = "Cancel",
   confirmVariant = "danger",
@@ -36,29 +37,34 @@ const ConfirmationModal = ({
       isOpen={isOpen}
       onClose={handleClose}
       title={title}
-      showCloseButton={true}
+      showCloseButton={false}
       closeOnOverlayClick={!isLoading}
       size="medium"
     >
       <div className="confirmation-modal">
-        <p className="confirmation-message">{message}</p>
-
+        {children ? (
+          <div className="confirmation-message">{children}</div>
+        ) : (
+          <p className="confirmation-message">{message}</p>
+        )}
+        
         <div className="confirmation-actions">
-          <Button 
-            variant="secondary" 
-            onClick={handleConfirm}
-            disabled={isLoading}
-          >
-            {cancelText}
-          </Button>
-
-          <Button 
+        <Button 
             variant={confirmVariant} 
             onClick={handleConfirm}
             disabled={isLoading}
           >
             {isLoading ? 'Deleting...' : confirmText}
           </Button>
+          <Button 
+            variant="secondary" 
+            onClick={handleClose}
+            disabled={isLoading}
+          >
+            {cancelText}
+          </Button>
+
+
         </div>
       </div>
     </Modal>

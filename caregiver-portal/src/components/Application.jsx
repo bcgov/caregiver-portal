@@ -8,7 +8,8 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import BreadcrumbBar from './BreadcrumbBar';
 
 
-const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false }) => {
+
+const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, isScreeningContext }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,25 +18,31 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [allForms, setAllForms] = React.useState([])
     const [nextUrl, setNextUrl] = React.useState('');
+    const [formMessage, setFormMessage] = React.useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
     
     const iframeRef = useRef(null);
+    const iframeUrlRef = useRef(null);
+    const navigationTargetRef = useRef(null);
 
     const navigate = useNavigate();
 
-    const home = `/foster-application/application-package/${applicationPackageId}`;
+    const home = isScreeningContext && householdMemberId
+    ? `/screening-package/${householdMemberId}`
+    : `/foster-application/application-package/${applicationPackageId}`;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
     useEffect(() => {
       if (applicationFormId) {
-        console.log('Loading application form for applicationFormId:', applicationFormId);
+        //console.log('Loading application form for applicationFormId:', applicationFormId);
         setLoading(true);
         setError(null);
   
         getApplicationForm(applicationFormId)
         .then(setApplicationForm)
         .catch(err => {
-          console.error('Error fetching application form:', err);
+          //console.error('Error fetching application form:', err);
           setError(err.message);
           setLoading(false);
         });
@@ -44,15 +51,25 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
     // Load all forms to determine next form in sequence
   useEffect(() => {
+/*
+    console.log('=== FORMS USEEFFECT TRIGGERED ===', {
+      applicationPackageId,
+      applicationFormId,
+      hasGetApplicationForms: !!getApplicationForms
+    });
+*/
     if (applicationPackageId) {
       getApplicationForms(applicationPackageId)
         .then(formsArray => {
           setAllForms(formsArray);
 
+          //console.log('All forms:', formsArray.map(f => ({ id: f.applicationFormId, type: f.type })));
           // Find current form index
           const currentIndex = formsArray.findIndex(
             form => form.applicationFormId === applicationFormId
           );
+
+          //console.log('Current form index:', currentIndex, 'applicationFormId:', applicationFormId);          
 
           // Get next form (skip Referral types)
           if (currentIndex !== -1 && currentIndex < formsArray.length - 1) {
@@ -62,16 +79,33 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               nextIndex++;
             }
 
+            //console.log('Final nextIndex:', nextIndex, 'formsArray.length:', formsArray.length);
+
             if (nextIndex < formsArray.length) {
               const nextForm = formsArray[nextIndex];
+              //console.log('Next form found:', { id: nextForm.applicationFormId, type: nextForm.type });
+              //console.log('screeningContext', isScreeningContext)
+              //console.log('householdMemberId', householdMemberId)
 
-              // Build URL based on form type (household vs regular)
-              if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
-                setNextUrl(`/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`);
+              let nextFormUrl;
+              if (isScreeningContext && householdMemberId) {
+                nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
+                //console.log(nextFormUrl)
+              } else if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+                // Build URL based on form type (household vs regular)
+                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
               } else {
-                setNextUrl(`/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`);
+                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`;
               }
+              setNextUrl(nextFormUrl);
+            } else {
+              //console.log('No next form - this is the last form');
+              setNextUrl('');
             }
+          } else {
+            // This is the last form in the array
+            //console.log('Last form - clearing nextUrl');
+            setNextUrl('');
           }
         })
         .catch(err => console.error('Error fetching forms:', err));
@@ -82,20 +116,26 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
   useEffect(() => {
     if (applicationForm && applicationFormId) {
-      console.log('getting form access token for form:', applicationForm);
+
+      // skip if we already generated a URL for this form
+      if (iframeUrlRef.current === applicationFormId) {
+        return;
+      }
+      //console.log('getting form access token for form:', applicationForm);
 
       getFormAccessToken()
         .then((formAccessToken) => {
           const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
-          console.log('Application form status:', applicationForm?.status);
+          //console.log('Application form status:', applicationForm?.status);
           const urlPath = applicationForm?.status === 'New' ? 'new' : 'edit';
           const url = `${formServiceUrl}/${urlPath}?id=${formAccessToken}`;
-          console.log('Setting iframe URL:', url);
+          //console.log('Setting iframe URL:', url);
           setIframeUrl(url);
           setLoading(false);
+          iframeUrlRef.current = applicationFormId;
         })
         .catch(err => {
-          console.error('Error fetching form access token:', err);
+          //console.error('Error fetching form access token:', err);
           setError(err.message);
           setLoading(false);
         });
@@ -110,22 +150,69 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       }
     }, [tokenError]);
 
+
+
+/**
+ * handleMessage responds to messages from the iFrame, which we can trigger interactively
+ * save is being run on a timer set below ~ every 2 seconds
+ * it will return errorOnSave or successOnSave; if successOnSave it means that all required information is provided on the form.
+ * submit is run when we want to mark the form as complete, it should be run whenever we're leaving the page;
+ * if there are errors on the page it will return errorOnComplete otherwise it will return 'submit' as a success
+ */
     useEffect(() => {
       async function handleMessage(event) {
+
+        console.log('Received message:', event.data);
+        
+
+        if (event.data === '{"event":"errorOnSave"}') {
+          //alert("ERROR!");
+          setFormMessage("The form is missing required information.");
+          setIsFormValid(false);
+
+          
+          setApplicationForm(prev => ({
+            ...prev,
+            status: 'Draft'
+          }));
+          
+        }
+
+
+        if (event.data === '{"event":"successOnSave"}') {
+          setFormMessage(""); // clear error message
+          setIsFormValid(true);
+
+          
+          setApplicationForm(prev => ({
+            ...prev,
+            status: 'Complete'
+          }));
+          
+        }
 
         if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
           setIsSubmitting(true);
 
           if (!submitPackage) {
-            //setIsSubmitting(true);
-            if( onSubmitComplete ) {
-              navigate(onSubmitComplete);
-            } else if (nextUrl) {
+            /*
+            if (nextUrl) {
               navigate(nextUrl);
+              //console.log('navigate() called');
+            } else if( onSubmitComplete ) {
+              //console.log('Navigating to onSubmitComplete:', onSubmitComplete);
+              navigate(onSubmitComplete);
             } else {
-              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`);
+              //console.log('Navigating to home:', home);
+              navigate(home);
             }
             setIsSubmitting(false); // Reset before navigation completes
+            */
+            // Check if navigation was triggered from breadcrumb actions first
+            const targetUrl = navigationTargetRef.current || nextUrl || onSubmitComplete || home;
+            navigationTargetRef.current = null; // Reset after reading
+            navigate(targetUrl);
+            setIsSubmitting(false);
           } else {
        
           try {
@@ -134,7 +221,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
             if( onSubmitComplete ) {
               navigate(onSubmitComplete);
             } else {
-              navigate(`/foster-application/application-package/${applicationForm?.applicationPackageId}/`)
+              navigate(home)
             }
           } catch (error) {
             console.error('Submit failed:', error);
@@ -153,7 +240,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       return () => {
         window.removeEventListener('message', handleMessage);
       };
-    }, [applicationForm, navigate]);
+    }, [applicationForm, navigate, nextUrl, home]);
 
     useEffect(() => {
       if(!isIframeLoaded) return;
@@ -161,7 +248,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       const autoSaveInterval = setInterval(() => {
         console.log('Auto-saving form...');
         sendSave();
-      }, 10000); // every 10 seconds
+      }, 2000); // every 10 seconds
 
       return () => {
         clearInterval(autoSaveInterval); // cleanup interval on unmount
@@ -182,11 +269,13 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
       const sendSave = () => {
         if (iframeRef.current?.contentWindow) {
-          iframeRef.current.contentWindow.postMessage({
+          const message = iframeRef.current.contentWindow.postMessage({
             type: "CLICK_BUTTON_BY_TEXT",
             text: "Save"   
           },
           "*")
+
+          console.log("Sending save:",message);
         }          
       }
 
@@ -238,8 +327,13 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         <>
 
         <div className="iframe-container">
-          {/* iFrame Container */}
-          <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} iframeRef={iframeRef}/>
+
+        {/* Top breadcrumb - aligned with page content */}
+        <div className="breadcrumb-top">
+          <div className="breadcrumb-top-content">
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} isFormValid={isFormValid} iframeRef={iframeRef} message={formMessage} navigationTargetRef={navigationTargetRef}/>
+          </div>
+        </div>
           <div className="iframe-content">
             {iframeUrl && (
               <iframe
@@ -252,6 +346,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
                 // Add additional security attributes as needed
               />
             )}
+           
           </div>
             {/* Submission Overlay - appears over entire page including iframe */}
             {isSubmitting && (

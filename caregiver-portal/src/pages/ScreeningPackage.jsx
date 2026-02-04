@@ -14,12 +14,14 @@ const ScreeningPackage = () => {
   const { householdMemberId } = useParams();
   const [forms, setForms] = React.useState([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isSpouse, setIsSpouse] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const { getApplicationFormsByHouseholdMember, confirmScreeningPackage } = useApplications();
   const back = `/dashboard`
 
     const breadcrumbItems = [
-        { label: 'Back', path: back },
+        { label: 'Dashboard', path: back },
+        { label: 'Application to provide foster family care', path: back },
       ];
 
       const handleBackClick = (item) => {
@@ -73,6 +75,8 @@ const ScreeningPackage = () => {
               const formsArray = await getApplicationFormsByHouseholdMember(householdMemberId);
               console.log('loaded forms:', formsArray);
               setForms(formsArray);
+              console.log(formsArray[0].type.toUpperCase());
+              setIsSpouse(formsArray[0].type.toUpperCase().includes("SPOUSE"));
             } catch (error) {
               console.error('Failed to load forms:', error);
             }
@@ -91,9 +95,15 @@ const ScreeningPackage = () => {
           <h1 className="page-title">Application to provide foster family care</h1>
         </div>
         <div className='page-details-row'>
-        <div className="section-description">
-              You have been named as the spouse/co-applicant on an application. You must submit this application.</div>
-              </div>        
+          <div className="section-description">
+            { isSpouse ? 
+              (<>You have been named as the spouse/co-applicant on an application to provide foster care. In order to process that application, you must fill out the information below:</>) :
+              (<>You have been named as a household member to an applicant of an application to provide foster care. In order to process that application, you must fill out the information below:</>)
+            }
+            
+              
+          </div>
+        </div>        
         <div className='page-details-row-small'>
           <div className="application-package">
             {forms.map((step, index) => (
