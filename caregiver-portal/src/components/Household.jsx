@@ -3,11 +3,13 @@ import { AlertCircle, Loader2, RefreshCw, Plus, Trash2, Trash } from 'lucide-rea
 import Button from './Button';
 import DateField from './Date'; 
 import { useHousehold } from '../hooks/useHousehold';
+import { useDates } from '../hooks/useDates';
 
 const Household = ({ applicationPackageId, applicationFormId, householdHook }) => {
 
   const ownHook = useHousehold({applicationPackageId, applicationFormId});
   const hook = householdHook || ownHook;
+  const {calculateAge} = useDates();
 
   const {
     partner,
@@ -20,7 +22,6 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     addHouseholdMember,
     removeHouseholdMember,
     removePartner,
-    calculateAge,
     saveHouseholdMember,
     loadHousehold,
     setHasHousehold,
