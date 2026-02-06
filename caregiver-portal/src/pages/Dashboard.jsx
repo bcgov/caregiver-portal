@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
@@ -21,6 +23,9 @@ const Dashboard = () => {
     loading: isLoading,
     //error
   } = useApplicationPackage();
+
+  const { userProfile } = useUserProfile();
+  const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
 
@@ -68,6 +73,7 @@ const Dashboard = () => {
       loadApplicationPackages();
       loadApplicationForms();
     }
+
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
 
     if (auth.loading) {
@@ -124,8 +130,8 @@ const Dashboard = () => {
                     <ScreeningTaskCard applicationFormSet={app} />
                   </div>
                 ))}
-                {(applicationPackages?.length ===0 && screeningForms?.length === 0) && (
-                  <FosterApplicationStart onClick={handleCreateApplication} showImage={false}/>
+                {(applicationPackages?.length ===0) && (
+                  <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}
 
               </div>
