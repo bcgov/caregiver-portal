@@ -212,14 +212,11 @@ text-underline-position: from-font;
 }
 
 .page-content {
-  width: 352px;
   color: var(--typography-color-primary, #2D2D2D);
-font-family: "BC Sans";
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 27px; /* 168.75% */
-margin:0px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  margin:0px;
 }
 
 p {
@@ -391,10 +388,13 @@ gap: 10px;
 
   .page-details-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
     gap: var(--layout-margin-xlarge);
+    @media (min-width: 1120px) { /* Now that we're using three columns on homepage, display them only at sufficiently wide viewport so button text won't overflow */
+      flex-direction: row;
+    }
   }
 
   .page-details-content-col {
@@ -409,6 +409,7 @@ gap: 10px;
 
   .page-details-frame {
     display: flex;
+    width: -webkit-fill-available;
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
@@ -569,12 +570,10 @@ gap: 10px;
 
   .image-frame {
     display: flex;
-    width: 352px;
     padding: 0;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    
     gap: 10px;
     align-self: stretch;
   }
@@ -594,7 +593,7 @@ gap: 10px;
     font-size: 24px;
     font-style: normal;
     font-weight: 600;
-    line-height: 100%; /* 32px */
+    line-height: var(--typography-line-heights-dense);
     padding: 0px;
     margin: 0px 0px 16px 0px;
   }
@@ -971,7 +970,7 @@ iframe {
   color: var(--typography-color-primary);
   font-size: 20px;
   font-weight: 700;
-  line-height: 130%; /* in case of long titles */
+  line-height: var(--typography-line-heights-dense);
   margin: 0 0 1em;
 }
 
@@ -982,10 +981,10 @@ iframe {
 
 .access-code-container {
   padding: var(--layout-padding-large);
-  max-width: 350px;
-
   border-radius: 6px;
   background: var(--theme-blue-10, #F1F8FE);
+  width: -webkit-fill-available;
+  max-width: 300px;
 }
 
 .task-card-content {
@@ -2249,25 +2248,9 @@ line-height: 54px; /* 225% */
       line-height: 12px;
     }
 
-    .page-content {
-      width: 100%;
-      max-width: 100%;
-    }
-
     .task-card {
       padding: 16px;
       box-sizing: border-box;
-    }
-
-    .access-code-container {
-      padding: 16px;
-      width: 90%;
-      box-sizing: border-box;
-    }
-
-    .image-frame {
-      width: 90%;
-      max-width: 90%;
     }
 
     .hero-image {
@@ -2304,16 +2287,7 @@ line-height: 54px; /* 225% */
   
   
 
-    /* Stack application start cards on mobile */
-    @media (max-width: 860px) {
-      .page-details-content {
-        flex-direction: column;
-      }
-  
-      .page-content {
-        width: 90%;
-      }
-    }
+    
 
     @media (max-width: 960px) {
       .task-content-row {
