@@ -13,8 +13,8 @@ const AboutCard = () => {
                 </div>
                 
                 <p className="page-content">Thank you for your interest in supporting children and youth who need safe, stable, and nurturing homes. This portal guides you through the steps to apply to become a caregiver in British Columbia.</p>
-                <p className="page-content">Every child deserves care rooted in respect, belonging, and compassion. Your willingness to help makes a meaningful difference. Before applying, please refer to the BC Government’s <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving" target="_blank" className="hyperlink">Foster Caregiving</a> and <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/kinshipcare" className="hyperlink">Kinship Care</a> pages for detailed information.</p>
-                <p className="page-content">The use of the portal requires a BC Service Card to verify your identity and securely transfer information.</p>
+                <p className="page-content">Every child deserves care rooted in respect, belonging, and compassion. Your willingness to help makes a meaningful difference. Before applying, please refer to the B.C. government’s <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving" target="_blank" className="hyperlink">Foster Caregiving</a> and <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/kinshipcare" target="_blank" className="hyperlink">Kinship Care</a> pages for detailed information.</p>
+                <p className="page-content">The use of the portal requires a BC Services Card to verify your identity and securely transfer information.</p>
             </div>
     )
 }
