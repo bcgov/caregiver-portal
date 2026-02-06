@@ -6,6 +6,7 @@ import "../DesignTokens.css";
 import Button from "../components/Button";
 import FosterApplicationStart from "../components/FosterApplicationStart";
 import WelcomeCard from "../components/WelcomeCard";
+import AboutCard from "../components/AboutCard";
 import AccessCard from "../components/AccessCard";
 
 
@@ -52,7 +53,8 @@ export default function Home() {
         <div className="page-details">
           <div className="page-details-row">
             <div className="page-details-content">
-          <FosterApplicationStart onClick={login} disabled={true}/>
+          <FosterApplicationStart onClick={login} disabled={false} showImage={false}/>
+          <AboutCard></AboutCard>
           <AccessCard login={login} active={false}/>
           </div>
         </div>
