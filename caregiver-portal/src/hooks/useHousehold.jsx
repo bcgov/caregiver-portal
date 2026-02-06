@@ -1,4 +1,5 @@
 import { useState, useCallback} from 'react';
+import { useDates } from './useDates';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -6,6 +7,7 @@ export const useHousehold = ({applicationPackageId}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const {calculateAge} = useDates();
 
     const [partner, setPartner] = useState({
         firstName: '',
@@ -254,7 +256,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     return member;
             })
         );
-    }, []);
+    }, [calculateAge]);
   
     const removeHouseholdMember = useCallback(async (householdMemberId) => {
         if (householdMemberId) {
@@ -332,7 +334,7 @@ export const useHousehold = ({applicationPackageId}) => {
     }
 
     return true;
-  }, [hasPartner, hasHousehold, partner, householdMembers]);    
+  }, [hasPartner, hasHousehold, partner, householdMembers, calculateAge]);    
 
     const loadHouseholdMember = useCallback(async (householdMemberId) => {
         if (!householdMemberId) {
@@ -390,18 +392,7 @@ export const useHousehold = ({applicationPackageId}) => {
     }, [applicationPackageId]);
 
 
-    const calculateAge = useCallback((dob) => {
-        if (!dob) return 0;
-        const today = new Date();
-        const birthDate = new Date(dob);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDifference = today.getMonth() - birthDate.getMonth();
-  
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }, []);
+
   
     return {
         // state
@@ -430,7 +421,6 @@ export const useHousehold = ({applicationPackageId}) => {
         updateHouseholdMember,
         removeHouseholdMember,
         removePartner,
-        calculateAge,
         loadHousehold,
         loadHouseholdMember,
         loadApplicationPackage,

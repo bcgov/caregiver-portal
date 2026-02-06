@@ -98,6 +98,21 @@ body {
     color: white;
   }
 
+  .hyperlink {
+    color: var(--typography-color-link, #255A90);
+font-family: "BC Sans";
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 27px;
+text-decoration-line: underline;
+text-decoration-style: solid;
+text-decoration-skip-ink: auto;
+text-decoration-thickness: auto;
+text-underline-offset: auto;
+text-underline-position: from-font;
+  }
+
   .dropdown-menu {
     position: absolute;
     top: 100%; /* Position below the button */
