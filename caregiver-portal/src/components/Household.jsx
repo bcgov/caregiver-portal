@@ -89,6 +89,24 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     return isFieldEmpty(value) ? 'form-control-error' : '';
   };
 
+  const getErrorMessage = (type, value) => {
+
+    if (isFieldEmpty(value)) {
+        switch (type) {
+          case ('First name'):
+          case ('Last name'):
+            return (`${type} is required`);
+          case ('dob'):
+            return ('Date of birth is required');
+          default:
+            return (`Please specify a ${type}`);
+        }
+    } else {
+      return "";
+    }
+
+  };
+
     // Validate field length
     const validateFieldLength = (value, maxLength, fieldName, fieldKey) => {
     if (value && value.length > maxLength) {
@@ -625,6 +643,7 @@ useEffect(() => {
                     <option value="Partner">Partner</option>
                     <option value="Spouse">Spouse</option>
                   </select>
+                {getErrorMessage('relationship', partner.relationship) && <span className="error-message">{getErrorMessage('relationship', partner.relationship)}</span>}
                 <label htmlFor="partner-firstName" className="form-control-label">
                   First Name<span className="required">*</span>
                 </label>
@@ -636,11 +655,7 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.firstName)}`}
                   maxLength={MAX_NAME_LENGTH}
                 />
-                {fieldLengthErrors['partner-firstName'] && (
-                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
-                    {fieldLengthErrors['partner-firstName']}
-                  </label>
-                )}
+                 {getErrorMessage('First name', partner.relationship) && <span className="error-message">{getErrorMessage('First name', partner.relationship)}</span>}
                 <label htmlFor="partner-lastName" className="form-control-label">
                   Last Name<span className="required">*</span>
                 </label>
@@ -652,11 +667,8 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.lastName)}`}                  
                   maxLength={MAX_NAME_LENGTH}
                 />
-                {fieldLengthErrors['partner-lastName'] && (
-                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
-                  {fieldLengthErrors['partner-lastName']}
-                  </label>
-                )}
+                {getErrorMessage('Last name', partner.relationship) && <span className="error-message">{getErrorMessage('Last name', partner.relationship)}</span>}
+
                 <label htmlFor="partner-dob" className="form-control-label">
                       Date of Birth<span className="required">*</span>
                 </label>
@@ -670,11 +682,7 @@ useEffect(() => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerAgeValidationError}
                 </label>
-                {fieldLengthErrors['partner-dob'] && (
-                  <label className="form-control-validation-label">
-                  {fieldLengthErrors['partner-dob']}
-                  </label>
-                )}
+                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}              
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
@@ -686,11 +694,7 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.email)}`}
                   maxLength={MAX_EMAIL_LENGTH}
                 />
-                {(emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']) && (
-                  <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
-                    {emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']}
-                  </label>
-                )}                
+                {getErrorMessage('email', partner.relationship) && <span className="error-message">{getErrorMessage('email', partner.relationship)}</span>}              
                 {duplicateErrors['partner'] && (
                 <div style={{
                   padding: '12px 16px',
@@ -800,6 +804,7 @@ useEffect(() => {
                     <option value="Boarder">Boarder</option>
                     <option value="Other">Other</option>
                   </select>
+                  {getErrorMessage('relationship', member.relationship) && <span className="error-message">{getErrorMessage('relationship', member.relationship)}</span>}
            
                   <label htmlFor={`member-${member.householdMemberId}-firstName`} className="form-control-label">
                     First Name<span className="required">*</span>
