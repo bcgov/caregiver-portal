@@ -46,6 +46,7 @@ spec:
         # Build the container image using branch name as the tag
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud --no-cache \
           --build-arg VITE_API_URL=$VITE_API_URL \
+          --build-arg VITE_ENV=$VITE_ENV \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
           --build-arg VITE_KILN_URL=$VITE_KILN_URL \
           --build-arg VITE_USE_KONG_OIDC=$VITE_USE_KONG_OIDC \
@@ -66,6 +67,11 @@ spec:
             secretKeyRef:
               name: $(params.VITE_SECRET_NAME)
               key: VITE_API_URL
+        - name: VITE_ENV
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_ENV
         - name: VITE_BCSC_CLIENT_ID
           valueFrom:
             secretKeyRef:
