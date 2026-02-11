@@ -8,6 +8,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import EnvironmentBanner from './components/EnvironmentBanner';
 import "./DesignTokens.css";
 // Pages
 
@@ -41,6 +42,7 @@ const App = () => {
   return (
     <Router>
     <div className="page-wrapper">
+    <EnvironmentBanner />
     <Header />
     <main className="main-content">
       <Routes>
