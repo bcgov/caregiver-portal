@@ -185,8 +185,8 @@ const FosterApplicationProcess = () => {
           iconType: 'start',
         }
       }
-      if (step.key === 'consent' && applicationPackage?.status === 'Submitted') {
-
+      if (step.key === 'consent' && applicationPackage && !['Application', 'New', 'Draft', 'Referral Requested'].includes(applicationPackage?.status)) {
+        console.log('status:',applicationPackage?.status)
         return {
           ...step,
           description: 'All household members have submitted their screening forms.',
@@ -194,7 +194,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && !hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && !hasMedicalAssessment) {
 
         return {
           ...step,
@@ -204,7 +204,7 @@ const FosterApplicationProcess = () => {
         }
       }
 
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && hasMedicalAssessment) {
 
         return {
           ...step,
