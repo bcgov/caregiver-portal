@@ -185,7 +185,7 @@ const FosterApplicationProcess = () => {
           iconType: 'start',
         }
       }
-      if (step.key === 'consent' && applicationPackage?.status === 'Submitted') {
+      if (step.key === 'consent' && applicationPackage?.status !== 'Application') {
 
         return {
           ...step,
@@ -194,7 +194,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && !hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && !hasMedicalAssessment) {
 
         return {
           ...step,
@@ -204,7 +204,7 @@ const FosterApplicationProcess = () => {
         }
       }
 
-      if (step.key === 'screening' && (applicationPackage?.srStage === 'Screening' || (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment')) && hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && hasMedicalAssessment) {
 
         return {
           ...step,
