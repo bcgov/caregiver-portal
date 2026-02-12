@@ -185,8 +185,8 @@ const FosterApplicationProcess = () => {
           iconType: 'start',
         }
       }
-      if (step.key === 'consent' && applicationPackage?.status !== 'Application') {
-
+      if (step.key === 'consent' && applicationPackage && !['Application', 'New', 'Draft', 'Referral Requested'].includes(applicationPackage?.status)) {
+        console.log('status:',applicationPackage?.status)
         return {
           ...step,
           description: 'All household members have submitted their screening forms.',
