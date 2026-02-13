@@ -827,7 +827,7 @@ iframe {
 
 .iframe-container {
   position: fixed;
-  top: 66px; /* Height of top-nav */
+  top: calc(66px + var(--banner-height, 0px)); /* Height of top-nav */
   left: 0;
   right: 0;
   bottom: 0;
