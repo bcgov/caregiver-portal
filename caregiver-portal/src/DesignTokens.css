@@ -2,7 +2,8 @@
 
 body {
     margin: 0;
-    font-family: 'BCSans', sans-serif;
+    font-family: 'BC Sans', sans-serif;
+    color: var(--typography-color-primary);
   }
 
 
@@ -1353,6 +1354,7 @@ a {
 
   .form-container{
     width: 100%;
+    padding-bottom: 64px;
   }
 
   .required {
@@ -1366,19 +1368,12 @@ a {
 
   .form-group {
     display: flex;
-    padding: 24px 20px;
+    padding: 0;
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
     margin-bottom: 24px;
-
-    border-radius: 0 0 10px 10px;
-    border-top: 8px solid var(--theme-gold-80, #F9C462);
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    background: var(--surface-color-background-white, #FFF);
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border: none;
   }
 
   .form-sub-group {
@@ -1397,20 +1392,12 @@ a {
   }
 
   .form-group-header{
-    color: #000;
-font-size: 24px;
-font-style: normal;
-font-weight: 700;
-line-height: 54px; /* 225% */
-
+    font-size: 24px;
+    line-height: 150%;
   }
 
   .form-control-label {
-    color: #525252;
-
     /* Web/Body/Label */
-    font-size: 16px;
-    font-style: normal;
     font-weight: 700;
     line-height: 150%; /* 24px */
     letter-spacing: 0.32px;
@@ -1434,7 +1421,6 @@ line-height: 54px; /* 225% */
     align-items: center;
     gap: 16px;
     align-self: stretch;
-
     border: 1px solid var(--Web-Border-input, #8D8D8D);
   }
 
@@ -1475,10 +1461,7 @@ line-height: 54px; /* 225% */
   }
 
   .error-message{
-
-  color: #B4231E;
-  font-size: 14px;
-
+    color: #B4231E;
   }
 
   .access-form-control {
@@ -1503,7 +1486,8 @@ line-height: 54px; /* 225% */
 
     overflow: hidden;
     text-overflow: ellipsis;
-
+    font-family: 'BC Sans', sans-serif;
+    font-size: 1rem;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 125% */
@@ -1565,9 +1549,23 @@ line-height: 54px; /* 225% */
     padding: 6px 24px;
     align-items: center;
     margin-bottom: 12px;
-    background-color: #d8d8d8;
+    background-color: var(--theme-gray-20);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+  }
+
+  input, select {  /* Attempt to standardize text on inputs of all types */
+    font-family: 'BC Sans', sans-serif;
+    font-size: 1rem;
+  }
+
+  input[type="date"] {
+    font-family: 'BC Sans', sans-serif; /* Backup in case above style doesn't work */
+    font-size: 1rem;
+  }
+
+  input[type="radio"] {
+    margin: 3px 8px 0 3px; /* Add a bit more space between button and label; when button is :focus, the outline can obscure the label */
   }
 
   select {
@@ -1600,16 +1598,12 @@ line-height: 54px; /* 225% */
     align-self: stretch;
   }
 
-  .section-description{
+  .section-description {
     margin-bottom: 24px;
-    font-size: 16px;
-    font-weight: 300;
-    width: 1000px;
-    color: #525252;
     background-color: #EDF5FF;
     border-left: solid 6px #0043CE;
     padding: 12px 24px;
-    line-height: 125%;
+    line-height: 150%;
   }
 
   .task-list {
