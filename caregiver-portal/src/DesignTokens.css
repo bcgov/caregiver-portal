@@ -738,6 +738,8 @@ height: 36px;
 }
 
 .application-package-step, .householdSummaryItem {
+  background: none; /* Cancel default styles on <button> element these classes are used with */
+  border: none;
   width: -webkit-fill-available;
   display: flex;
   align-items: center;
