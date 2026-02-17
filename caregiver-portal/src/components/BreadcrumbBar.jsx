@@ -28,6 +28,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
 
     const handleNextClick = () => {
         //console.log("Next: isFormComplete()", isFormComplete);
+        /*
         if (iframeRef && navigationTargetRef) {
             if (isFormComplete) {
                 navigationTargetRef.current = next || home;
@@ -38,15 +39,20 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
         } else {
         navigate(next);
         }
+        */
+       if (iframeRef && iframeRef.current?.contentWindow) {
+        navigationTargetRef.current = next || home;
+        sendComplete();
+       } else {
+        navigate(next || home);
+       }
     }
 
 
     const sendComplete = () => {
-
-        if (!isFormComplete) {
-            return; // Do nothing if form is not complete
-        }
-
+        //if (!isFormComplete) {
+        //    return; // Do nothing if form is not complete
+       // }
         if (iframeRef && iframeRef.current?.contentWindow) {
         iframeRef.current.contentWindow.postMessage({
             type: "CLICK_BUTTON_BY_TEXT",
@@ -147,10 +153,13 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
             <Button 
                 variant='next' 
                 onClick={handleNextClick}
-                disabled={!isFormComplete && applicationForm?.status}
+                //disabled={!isFormComplete && applicationForm?.status}
+                disable={!!message}
                 style={{
-                    opacity: (!isFormComplete && applicationForm?.status) ? 0.5 : 1,
-                    cursor: (!isFormComplete && applicationForm?.status) ? 'not-allowed' : 'pointer'
+                    //opacity: (!isFormComplete && applicationForm?.status) ? 0.5 : 1,
+                    //cursor: (!isFormComplete && applicationForm?.status) ? 'not-allowed' : 'pointer'
+                    opacity: message ? 0.5 : 1,
+                    cursor: message ? 'not-allowed' : 'pointer'
                 }}
             >
                 Next section <ArrowRight/>

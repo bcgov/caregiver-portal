@@ -167,7 +167,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
         if (event.data === '{"event":"errorOnSave"}') {
           //alert("ERROR!");
-          setFormMessage("The form is missing required information.");
+          //setFormMessage("The form is missing required information.");
           setIsFormValid(false);
 
           
@@ -191,47 +191,43 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
           
         }
 
-        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}' || event.data === '{"event":"errorOnComplete"}') {
+        // user clicked COMPLETE but there were errors
+        if (event.data === '{"event":"errorOnComplete"}' ) {
+          setFormMessage("Please correct the errors below before continuing.");
+          setIsFormValid(false);
+          setApplicationForm(prev => ({
+            ...prev,
+            status: 'Error'
+          }));
+          return;
+        }
+
+        // user clicked COMPLETE and it was all G
+        if (event.data?.event === 'submit' || event.data === '{"event":"submit"}') {
           setIsSubmitting(true);
 
           if (!submitPackage) {
-            /*
-            if (nextUrl) {
-              navigate(nextUrl);
-              //console.log('navigate() called');
-            } else if( onSubmitComplete ) {
-              //console.log('Navigating to onSubmitComplete:', onSubmitComplete);
-              navigate(onSubmitComplete);
-            } else {
-              //console.log('Navigating to home:', home);
-              navigate(home);
-            }
-            setIsSubmitting(false); // Reset before navigation completes
-            */
             // Check if navigation was triggered from breadcrumb actions first
             const targetUrl = navigationTargetRef.current || nextUrl || onSubmitComplete || home;
             navigationTargetRef.current = null; // Reset after reading
             navigate(targetUrl);
             setIsSubmitting(false);
-          } else {
-       
-          try {
-            const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
-            console.log('Submission successful:', result);
-            if( onSubmitComplete ) {
-              navigate(onSubmitComplete);
-            } else {
-              navigate(home)
+          } else {       
+            try {
+              const result = await submitApplicationPackage(applicationForm?.applicationPackageId);
+              console.log('Submission successful:', result);
+              if( onSubmitComplete ) {
+                navigate(onSubmitComplete);
+              } else {
+                navigate(home)
+              }
+            } catch (error) {
+              console.error('Submit failed:', error);
+              alert('Failed to submit application. Please try again.');
+            } finally {
+              setIsSubmitting(false);
             }
-          } catch (error) {
-            console.error('Submit failed:', error);
-            alert('Failed to submit application. Please try again.');
-          } finally {
-            setIsSubmitting(false);
-          }
         }
-
-
         }
       }
 

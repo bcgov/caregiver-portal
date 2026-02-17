@@ -2,7 +2,8 @@
 
 body {
     margin: 0;
-    font-family: 'BCSans', sans-serif;
+    font-family: 'BC Sans', sans-serif;
+    color: var(--typography-color-primary);
   }
 
 
@@ -349,7 +350,6 @@ gap: 10px;
 
   .page-details-row-small {
     display: flex;
-    width: 100%;
     max-width: 1120px;
     flex-direction: row;
     align-items: center;
@@ -358,7 +358,6 @@ gap: 10px;
 
   .page-details-row-small-right {
     display: flex;
-    width: 100%;
     max-width: 1120px;
     padding: 0 20px;
     flex-direction: row;
@@ -399,9 +398,6 @@ gap: 10px;
 
   .page-details-content-col {
     display: flex;
-    width: 100%;
-    max-width: 1120px;
-    padding: 0 20px;
     justify-content: space-between;
     align-items: flex-start;
     flex-direction: column;
@@ -546,8 +542,7 @@ gap: 10px;
 
   .caption {
     align-self: stretch;
-    color: var(--typography-color-primary, #2D2D2D);
-    font-family: "BC Sans", Helvetica, Arial, sans-serif;
+    color: var(--typography-color-secondary);
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -559,13 +554,8 @@ gap: 10px;
 
   .caption-small {
     align-self: stretch;
-    color: var(--typography-color-primary, #2D2D2D);
-    font-family: "BC Sans", Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 125%;
-    margin-top: 8px; /* 22.5px */
+    color: var(--typography-color-secondary);
+    font-size: 14px;
   }
 
   .image-frame {
@@ -747,24 +737,21 @@ height: 36px;
   max-width: 760px;
 }
 
-.application-package-step {
-  width: 100%;
+.application-package-step, .householdSummaryItem {
+  background: none; /* Cancel default styles on <button> element these classes are used with */
+  border: none;
+  width: -webkit-fill-available;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 12px;
-  border: 1px solid transparent;
-  border-bottom: 1px solid var(--theme-gray-40, #E0DEDC);
-  background-color: transparent;
-
+  padding: 16px;
+  border-bottom: 1px solid var(--surface-color-border-default);
 }
 
-.application-package-step:hover {
-
-    background: var(--surface-color-menus-hover);
-    cursor: pointer;
-
+.application-package-step:hover, .householdSummaryItem:hover {
+  background: var(--surface-color-menus-hover);
+  cursor: pointer;
 }
 
 .application-package-left {
@@ -826,7 +813,7 @@ iframe {
 
 .iframe-container {
   position: fixed;
-  top: 66px; /* Height of top-nav */
+  top: calc(66px + var(--banner-height, 0px)); /* Height of top-nav */
   left: 0;
   right: 0;
   bottom: 0;
@@ -1353,6 +1340,7 @@ a {
 
   .form-container{
     width: 100%;
+    padding-bottom: 64px;
   }
 
   .required {
@@ -1366,19 +1354,12 @@ a {
 
   .form-group {
     display: flex;
-    padding: 24px 20px;
+    padding: 0;
     flex-direction: column;
     align-items: flex-start;
     align-self: stretch;
     margin-bottom: 24px;
-
-    border-radius: 0 0 10px 10px;
-    border-top: 8px solid var(--theme-gold-80, #F9C462);
-    border-right: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    background: var(--surface-color-background-white, #FFF);
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border: none;
   }
 
   .form-sub-group {
@@ -1397,20 +1378,12 @@ a {
   }
 
   .form-group-header{
-    color: #000;
-font-size: 24px;
-font-style: normal;
-font-weight: 700;
-line-height: 54px; /* 225% */
-
+    font-size: 24px;
+    line-height: 150%;
   }
 
   .form-control-label {
-    color: #525252;
-
     /* Web/Body/Label */
-    font-size: 16px;
-    font-style: normal;
     font-weight: 700;
     line-height: 150%; /* 24px */
     letter-spacing: 0.32px;
@@ -1434,7 +1407,6 @@ line-height: 54px; /* 225% */
     align-items: center;
     gap: 16px;
     align-self: stretch;
-
     border: 1px solid var(--Web-Border-input, #8D8D8D);
   }
 
@@ -1475,10 +1447,7 @@ line-height: 54px; /* 225% */
   }
 
   .error-message{
-
-  color: #B4231E;
-  font-size: 14px;
-
+    color: #B4231E;
   }
 
   .access-form-control {
@@ -1503,7 +1472,8 @@ line-height: 54px; /* 225% */
 
     overflow: hidden;
     text-overflow: ellipsis;
-
+    font-family: 'BC Sans', sans-serif;
+    font-size: 1rem;
     font-style: normal;
     font-weight: 400;
     line-height: 20px; /* 125% */
@@ -1565,9 +1535,23 @@ line-height: 54px; /* 225% */
     padding: 6px 24px;
     align-items: center;
     margin-bottom: 12px;
-    background-color: #d8d8d8;
+    background-color: var(--theme-gray-20);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+  }
+
+  input, select {  /* Attempt to standardize text on inputs of all types */
+    font-family: 'BC Sans', sans-serif;
+    font-size: 1rem;
+  }
+
+  input[type="date"] {
+    font-family: 'BC Sans', sans-serif; /* Backup in case above style doesn't work */
+    font-size: 1rem;
+  }
+
+  input[type="radio"] {
+    margin: 3px 8px 0 3px; /* Add a bit more space between button and label; when button is :focus, the outline can obscure the label */
   }
 
   select {
@@ -1600,16 +1584,12 @@ line-height: 54px; /* 225% */
     align-self: stretch;
   }
 
-  .section-description{
+  .section-description {
     margin-bottom: 24px;
-    font-size: 16px;
-    font-weight: 300;
-    width: 1000px;
-    color: #525252;
     background-color: #EDF5FF;
     border-left: solid 6px #0043CE;
     padding: 12px 24px;
-    line-height: 125%;
+    line-height: 150%;
   }
 
   .task-list {
@@ -1694,31 +1674,21 @@ line-height: 54px; /* 225% */
     line-height: 150%; /* 24px */
   }
 
-  .householdSummaryItem {
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 16px;
-    width: 100%;
-  }
   .topLabel {
     display: flex;
     align-items: center;
     gap: 8px;
     min-width: 0;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
   .bottomLabel {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    color: #6b7280;
   }
   .nameLabel {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 20px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2032,7 +2002,7 @@ line-height: 54px; /* 225% */
   }
   
   .chevronRight {
-    color: #555;
+    color: var(--icons-color-secondary);
   }
 
   .submission-overlay {
