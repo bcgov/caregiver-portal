@@ -293,8 +293,8 @@ useEffect(() => {
     // Age validation for DOB
     if (field === 'dob' && value) {
       const age = calculateAge(value);
-      if (age < 19) {
-        setPartnerAgeValidationError('Caregivers must be 19 years of age or older.');
+      if (age < 18) {
+        setPartnerAgeValidationError('Caregivers must be 18 years of age or older.');
         updatePartner(field, value);
         return;
       } else {
@@ -381,10 +381,22 @@ useEffect(() => {
       );
     }
 
-    // Email validation - ONLY for adults (19+)
+    if (field === 'dob' && value) {                                                                                                                         
+      const age = calculateAge(value);                                                                                                                      
+      if (age < 18) {                                 
+        setFieldLengthErrors(prev => ({
+          ...prev,
+          [`member-${memberId}-dob`]: 'Household members must be 18 years of age or older.'
+        }));
+        updateHouseholdMember(memberIndex, field, value);
+        return;
+      }
+    }    
+
+    // Email validation - ONLY for adults (18+)
     if (field === 'email') {
       const age = member.dob ? calculateAge(member.dob) : null;
-      const isAdult = age !== null && age >= 19;
+      const isAdult = age !== null && age >= 18;
 
       if (isAdult) {
         // Validate email length
@@ -461,7 +473,7 @@ useEffect(() => {
 
       // Clear email validation errors if member becomes a child
       const age = calculateAge(value);
-      if (age < 19) {
+      if (age < 18) {
         setEmailValidationErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
         setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
       }
@@ -516,7 +528,7 @@ useEffect(() => {
         if (householdMembers.length > 0) {
           for (const member of householdMembers) {
             const age = calculateAge(member.dob);
-            const isAdult = age >= 19;
+            const isAdult = age >= 18;
             const isComplete = member.firstName && member.lastName && member.dob && member.relationship && member.genderType;
             const hasEmailIfAdult = !isAdult || (isAdult && member.email);
 
@@ -903,7 +915,7 @@ useEffect(() => {
                   </label>
                   <DateField 
                     id={`member-${member.householdMemberId}-dob`}
-                    variant='past'
+                    variant='adult18'
                     value={member.dob}
                     required
                     onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'dob', e.target.value)}
@@ -957,7 +969,7 @@ useEffect(() => {
                           </label>
                         </div>
 
-                  {calculateAge(member.dob) >= 19 && (
+                  {calculateAge(member.dob) >= 18 && (
                     <>
                   <label htmlFor={`member-${member.householdMemberId}-email`} className="form-control-label">
                     Email<span className="required">*</span>
