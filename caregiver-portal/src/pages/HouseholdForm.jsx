@@ -60,7 +60,7 @@ const HouseholdForm = () => {
             const nextForm = formsArray[nextIndex];
 
             // Build URL based on form type
-            if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+            if (nextForm.type && nextForm.type === 'Adults in household') {
               setNextUrl(`/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`);
             } else {
               setNextUrl(`/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`);
@@ -75,7 +75,7 @@ const HouseholdForm = () => {
   // Update message when household status changes
   useEffect(() => {
     if (householdFormStatus.status === 'Complete') {
-      setFormMessage('Information complete.');
+      setFormMessage('');
     } else if (householdFormStatus.status === 'Draft') {
       setFormMessage('Household information is incomplete.');
     } else {
