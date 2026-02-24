@@ -93,7 +93,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               if (Context === 'Screening' && householdMemberId) {
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
                 //console.log(nextFormUrl)
-              } else if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+              } else if (nextForm.type && nextForm.type === 'Adults in household') {
                 // Build URL based on form type (household vs regular)
                 nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
               } else {
