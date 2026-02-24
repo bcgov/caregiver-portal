@@ -62,9 +62,14 @@ const FosterApplicationPackage = () => {
         const householdComplete = household?.isComplete === true;
         // Check if all non-household forms have status 'Complete'
         const nonHouseholdForms = forms.filter(form =>
-          !form.type === 'Adults in household' &&
-          !form.type?.toLowerCase().includes('referral') 
+          !form.type?.toLowerCase().includes ('adults') &&
+          !form.type?.toLowerCase().includes('referral') &&
+          !form.type?.toLowerCase().includes('indigenous')
         );
+
+        //console.log("NonHouseholdForms:",nonHouseholdForms)
+
+
         const allFormsComplete = nonHouseholdForms.length > 0 &&
           nonHouseholdForms.every(form => form.status === 'Complete');
         // Both conditions must be true
