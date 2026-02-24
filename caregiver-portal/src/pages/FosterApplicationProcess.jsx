@@ -122,7 +122,7 @@ const FosterApplicationProcess = () => {
 
   const handleConfirmReferral = () => {
     setShowReferralModal(false);
-    navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
+    navigate(`/foster-application/referral-package/${applicationPackageId}`);
   }
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
