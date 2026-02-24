@@ -32,7 +32,7 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        if (item.type && item.type.toLowerCase().includes('household')) {
+        if (item.type && item.type === 'Adults in household') {
           // Special case for household form
           navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
           return;
@@ -50,7 +50,7 @@ const FosterApplicationPackage = () => {
         // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
         // state
 
-        if (item.type && item.type.toLowerCase().includes('household') && household?.isComplete) {
+        if (item.type === 'Adults in household' && household?.isComplete) {
           return 'Complete';
         } else {
           return item.status;
@@ -62,7 +62,7 @@ const FosterApplicationPackage = () => {
         const householdComplete = household?.isComplete === true;
         // Check if all non-household forms have status 'Complete'
         const nonHouseholdForms = forms.filter(form =>
-          !form.type?.toLowerCase().includes('household') &&
+          !form.type === 'Adults in household' &&
           !form.type?.toLowerCase().includes('referral') 
         );
         const allFormsComplete = nonHouseholdForms.length > 0 &&
