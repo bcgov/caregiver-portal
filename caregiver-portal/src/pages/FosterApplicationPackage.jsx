@@ -169,7 +169,7 @@ const FosterApplicationPackage = () => {
         <div className='page-details-row-small'>
           <div className="application-package">
             {forms.map((step, index) => (
-              step.type !== 'Referral' && // Exclude 'Referral' type steps
+              (step.type !== 'Referral' && step.type.indexOf('Indigenous') < 0) && // Exclude 'Referral' type steps
                <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
