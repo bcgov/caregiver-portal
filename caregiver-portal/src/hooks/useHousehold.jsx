@@ -1,4 +1,5 @@
 import { useState, useCallback} from 'react';
+import { useDates } from './useDates';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -6,6 +7,7 @@ export const useHousehold = ({applicationPackageId}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const {calculateAge} = useDates();
 
     const [partner, setPartner] = useState({
         firstName: '',
@@ -21,7 +23,7 @@ export const useHousehold = ({applicationPackageId}) => {
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
  
-    const [saveStatus, setSaveStatus] = useState('saved'); // 'saving', 'saved', 'error'
+    const [saveStatus, setSaveStatus] = useState(''); // 'saving', 'saved', 'error'
     const [lastSaved, setLastSaved] = useState(null);
 
       // Add function to load application package
@@ -125,7 +127,7 @@ export const useHousehold = ({applicationPackageId}) => {
     }, [applicationPackageId]);
 
     const saveHouseholdMember = useCallback(async (memberData) => {
-        setSaveStatus('saving');
+        setSaveStatus('Updating household records.');
         try {
 
             const requestBody = {
@@ -152,28 +154,28 @@ export const useHousehold = ({applicationPackageId}) => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+
+                // Check if it's a duplicate error from backend
+                if (errorData.message && errorData.message.includes('duplicate')) {
+                    throw new Error('DUPLICATE:' + errorData.message);
+                }
                 throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
 
             const savedMember = await response.json();
             // update the appropriate state based on relationship type
-            if (memberData.relationship === 'Spouse') { // TODO: Add 'Common-law', 'Partner' when available in dropdown
+            if (memberData.relationship === 'Spouse' || memberData.relationship === 'Partner' || memberData.relationship === 'Common law') { 
                 if(!memberData.householdMemberId && savedMember.householdMemberId) {
                     setPartner(prev => ({...prev, householdMemberId: savedMember.householdMemberId}));
                 }
-            } //else {
-                // update householdMembers state
-              //  if(!memberData.householdMemberId && savedMember.householdMemberId) {
-              //      setHouseholdMembers(prev => ([...prev, {...memberData, householdMemberId: savedMember.householdMemberId}]));
-              //  }
-            //}
+            } 
 
-            setSaveStatus('saved');
+            setSaveStatus('Household record updated.');
             setLastSaved(new Date().toLocaleString());
-            console.log(`${memberData.relationship} saved:`);
+            //console.log(`${memberData.relationship} saved:`);
             return savedMember;
         } catch(error) {
-            setSaveStatus('error');
+            setSaveStatus('There are errors with the form that are preventing it from being saved.');
             console.error('Error saving household member:', error);
             throw error;
         }
@@ -254,7 +256,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     return member;
             })
         );
-    }, []);
+    }, [calculateAge]);
   
     const removeHouseholdMember = useCallback(async (householdMemberId) => {
         if (householdMemberId) {
@@ -289,6 +291,51 @@ export const useHousehold = ({applicationPackageId}) => {
         return true;
     }, [partner.householdMemberId, deleteHouseholdMember]);
 
+  // Check if household data is complete
+  const isHouseholdComplete = useCallback(() => {
+    // If user said no partner and no household, that's complete
+    if (hasPartner === false && hasHousehold === false) {
+      return true;
+    }
+
+    // Check partner if they have one
+    if (hasPartner === true) {
+      if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
+  !partner.relationship) {
+        return false;
+      }
+    }
+
+    // Check household members if they have any
+    if (hasHousehold === true) {
+      if (householdMembers.length === 0) {
+        return false;
+      }
+
+      for (const member of householdMembers) {
+        const age = calculateAge(member.dob);
+        const isAdult = age >= 19;
+
+        // Check required fields
+        if (!member.firstName || !member.lastName || !member.dob || !member.relationship) {
+          return false;
+        }
+
+        // Adults need email
+        if (isAdult && !member.email) {
+          return false;
+        }
+
+        // Children need gender
+        if (!isAdult && !member.genderType) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [hasPartner, hasHousehold, partner, householdMembers, calculateAge]);    
+
     const loadHouseholdMember = useCallback(async (householdMemberId) => {
         if (!householdMemberId) {
             console.error('No householdMemberId provided for deletion.');
@@ -313,19 +360,39 @@ export const useHousehold = ({applicationPackageId}) => {
         }
     }, [applicationPackageId]);
 
-
-    const calculateAge = useCallback((dob) => {
-        if (!dob) return 0;
-        const today = new Date();
-        const birthDate = new Date(dob);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDifference = today.getMonth() - birthDate.getMonth();
-  
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
+    const getAccessCode = useCallback(async (householdMemberId) => {
+        if (!householdMemberId) {
+            console.error('No householdMemberId provided for access code retrieval');
+            return null;
         }
-        return age;
-    }, []);
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/access-code`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+            if (!response.ok) {
+                // If 404, there's no access code yet
+                if (response.status === 404) {
+                    return null;
+                }
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+  
+            const data = await response.json();
+            return data; // Returns { accessCode, expiresAt, isUsed, attemptCount }
+        } catch (error) {
+            console.error('Error fetching access code:', error);
+            return null;
+        }
+    }, [applicationPackageId]);
+
+
+
   
     return {
         // state
@@ -354,10 +421,11 @@ export const useHousehold = ({applicationPackageId}) => {
         updateHouseholdMember,
         removeHouseholdMember,
         removePartner,
-        calculateAge,
         loadHousehold,
         loadHouseholdMember,
         loadApplicationPackage,
+        getAccessCode,
+        isHouseholdComplete,
       };
 
 };

@@ -17,12 +17,14 @@ const MedicalForms = () => {
   const { uploadAttachment, getAttachmentsByHouseholdId, deleteAttachment, uploadMedicalAssessment } = useAttachments();
   const [uploadedFiles, setUploadedFiles ] = React.useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const medicalUploadsInPortal = import.meta.env.VITE_UPLOAD_MEDICAL === 'true';
 
   const  back = `/foster-application/${applicationPackageId}`
 
 
   const breadcrumbItems = [
-    { label: 'Back', path: back },
+    { label: 'Become a foster caregiver', path: back },
+    { label: 'Providing your medical assessment forms'}
   ];
 
 
@@ -116,11 +118,11 @@ const MedicalForms = () => {
         </div>
 
         <div className="page-details-row-small">
-          <h1>Provide your medical assessment forms</h1>
+          <h1>Providing your medical assessment forms</h1>
         </div>
         <div className="page-details-row">
             <div className="section-description">
-                <p>As part of your assessment to become a Foster Caregiver, you must provide a completed Medical Report. The report will be used to assess your 
+                <p>As part of your assessment to become a Foster Caregiver, you must have a Medical Report completed by your Primary Health Care Provider. The report will be used to assess your 
                 medical capacity to provide and care for a foster child.</p>
 
                 <p><strong>Step 1</strong>: Download a copy of the <a href="/MCFD_Medical_Report_on_Applicant.pdf" download className="bright">Medical Report on Applicant</a> form.</p>
@@ -128,8 +130,11 @@ const MedicalForms = () => {
                 <p><strong>Step 3</strong>: Make an appointment with your Primary Health Care Provider to complete the rest of the form. 
                 Ensure that they sign and date the section on page 3. If you do not have a Primary Health Care Provider, 
                 book an appointment with an <a href="https://www.healthlinkbc.ca/primary-care/service-type/urgent-and-primary-care-centres" target="_blank" className="bright">Urgent and Primary Care Centre <ExternalLink className="welcome-link-icon"/></a>.</p>
-                <p><strong>Step 4</strong>: Scan and upload the completed form into the box below.</p> 
-                <p><strong>Step 5</strong>: Complete the declaration.</p>
+                <p><strong>Step 4</strong>: Have them forward the completed report along to MCFD as per the contact information on the form.</p> 
+
+                {medicalUploadsInPortal && (
+                  <>
+                
                 <Declaration
                   checked={isDeclarationChecked}
                   disabled={uploadedFiles.length === 0}
@@ -142,10 +147,11 @@ const MedicalForms = () => {
                   disabled={!isDeclarationChecked && !uploadedFiles.length === 0}
                   onClick={handleSubmitMedicalForms}
                   >Submit Medical Assessment Forms</Button>
-
+                  </>
+                )}
             </div>
         </div>
-
+ { medicalUploadsInPortal && (
        <div className="page-details-row-small">       
         <div className="page-details-col">          
           <FileUpload
@@ -163,7 +169,7 @@ const MedicalForms = () => {
           />   
        </div>
       </div>
-
+)}
        
        </div>
     </div>

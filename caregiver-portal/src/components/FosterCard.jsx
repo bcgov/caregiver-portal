@@ -60,8 +60,13 @@ const FosterCard = ({ variant = 'login', onClick, loading = false }) => {
                       <br/><br/>
                       {(variant === 'login' || variant === 'startapplication') && (                      
                        <Button 
-                        variant="secondary" 
-                        onClick={() => { window.location.href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving"}}
+                        variant="learnmore" 
+                        onClick={() => { 
+                          window.open(
+                            "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving",
+                            "_blank",
+                            "noopener,noreferrer"
+                          )}}
                         >Learn more</Button>
                       )}
 

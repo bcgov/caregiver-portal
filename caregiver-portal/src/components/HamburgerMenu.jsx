@@ -2,11 +2,14 @@ import React, {useState, useRef, useEffect} from 'react';
 import { Menu, CircleUserRound, X } from 'lucide-react';
 import Button from './Button';
 import { useAuth } from "../hooks/useAuth";
+import { useCommon } from '../hooks/useCommon';
 
 const HamburgerMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { logout, user } = useAuth();
     const menuRef = useRef(null);
+
+    const {toTitleCase} = useCommon();
 
       // Close menu when clicking outside
   useEffect(() => {
@@ -49,7 +52,7 @@ const HamburgerMenu = () => {
              >
                 {!isOpen ? 
                     <>
-                        <CircleUserRound/>{user.name}
+                        <CircleUserRound/>{toTitleCase(user.name)}
                     </>
                 :
                     <>Close menu <X/></>
@@ -60,7 +63,7 @@ const HamburgerMenu = () => {
             {isOpen && (
                 <div className="dropdown-menu">
                 <ul className="menu-list">
-                <li className="menu-header">{user.name?.replace(/undefined/gi, '').trim() || 'User'}</li>
+                <li className="menu-header">{toTitleCase(user.name?.replace(/undefined/gi, '').trim() || 'User')}</li>
                 <li className="menu-item">
                     <button onClick={() => handleMenuItemClick('logout')}>
                     Log out

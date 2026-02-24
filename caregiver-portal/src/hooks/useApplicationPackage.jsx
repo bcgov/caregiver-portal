@@ -103,7 +103,7 @@ export const useApplicationPackage = () => {
     return await response.json();
   }, []);
 
-  const getApplicationForms = async (applicationPackageId) => {
+  const getApplicationForms = useCallback(async (applicationPackageId) => {
     console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
     console.log('Request URL:', url);
@@ -117,7 +117,7 @@ export const useApplicationPackage = () => {
         throw new Error(`Failed to fetch application forms: ${response.status}`)
       }
       return await response.json();
-  };
+  }, []);
 
   // initial submission of an application package for the referral step
   const submitApplicationPackage = async (applicationPackageId) => {
@@ -152,6 +152,9 @@ export const useApplicationPackage = () => {
     const requestInfoSession = async (applicationPackageId, contactData) => {
       setLoading(true);
       setError(null);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
   
       try {
         const response = await fetch(
@@ -163,6 +166,7 @@ export const useApplicationPackage = () => {
             },
             credentials: 'include',
             body: JSON.stringify(contactData),
+            signal: controller.signal,
           }
         );
   
@@ -179,6 +183,7 @@ export const useApplicationPackage = () => {
         setError(err.message);
         throw err;
       } finally {
+        clearTimeout(timeout);
         setLoading(false);
       }
     };

@@ -1,6 +1,6 @@
 // App.jsx 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import "@bcgov/bc-sans/css/BC_Sans.css"
 
 // Components
@@ -8,13 +8,13 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import EnvironmentBanner from './components/EnvironmentBanner';
 import "./DesignTokens.css";
 // Pages
 
 import LoginPage from './pages/Login';
 import Dashboard from "./pages/Dashboard";
 import HouseholdLanding from './pages/HouseholdLanding';
-import ApplicationPackageWrapper from "./components/ApplicationPackageWrapper";
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
 import ApplicationForm from './pages/ApplicationForm';
@@ -27,11 +27,22 @@ import MedicalForms from './pages/MedicalForms';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
 
+// Component to conditionally render Footer
+const ConditionalFooter = () => {
+  const location = useLocation();
+  const showFooter = location.pathname === '/' ||
+                      location.pathname === '/login' ||
+                      location.pathname === '/dashboard';
+
+  return showFooter ? <Footer /> : null;
+};
+
 const App = () => {
 
   return (
     <Router>
     <div className="page-wrapper">
+    <EnvironmentBanner />
     <Header />
     <main className="main-content">
       <Routes>
@@ -57,7 +68,7 @@ const App = () => {
 
       </Routes>
     </main>
-    <Footer></Footer>
+    <ConditionalFooter />
     </div>
     </Router>
     

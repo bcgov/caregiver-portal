@@ -2,11 +2,12 @@ import React from 'react';
 import Button from './Button';
 import { useAccessCode } from '../hooks/useAccessCode';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
-const AccessCard = () => {
+const AccessCard = ({login, active = true}) => {
     const [accessCode, setAccessCode] = React.useState('');
     const [message, setMessage] = React.useState('');
+    const [showSuccess, setShowSuccess] = React.useState('');
     const { associateAccessCode, isLoading } = useAccessCode();
     const navigate = useNavigate();
     //const [isLoading, setIsLoading] = React.useState(false);
@@ -15,6 +16,8 @@ const AccessCard = () => {
 
         e.preventDefault();
 
+
+
         if (!accessCode.trim()) {
             setMessage('Please enter a valid access code.');
             return;
@@ -22,7 +25,8 @@ const AccessCard = () => {
 
         try {
             const result = await associateAccessCode(accessCode.trim());
-            setMessage('Access code associated successfully, opening screening form...');
+            setShowSuccess('Access code associated successfully, opening screening form...');
+            //setMessage('Access code associated successfully, opening screening form...');
             console.log("Access code associated, result:", result);
             // navigate to the application page using the returned applicationId
             setTimeout(() => {
@@ -47,12 +51,20 @@ const AccessCard = () => {
 
     return (
                 
-                        <div className="task-card-minor-container">
+                        <div className="access-code-container">
+                            <div className="access-code-title-header-container">
+                                <h2 className='access-code-title-header'>
+                                    Did you receive an access code?
+                                </h2>
+                            </div>    
+                        <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
+                        {active && (
+                            <>
                         <p className="task-card-content">
                         Access code
                         </p>
                         <input type="text" 
-                        placeholder="Enter Access Code" 
+                        placeholder="e.g. XY74N9" 
                         value={accessCode}
                         onChange={(e) => setAccessCode(e.target.value)}
                         disabled={isLoading}
@@ -60,7 +72,7 @@ const AccessCard = () => {
                         maxLength={6}
                         />
 
-                        {message && (
+                        {message && !showSuccess && (
                             <p style={{ color: message.includes('verified') ? 'green' : 'red', margin: '10px 0'}}>
                                 {message}
                             </p>
@@ -69,17 +81,27 @@ const AccessCard = () => {
                         
                     
                         <Button 
-                            variant="lowkey" 
+                            variant="primary" 
                             onClick={handleClick}
                             >
-                            {isLoading ? 'Verifying...' : 'Submit'}
-                            <ArrowRight class="minor"></ArrowRight>
+                            {isLoading ? 'Verifying...' : 'Continue'}
+                            <ArrowRight className="minor"></ArrowRight>
                             </Button>                    
 
+                            </>
+                        )}
+
+                        {!active && (
+                        <Button 
+                        variant="primary" 
+                        onClick={login}
+                        >
+                        {isLoading ? 'Verifying...' : 'Create Account / Log In'}
+                        </Button>                    
+                        )}
                         
-                    
                         {/* Access Code Verification Overlay */}
-                        {isLoading && (
+                        {isLoading && !showSuccess && (
                             <div className="submission-overlay">
                             <div className="submission-modal">
                                 <Loader2 className="submission-spinner" />
@@ -88,12 +110,60 @@ const AccessCard = () => {
                             </div>
                             </div>
                         )}
-                        </div>
-                        
-                
         
-    );
+
+              {showSuccess && (
+                  <div className="submission-overlay" style={{ 
+                      backgroundColor: 'rgba(46, 133, 64, 0.05)' 
+                  }}>
+                      <div className="submission-modal success-modal">
+                          {/* Success Icon with Animation */}
+                          <div className="success-icon-wrapper">
+                              <CheckCircle2 
+                                  className="success-icon" 
+                                  size={64} 
+                                  strokeWidth={2}
+                              />
+                              <Sparkles 
+                                  className="sparkle-icon sparkle-1" 
+                                  size={24}
+                              />
+                              <Sparkles 
+                                  className="sparkle-icon sparkle-2" 
+                                  size={20}
+                              />
+                              <Sparkles 
+                                  className="sparkle-icon sparkle-3" 
+                                  size={18}
+                              />
+                          </div>
+
+                          {/* Success Message */}
+                          <p className="submission-title" style={{ 
+                              color: '#2E8540',
+                              fontSize: '1.75rem',
+                              marginTop: '1.5rem'
+                          }}>
+                              Access code verified
+                          </p>
+                          <p className="submission-text" style={{ 
+                              color: '#606060',
+                              fontSize: '1.1rem'
+                          }}>
+                              Opening your screening package...
+                          </p>
+
+                          {/* Progress Bar */}
+                          <div className="success-progress-bar">
+                              <div className="success-progress-fill"></div>
+                          </div>
+                      </div>
+                  </div>
+              )}
+          </div>
+      );
   };
+
 
 
 export default AccessCard;

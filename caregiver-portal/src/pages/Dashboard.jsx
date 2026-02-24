@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
@@ -21,6 +23,9 @@ const Dashboard = () => {
     loading: isLoading,
     //error
   } = useApplicationPackage();
+
+  const { userProfile } = useUserProfile();
+  const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
 
@@ -44,7 +49,8 @@ const Dashboard = () => {
     isLoading: formsLoading
   } = useApplications();
 
-  console.log('screeningforms:',screeningForms);
+  //console.log('screeningforms:',screeningForms);
+
 
   const loadApplicationForms = useCallback(() => {
     getApplicationForms();
@@ -67,6 +73,7 @@ const Dashboard = () => {
       loadApplicationPackages();
       loadApplicationForms();
     }
+
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
 
     if (auth.loading) {
@@ -96,50 +103,43 @@ const Dashboard = () => {
 
  
           <>
-            <div className="task-frame-image">
+          <div className="task-frame-image">
             <div className="task-content">
-            <WelcomeCard></WelcomeCard>
+              <WelcomeCard user={auth.user}></WelcomeCard>
             </div>
           </div>
-          <div className="task-frame">
+          <div className="task-frame-main-body">
+            <div className="task-content-row">
+              <div className="task-list">
+              
+                {(applicationPackages?.length > 0 || screeningForms?.length > 0) && (
+                  <div className="image-frame">
+                    <hr className="gold-underline-large" />
+                    <h2 className="page-heading">My tasks</h2>
+                  </div>
+                )}
+                {applicationPackages?.map((app) => (
+                  <>
+                    {app.subtype === "FCH" && (
+                      <TaskCard applicationPackage={app} />
+                    )}
+                  </>
+                ))}
+                {screeningForms?.map((app, index) => (
+                  <div key={app[0]?.householdMemberId || index}>
+                    <ScreeningTaskCard applicationFormSet={app} />
+                  </div>
+                ))}
+                {(applicationPackages?.length ===0) && (
+                  <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+                )}
 
-          <div className="task-content">
-    <div className="task-content-list">
-      {(applicationPackages?.length > 0 || screeningForms?.length > 0) && (
-        <h2 className="page-heading">My tasks</h2>
-      )}
-      <div className="draft-applications">
-        {applicationPackages?.map((app) => (
-          <div key={app.applicationPackageId}>
-            {app.subtype === "FCH" && (
-              <TaskCard applicationPackage={app} />
-            )}
-          </div>
-        ))}
-        {screeningForms?.map((app, index) => (
-          <div key={app[0]?.householdMemberId || index}>
-            <ScreeningTaskCard applicationFormSet={app} />
-          </div>
-        ))}
-        <AccessCard />
-      </div>
-    </div>
-  </div>
-
-          
-          </div>
+              </div>
+              <AccessCard />
+              </div>
+            
+            </div>
           </>
-      
-
-        <div className="page-details">
-          <div className="page-details-row">
-            <div className="page-details-content"> 
-          <FosterApplicationStart onClick={handleCreateApplication} disabled={applicationPackages.length > 0}/>
-          <OOCApplicationStart disabled={true}/>
-          
-          </div>
-        </div>
-        </div>
     </div>
   );
 };
