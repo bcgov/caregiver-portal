@@ -188,6 +188,35 @@ export const useApplicationPackage = () => {
       }
     };
 
+  const saveReferralContactData = async (applicationPackageId, contactData) => {
+    setLoading(true);
+    setError(true);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/save-referral-contact`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(contactData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to save contact data: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // lock, and potentially finalize, an application package
   // will enable household consent forms to be collected, if applicable
   const lockApplicationPackage = async (applicationPackageId) => {
@@ -251,6 +280,7 @@ export const useApplicationPackage = () => {
     submitApplicationPackage,
     requestInfoSession,
     validateHouseholdCompletion,
+    saveReferralContactData,
     loading,
     error,
   };
