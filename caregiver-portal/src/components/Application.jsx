@@ -9,7 +9,7 @@ import BreadcrumbBar from './BreadcrumbBar';
 
 
 
-const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, isScreeningContext }) => {
+const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, Context = 'Application' }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,8 +27,10 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
     const navigate = useNavigate();
 
-    const home = isScreeningContext && householdMemberId
+    const home = Context === 'Screening' && householdMemberId
     ? `/screening-package/${householdMemberId}`
+    : Context === 'Referral'
+    ? `/foster-application/referral-package/${applicationPackageId}`
     : `/foster-application/application-package/${applicationPackageId}`;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
@@ -88,7 +90,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               //console.log('householdMemberId', householdMemberId)
 
               let nextFormUrl;
-              if (isScreeningContext && householdMemberId) {
+              if (Context === 'Screening' && householdMemberId) {
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
                 //console.log(nextFormUrl)
               } else if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
