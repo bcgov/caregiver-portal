@@ -390,6 +390,8 @@ useEffect(() => {
         }));
         updateHouseholdMember(memberIndex, field, value);
         return;
+      } else {
+        setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-dob`]: ''}))
       }
     }    
 
@@ -786,7 +788,7 @@ useEffect(() => {
         <fieldset className="form-group">
           <div className="radio-button-group">
             <div className="radio-button-header">
-              Do you have anyone else living your primary residence?<span className="required">*</span>
+              Are there any other people 18 or older at your primary residence?<span className="required">*</span>
             </div>
             <label>
               <input
