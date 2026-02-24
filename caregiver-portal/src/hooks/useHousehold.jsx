@@ -15,6 +15,7 @@ export const useHousehold = ({applicationPackageId}) => {
         dob: '',
         email: '',
         relationship: '',
+        genderType: '',
         householdMemberId: null
     });
 
@@ -301,7 +302,7 @@ export const useHousehold = ({applicationPackageId}) => {
     // Check partner if they have one
     if (hasPartner === true) {
       if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
-  !partner.relationship) {
+  !partner.relationship || !partner.genderType) {
         return false;
       }
     }
