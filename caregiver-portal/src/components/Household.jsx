@@ -337,6 +337,21 @@ useEffect(() => {
       }
     }
 
+      // Duplicate check for gender changes
+      if (field === 'genderType') {
+        if (value && partner.firstName && partner.lastName && partner.dob) {
+          const dupCheck = checkForDuplicate(partner.firstName, partner.lastName, partner.dob, 'partner');
+          if (dupCheck.isDuplicate) {
+            setDuplicateErrors(prev => ({
+              ...prev,
+              'partner': `This person (${dupCheck.name}) is already in your household; they can be removed.`
+            }));
+          } else {
+            setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
+          }
+        }
+      }    
+
     updatePartner(field, value);
   };
 
@@ -485,7 +500,7 @@ useEffect(() => {
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
-        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship) {
+        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType) {
           //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
@@ -682,7 +697,50 @@ useEffect(() => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerAgeValidationError}
                 </label>
-                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}              
+                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}
+                <div className="radio-button-group">
+                    <div className="radio-button-header">Gender<span className="required">*</span></div>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Man/Boy"
+                        checked={partner.genderType === "Man/Boy"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Man/Boy
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Woman/Girl"
+                        checked={partner.genderType === "Woman/Girl"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Woman/Girl
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Non-Binary"
+                        checked={partner.genderType === "Non-Binary"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Non-Binary
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Unknown"
+                        checked={partner.genderType === "Unknown"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Prefer not to say
+                    </label>
+                  </div>                           
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
