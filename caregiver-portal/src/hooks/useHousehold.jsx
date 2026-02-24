@@ -315,20 +315,11 @@ export const useHousehold = ({applicationPackageId}) => {
 
       for (const member of householdMembers) {
         const age = calculateAge(member.dob);
-        const isAdult = age >= 19;
-
+        if (age < 18) {
+            return false;
+        }
         // Check required fields
-        if (!member.firstName || !member.lastName || !member.dob || !member.relationship) {
-          return false;
-        }
-
-        // Adults need email
-        if (isAdult && !member.email) {
-          return false;
-        }
-
-        // Children need gender
-        if (!isAdult && !member.genderType) {
+        if (!member.firstName || !member.lastName || !member.dob || !member.relationship || !member.email) {
           return false;
         }
       }
