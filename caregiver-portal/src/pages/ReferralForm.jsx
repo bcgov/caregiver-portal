@@ -299,7 +299,7 @@ const ReferralForm = () => {
                 </div>
               <div className="field-control">
                 <div className="radio-button-group">
-                  <div className="radio-button-header">Gender<span className="required">*</span></div>
+                  <div className="radio-button-header">Please indicate your gender:<span className="required">*</span></div>
                   <label>
                     <input
                       type="radio"
