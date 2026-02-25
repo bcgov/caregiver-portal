@@ -83,6 +83,7 @@ spec:
         results:
           - name: secretName
           - name: namespace
+          - name: imageTag
         params:
           - name: branchName
             type: string
@@ -95,14 +96,17 @@ spec:
                 dev|develop)
                   echo -n "vite-dev" > $(results.secretName.path)
                   echo -n "f6e00d-dev" > $(results.namespace.path)
+                  echo -n "dev" > $(results.imageTag.path)
                   ;;
                 test)
                   echo -n "vite-test" > $(results.secretName.path)
                   echo -n "f6e00d-test" > $(results.namespace.path)
+                  echo -n "test" > $(results.imageTag.path)
                   ;;
                 main|prod)
                   echo -n "vite-prod" > $(results.secretName.path)
                   echo -n "f6e00d-prod" > $(results.namespace.path)
+                  echo -n "prod" > $(results.imageTag.path)
                   ;;
                 *)
                   echo "Unknown branch: $(params.branchName)"
@@ -120,7 +124,7 @@ spec:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(params.branchName)
+          value: $(tasks.set-vite-secret.results.imageTag)
         - name: IMAGE_REGISTRY
           value: $(params.imageRegistry)
         - name: IMAGE_REGISTRY_USER
@@ -162,7 +166,7 @@ spec:
         - name: IMAGE
           value: $(params.imageUrl)
         - name: IMAGE_TAG
-          value: $(params.branchName)
+          value: $(tasks.set-vite-secret.results.imageTag)
         - name: NAMESPACE
           value: $(tasks.set-vite-secret.results.namespace)
       taskRef:
