@@ -35,6 +35,16 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
+    // Reset state when navigating to a different form
+    useEffect(() => {
+      iframeUrlRef.current = null;
+      setIframeUrl('');
+      setIsIframeLoaded(false);
+      setFormMessage('');
+      setIsFormValid(false);
+      setLoading(true);
+    }, [applicationFormId]);      
+
     useEffect(() => {
       if (applicationFormId) {
         //console.log('Loading application form for applicationFormId:', applicationFormId);
@@ -116,6 +126,8 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
+
+
   useEffect(() => {
     if (applicationForm && applicationFormId) {
 
@@ -123,6 +135,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       if (iframeUrlRef.current === applicationFormId) {
         return;
       }
+
+    // Ensure loaded applicationForm matches the current form ID to prevent race condition
+    if (applicationForm.applicationFormId !== applicationFormId) {
+      return;
+    }
       //console.log('getting form access token for form:', applicationForm);
 
       getFormAccessToken()
