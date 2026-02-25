@@ -258,7 +258,7 @@ const ReferralForm = () => {
         </div>
         <div className="page-details-row">
           <div className="section-description">
-            <p>Information sessions are design to help prospective foster caregivers make the decision about fostering.</p>
+            <p>Information sessions are designed to help prospective foster caregivers make the decision about fostering.</p>
 
             <p>Topics include:</p>
             <ul>
@@ -299,7 +299,7 @@ const ReferralForm = () => {
                 </div>
               <div className="field-control">
                 <div className="radio-button-group">
-                  <div className="radio-button-header">Gender<span className="required">*</span></div>
+                  <div className="radio-button-header">Please indicate your gender:<span className="required">*</span></div>
                   <label>
                     <input
                       type="radio"
