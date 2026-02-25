@@ -4,27 +4,28 @@ import "../DesignTokens.css";
 import ApplicationPackageStep from '../components/ApplicationPackageStep';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
+import { useUserProfile } from '../hooks/useUserProfile';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 import Declaration from '../components/Declaration';
 import { Loader2 } from 'lucide-react';
 
 
-const FosterApplicationPackage = () => {
+const ReferralPackage = () => {
   const { applicationPackageId } = useParams();
+  const { userProfile } = useUserProfile();
   const [forms, setForms] = React.useState([]);
-  const [household, setHousehold] = React.useState();
   const [appPackage, setAppPackage] = React.useState();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isReferralComplete, setIsReferralComplete] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
-  const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
   const navigate = useNavigate();     
-  const { getApplicationForms, getApplicationPackage, lockApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
+  const { getApplicationForms, getApplicationPackage, requestInfoSession } = useApplicationPackage();
   const { formatSubmissionDate } = useDates();
 
     const breadcrumbItems = [
         { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
-        { label: 'Application to provide foster family care' },
+        { label: 'Request an Information Session' },
       ];
 
       const handleBackClick = (item) => {
@@ -32,60 +33,47 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        if (item.type && item.type === 'Adults in household') {
+        if (item.type && item.type.toLowerCase().includes('referral')) {
           // Special case for household form
-          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
+          navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${item.applicationFormId}`);
           return;
         } else { 
-          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
+          navigate(`/foster-application/referral-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
           return
         }
       }
 
       const handleState = (item) => {
-        // TODO: Finish this
-
-        //household will need a verify complet function that looks into the hasHoushold, hasSpouse, etc to verify they are not null
-        //and for either of those that are true, verify that there is at least one household member that matches those criterion
-        // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
-        // state
-
-        if (item.type === 'Adults in household' && household?.isComplete) {
-          return 'Complete';
-        } else {
-          return item.status;
+        if (item.type && item.type.toLowerCase().includes('referral')) {
+          return (userProfile?.gender)
+            ? 'Complete'
+            : item.status;
         }
+        return item.status;
       }
 
       const isApplicationComplete = () => {
-        // Check if household is complete
-        const householdComplete = household?.isComplete === true;
+
         // Check if all non-household forms have status 'Complete'
-        const nonHouseholdForms = forms.filter(form =>
-          !form.type?.toLowerCase().includes ('adults') &&
-          !form.type?.toLowerCase().includes('referral') &&
-          !form.type?.toLowerCase().includes('indigenous')
+        const nonReferralForms = forms.filter(form =>
+          !form.type?.toLowerCase().includes('referral') 
         );
+        const allFormsComplete = nonReferralForms.length > 0 &&
+          nonReferralForms.every(form => form.status === 'Complete');
 
-        //console.log("NonHouseholdForms:",nonHouseholdForms)
-
-
-        const allFormsComplete = nonHouseholdForms.length > 0 &&
-          nonHouseholdForms.every(form => form.status === 'Complete');
+        const referralDataSaved = !!userProfile?.gender;          
         // Both conditions must be true
-        return householdComplete && allFormsComplete;
+        return allFormsComplete && referralDataSaved;
       };
 
       const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
-          const result = await lockApplicationPackage(applicationPackageId);
-          console.log('lock successful:', result);
-          setIsApplicationLocked(true);
+          await requestInfoSession(applicationPackageId, {});
           navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
-          console.error('lock failed:', error);
-          alert('Failed to lock application. Please try again.');
+          console.error('Submission failed:', error);
+          alert('Failed to submit request. Please try again.');
         } finally {
           setIsSubmitting(false);
         }
@@ -100,7 +88,7 @@ const FosterApplicationPackage = () => {
             setAppPackage(appPackage);
             if(appPackage.status === 'Submitted') {
               console.log('locking application');
-              setIsApplicationLocked(true);
+              //setIsApplicationLocked(true);
               navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
             } else {
               console.log('not locking application');
@@ -128,33 +116,8 @@ const FosterApplicationPackage = () => {
         loadForms();
       }, []);
 
-      React.useEffect(() => {
-        const loadHouseholdStatus = async () => {
-          if (applicationPackageId) {
-            const householdStatus = await validateHouseholdCompletion(applicationPackageId)
-            setHousehold(householdStatus);
-            console.log('household status:', householdStatus);
-        }
-        };
-        loadHouseholdStatus();
-      }, []);
-
       console.log('applicationPackageId:', applicationPackageId);
       console.log('forms:', forms);
-
-
-  
-      
-    //const applicationPackageItems = [
-/*
-        {key: 'profile', label: 'About me', path: `/foster-application/application-package/${applicationPackageId}/application-form/${applicationFormId}`, description: 'Provide details about your household, lifestyle, and experience.'},
-        {key: 'household', label: 'My household and support network', path: `/foster-application/application-package/household-form/${applicationId}`, description: 'All adults in the household must consent to background checks.'},
-        {key: 'pastinvolvement', label: 'Past involvement with Child Welfare'},
-        {key: 'healthhistory', label: 'Health history'},
-        {key: 'placementconsiderations', label: 'Placement considerations'},
-        {key: 'references', label: 'References', description: 'All adults in the household must consent to background checks.'},        
-        {key: 'consent', label: 'Consent for prior contact check', description: 'Complete required training sessions.'},   
-*/// ]
 
     return (
       <div className="page">
@@ -163,7 +126,7 @@ const FosterApplicationPackage = () => {
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Application to provide foster family care</h1>
+          <h1 className="page-title">Submit an Information Session Request</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
@@ -174,7 +137,6 @@ const FosterApplicationPackage = () => {
         <div className='page-details-row-small'>
           <div className="application-package">
             {forms.map((step, index) => (
-              (step.type !== 'Referral' && step.type.indexOf('Indigenous') < 0) && // Exclude 'Referral' type steps
                <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
@@ -182,15 +144,15 @@ const FosterApplicationPackage = () => {
         
         <div className="page-details-row-footer">
         {!isApplicationComplete() &&
-          <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
+          <p className="caption">Once all sections are complete, you'll be able to submit your request.</p>
         }
         {isApplicationComplete() && 
           <>
           <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
           <Declaration
-            checked={isDeclarationChecked || isApplicationLocked}
+            checked={isDeclarationChecked || isReferralComplete}
             onChange={setIsDeclarationChecked}
-            disabled={isApplicationLocked}
+            disabled={isReferralComplete}
           >
             I declare that the information contained in this application is true to the best of my knowledge and belief, and believe that I have not omitted any information requested.
           </Declaration>
@@ -198,7 +160,7 @@ const FosterApplicationPackage = () => {
           </>
         }
         <div className="page-details-row">
-        {!isApplicationLocked ? (
+        {!isReferralComplete ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
         ) : (
           <div className="section-description">
@@ -224,4 +186,4 @@ const FosterApplicationPackage = () => {
     )
 };
 
-export default FosterApplicationPackage;
+export default ReferralPackage;

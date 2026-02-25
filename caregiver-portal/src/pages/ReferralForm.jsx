@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
-import Breadcrumb from '../components/Breadcrumb';
+//import Breadcrumb from '../components/Breadcrumb';
+import BreadcrumbBar from '../components/BreadcrumbBar';
 import Button from '../components/Button';
 import { IMaskInput} from 'react-imask';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
@@ -12,21 +13,26 @@ import { Loader2 } from 'lucide-react';
 const ReferralForm = () => {
   const { applicationPackageId } = useParams();
   const navigate = useNavigate();
-  const back = `/foster-application/${applicationPackageId}`
+  const back = `/foster-application/referral-package/${applicationPackageId}`
 
   const { userProfile, loading: profileLoading, error: profileError } = useUserProfile();  
-  const { requestInfoSession, loading } = useApplicationPackage();
+  const { saveReferralContactData, getApplicationForm, loading } = useApplicationPackage();
 
   const [home_phone, setHomePhone] = React.useState(userProfile?.home_phone || '');
   const [alternate_phone, setAlternatePhone] = React.useState(userProfile?.alternate_phone || '');
   const [email, setEmail] = React.useState(userProfile?.email || '');
+  const [sex, setSex] = React.useState(userProfile?.gender || '');
   const [emailError, setEmailError] = React.useState('');
+  const [sexError, setSexError] = React.useState('');
   const [primaryPhoneError, setPrimaryPhoneError] = React.useState('');
   const [secondaryPhoneError, setSecondaryPhoneError] = React.useState('');
   const [submitError, setSubmitError] = React.useState('');
+  const [indigenousFormUrl, setIndigenousFormUrl] = React.useState('');
+  const { getApplicationForms } = useApplicationPackage();
 
   React.useEffect(() => {
     if (userProfile) {
+      setSex(userProfile.gender || '');
       setEmail(userProfile.email || '');
       setHomePhone(userProfile.home_phone || '');
       setAlternatePhone(userProfile.alternate_phone || '');
@@ -38,13 +44,27 @@ const ReferralForm = () => {
                 lastName: userProfile.last_name,
                 streetAddress: userProfile.street_address,
                 city: userProfile.city,
+                sex: userProfile.gender,
                 region: userProfile.region,
                 postalCode: userProfile.postal_code,
   } : null;
 
+  React.useEffect(() => {
+    if (applicationPackageId) {
+      getApplicationForms(applicationPackageId).then(formsArray => {
+        const indigenousForm = formsArray.find(f => !f.type?.toLowerCase().includes('referral'));
+        if (indigenousForm) {
+          setIndigenousFormUrl(
+            `/foster-application/referral-package/${applicationPackageId}/application-form/${indigenousForm.applicationFormId}`
+          );
+        }
+      });
+    }
+  }, [applicationPackageId]);
+
 
   const breadcrumbItems = [
-    { label: 'Become a foster caregiver', path: back },
+    { label: 'Request an Information Session', path: back },
   ];
 
   const validateEmail = (value) => {
@@ -83,6 +103,10 @@ const ReferralForm = () => {
     return true;
   };
 
+  const validateSex = (value) => {
+    return value.length > 0;
+  };
+
   const validatePrimaryPhone = (value) => {
     return validatePhone(value, setPrimaryPhoneError, 'phone number');
   };
@@ -95,23 +119,26 @@ const ReferralForm = () => {
     navigate(item.path);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleNext = async () => {
     setSubmitError('');
 
-    // Validate all required fields
+    const isSexValid = validateSex(sex);
     const isEmailValid = validateEmail(email);
     const isPhoneValid = validatePrimaryPhone(home_phone);
 
-    if (!isEmailValid || !isPhoneValid) {
-      setSubmitError('Please fix the errors above before submitting');
+    if (!isEmailValid || !isPhoneValid || !isSexValid) {
+      setSubmitError('Please fix the errors above before continuing');
       return;
     }
 
-    // Check if fields are empty (additional check)
     if (!email || !email.trim()) {
       setEmailError('Email is required');
+      setSubmitError('Please complete all required fields');
+      return;
+    }
+
+    if (!sex || !sex.trim()) {
+      setSexError('Please provide a value');
       setSubmitError('Please complete all required fields');
       return;
     }
@@ -123,16 +150,68 @@ const ReferralForm = () => {
     }
 
     try {
+      await saveReferralContactData(applicationPackageId, {
+        sex,
+        email,
+        home_phone,
+        alternate_phone: alternate_phone || undefined,
+      });
+      navigate(indigenousFormUrl || back);
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to save. Please try again.');
+    }
+  };
+
+  const referralFormStatus = {
+    type: 'Referral',
+    status: (sex && email && home_phone) ? 'Complete' : 'New',
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSubmitError('');
+
+    // Validate all required fields
+    const isSexValid = validateSex(sex);
+    const isEmailValid = validateEmail(email);
+    const isPhoneValid = validatePrimaryPhone(home_phone);
+
+    if (!isEmailValid || !isPhoneValid | !isSexValid) {
+      setSubmitError('Please fix the errors above before submitting');
+      return;
+    }
+
+    // Check if fields are empty (additional check)
+    if (!email || !email.trim()) {
+      setEmailError('Email is required');
+      setSubmitError('Please complete all required fields');
+      return;
+    }
+
+
+    if(!sex || !sex.trim()) {
+      setSexError('Please provide a value');
+      setSubmitError('Please complete all required fields')
+    }
+    if (!home_phone || !home_phone.trim()) {
+      setPrimaryPhoneError('Primary phone is required');
+      setSubmitError('Please complete all required fields');
+      return;
+    }
+
+    try {
       const contactData = {
+        sex,
         email,
         home_phone,
         alternate_phone: alternate_phone || undefined, // Only include if provided
       };
 
-      await requestInfoSession(applicationPackageId, contactData);
+      await saveReferralContactData(applicationPackageId, contactData);
 
       // Success! Navigate to confirmation or next page
-      navigate(`/foster-application/${applicationPackageId}`);
+      navigate(back);
 
     } catch (err) {
       setSubmitError(err.message || 'Failed to submit request. Please try again.');
@@ -151,22 +230,28 @@ const ReferralForm = () => {
   return (
 
     <>
-          {/* Submission Overlay */}
-          {loading && (
-            <div className="submission-overlay">
-              <div className="submission-modal">
-                <Loader2 className="submission-spinner" />
-                <p className="submission-title">Submitting Request</p>
-                <p className="submission-text">Please wait while we process your information session request...</p>
-              </div>
-            </div>
-          )}
+      {/* Submission Overlay */}
+      {loading && (
+        <div className="submission-overlay">
+          <div className="submission-modal">
+            <Loader2 className="submission-spinner" />
+            <p className="submission-title">Saving</p>
+            <p className="submission-text">Please wait while we save your information...</p>
+          </div>
+        </div>
+      )}
+
+      <div className="iframe-container">
+        <div className="breadcrumb-top">
+          <div className="breadcrumb-top-content">
+            <BreadcrumbBar home={back} next={indigenousFormUrl} applicationForm={referralFormStatus} onNext={handleNext} onBack={() => navigate(back)}/>
+          </div>
+        </div>
+
+        <div className="iframe-content" style={{ overflow: 'auto' }}>
 
     <div className="page">
       <div className="page-details">
-        <div className="page-details-row-breadcrumb">
-        <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
-        </div>
         <div className="page-details-row-small">
          <h1 className="page-title">Attend an information session</h1>
         
@@ -212,6 +297,54 @@ const ReferralForm = () => {
                   value={`${user.streetAddress} \n${user.city} ${user.region} ${user.postalCode}`}>
                   </textarea>
                 </div>
+              <div className="field-control">
+                <div className="radio-button-group">
+                  <div className="radio-button-header">Gender<span className="required">*</span></div>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`gender`}
+                      value="Man/Boy"
+                      checked={sex === "Man/Boy"}
+                      onChange={(e) => setSex(e.target.value)}
+                    />
+                    Man/Boy
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`gender`}
+                      value="Woman/Girl"
+                      checked={sex === "Woman/Girl"}
+                      onChange={(e) => setSex(e.target.value)}
+                    />
+                    Woman/Girl
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`gender`}
+                      value="Non-Binary"
+                      checked={sex === "Non-Binary"}
+                      onChange={(e) => setSex(e.target.value)}
+                    />
+                    Non-Binary
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name={`gender`}
+                      value="Unknown"
+                      checked={sex === "Unknown"}
+                      onChange={(e) => setSex(e.target.value)}
+                    />
+                    Prefer not to say
+                  </label>
+                  {sexError && <span className="error-message">{sexError}</span>}
+                </div>
+                
+                </div>
+
                 <div className="field-control">
                   <label htmlFor={`user-email`} className="form-control-label">
                       Email<span className="required">*</span>
@@ -268,19 +401,18 @@ const ReferralForm = () => {
             
           </div>
         </div>
-        <div className="page-details-row-bottom">
+
         {submitError && (
-          <div className="error-message" style={{ marginBottom: '16px' }}>
-            {submitError}
+          <div className="page-details-row">
+            <div className="error-message" style={{ marginBottom: '16px' }}>
+              {submitError}
+            </div>
           </div>
         )}
-        <Button type="submit" disabled={loading || !email || !home_phone || primaryPhoneError || emailError} onClick={handleSubmit} variant={!email || !home_phone || primaryPhoneError || emailError? "disabled" : "primary"}>
-          {loading ? 'Requesting...' : 'Request Information Session'}
-        </Button>
         </div>
-
-        </div>
-    </div>
+      </div>
+      </div>
+      </div>
     </>
   );
 

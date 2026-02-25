@@ -9,7 +9,7 @@ import BreadcrumbBar from './BreadcrumbBar';
 
 
 
-const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, isScreeningContext }) => {
+const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, Context = 'Application' }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,11 +27,23 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
     const navigate = useNavigate();
 
-    const home = isScreeningContext && householdMemberId
+    const home = Context === 'Screening' && householdMemberId
     ? `/screening-package/${householdMemberId}`
+    : Context === 'Referral'
+    ? `/foster-application/referral-package/${applicationPackageId}`
     : `/foster-application/application-package/${applicationPackageId}`;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
+
+    // Reset state when navigating to a different form
+    useEffect(() => {
+      iframeUrlRef.current = null;
+      setIframeUrl('');
+      setIsIframeLoaded(false);
+      setFormMessage('');
+      setIsFormValid(false);
+      setLoading(true);
+    }, [applicationFormId]);      
 
     useEffect(() => {
       if (applicationFormId) {
@@ -88,10 +100,10 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               //console.log('householdMemberId', householdMemberId)
 
               let nextFormUrl;
-              if (isScreeningContext && householdMemberId) {
+              if (Context === 'Screening' && householdMemberId) {
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
                 //console.log(nextFormUrl)
-              } else if (nextForm.type && nextForm.type.toLowerCase().includes('household')) {
+              } else if (nextForm.type && nextForm.type === 'Adults in household') {
                 // Build URL based on form type (household vs regular)
                 nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
               } else {
@@ -114,6 +126,8 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
 
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
+
+
   useEffect(() => {
     if (applicationForm && applicationFormId) {
 
@@ -121,6 +135,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
       if (iframeUrlRef.current === applicationFormId) {
         return;
       }
+
+    // Ensure loaded applicationForm matches the current form ID to prevent race condition
+    if (applicationForm.applicationFormId !== applicationFormId) {
+      return;
+    }
       //console.log('getting form access token for form:', applicationForm);
 
       getFormAccessToken()
