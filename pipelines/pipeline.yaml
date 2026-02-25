@@ -80,39 +80,64 @@ spec:
         - name: branchName
           value: $(params.branchName)
       taskSpec:
-        results:
-          - name: secretName
-          - name: namespace
-          - name: imageTag
         params:
           - name: branchName
+            type: string
+        results:
+          - name: secretName
+            type: string
+          - name: namespace
+            type: string
+          - name: imageTag
             type: string
         steps:
           - name: set-secret-and-namespace
             image: registry.access.redhat.com/ubi9/ubi-minimal
+            env:
+              - name: BRANCH_NAME
+                value: $(params.branchName)
+              - name: SECRET_NAME_PATH
+                value: $(results.secretName.path)
+              - name: NAMESPACE_PATH
+                value: $(results.namespace.path)
+              - name: IMAGE_TAG_PATH
+                value: $(results.imageTag.path)
             script: |
               #!/bin/bash
-              case "$(params.branchName)" in
+              set -euxo pipefail
+
+              echo "DEBUG: branchName param = '${BRANCH_NAME}'"
+
+              # Clear any previous values to avoid stale results
+              : > "${SECRET_NAME_PATH}"
+              : > "${NAMESPACE_PATH}"
+              : > "${IMAGE_TAG_PATH}"
+
+              case "${BRANCH_NAME}" in
                 dev|develop)
-                  echo -n "vite-dev" > $(results.secretName.path)
-                  echo -n "f6e00d-dev" > $(results.namespace.path)
-                  echo -n "dev" > $(results.imageTag.path)
+                  echo -n "vite-dev" > "${SECRET_NAME_PATH}"
+                  echo -n "f6e00d-dev" > "${NAMESPACE_PATH}"
+                  echo -n "dev" > "${IMAGE_TAG_PATH}"
                   ;;
                 test)
-                  echo -n "vite-test" > $(results.secretName.path)
-                  echo -n "f6e00d-test" > $(results.namespace.path)
-                  echo -n "test" > $(results.imageTag.path)
+                  echo -n "vite-test" > "${SECRET_NAME_PATH}"
+                  echo -n "f6e00d-test" > "${NAMESPACE_PATH}"
+                  echo -n "test" > "${IMAGE_TAG_PATH}"
                   ;;
                 main|prod)
-                  echo -n "vite-prod" > $(results.secretName.path)
-                  echo -n "f6e00d-prod" > $(results.namespace.path)
-                  echo -n "prod" > $(results.imageTag.path)
+                  echo -n "vite-prod" > "${SECRET_NAME_PATH}"
+                  echo -n "f6e00d-prod" > "${NAMESPACE_PATH}"
+                  echo -n "prod" > "${IMAGE_TAG_PATH}"
                   ;;
                 *)
-                  echo "Unknown branch: $(params.branchName)"
+                  echo "ERROR: Unknown branch '${BRANCH_NAME}'"
                   exit 1
                   ;;
               esac
+
+              echo "DEBUG: resolved secretName = '$(cat "${SECRET_NAME_PATH}")'"
+              echo "DEBUG: resolved namespace  = '$(cat "${NAMESPACE_PATH}")'"
+              echo "DEBUG: resolved imageTag   = '$(cat "${IMAGE_TAG_PATH}")'"
 
     # ---------------------------------------------------
     # Build Image With Buildah (uses dynamic secret & branch tag)
