@@ -293,8 +293,8 @@ useEffect(() => {
     // Age validation for DOB
     if (field === 'dob' && value) {
       const age = calculateAge(value);
-      if (age < 19) {
-        setPartnerAgeValidationError('Caregivers must be 19 years of age or older.');
+      if (age < 18) {
+        setPartnerAgeValidationError('Caregivers must be 18 years of age or older.');
         updatePartner(field, value);
         return;
       } else {
@@ -337,6 +337,21 @@ useEffect(() => {
       }
     }
 
+      // Duplicate check for gender changes
+      if (field === 'genderType') {
+        if (value && partner.firstName && partner.lastName && partner.dob) {
+          const dupCheck = checkForDuplicate(partner.firstName, partner.lastName, partner.dob, 'partner');
+          if (dupCheck.isDuplicate) {
+            setDuplicateErrors(prev => ({
+              ...prev,
+              'partner': `This person (${dupCheck.name}) is already in your household; they can be removed.`
+            }));
+          } else {
+            setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
+          }
+        }
+      }    
+
     updatePartner(field, value);
   };
 
@@ -366,10 +381,24 @@ useEffect(() => {
       );
     }
 
-    // Email validation - ONLY for adults (19+)
+    if (field === 'dob' && value) {                                                                                                                         
+      const age = calculateAge(value);                                                                                                                      
+      if (age < 18) {                                 
+        setFieldLengthErrors(prev => ({
+          ...prev,
+          [`member-${memberId}-dob`]: 'Household members must be 18 years of age or older.'
+        }));
+        updateHouseholdMember(memberIndex, field, value);
+        return;
+      } else {
+        setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-dob`]: ''}))
+      }
+    }    
+
+    // Email validation - ONLY for adults (18+)
     if (field === 'email') {
       const age = member.dob ? calculateAge(member.dob) : null;
-      const isAdult = age !== null && age >= 19;
+      const isAdult = age !== null && age >= 18;
 
       if (isAdult) {
         // Validate email length
@@ -446,7 +475,7 @@ useEffect(() => {
 
       // Clear email validation errors if member becomes a child
       const age = calculateAge(value);
-      if (age < 19) {
+      if (age < 18) {
         setEmailValidationErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
         setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
       }
@@ -485,7 +514,7 @@ useEffect(() => {
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
-        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship) {
+        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType) {
           //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
@@ -501,7 +530,7 @@ useEffect(() => {
         if (householdMembers.length > 0) {
           for (const member of householdMembers) {
             const age = calculateAge(member.dob);
-            const isAdult = age >= 19;
+            const isAdult = age >= 18;
             const isComplete = member.firstName && member.lastName && member.dob && member.relationship && member.genderType;
             const hasEmailIfAdult = !isAdult || (isAdult && member.email);
 
@@ -682,7 +711,50 @@ useEffect(() => {
                 <label htmlFor="partner-dob" className="form-control-validation-label">
                   {partnerAgeValidationError}
                 </label>
-                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}              
+                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}
+                <div className="radio-button-group">
+                    <div className="radio-button-header">Gender<span className="required">*</span></div>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Man/Boy"
+                        checked={partner.genderType === "Man/Boy"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Man/Boy
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Woman/Girl"
+                        checked={partner.genderType === "Woman/Girl"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Woman/Girl
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Non-Binary"
+                        checked={partner.genderType === "Non-Binary"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Non-Binary
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name="partner-gender"
+                        value="Unknown"
+                        checked={partner.genderType === "Unknown"}
+                        onChange={(e) => handleUpdatePartner('genderType', e.target.value)}
+                      />
+                      Prefer not to say
+                    </label>
+                  </div>                           
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
@@ -716,7 +788,7 @@ useEffect(() => {
         <fieldset className="form-group">
           <div className="radio-button-group">
             <div className="radio-button-header">
-              Do you have anyone else living your primary residence?<span className="required">*</span>
+              Are there any other people 18 or older at your primary residence?<span className="required">*</span>
             </div>
             <label>
               <input
@@ -845,7 +917,7 @@ useEffect(() => {
                   </label>
                   <DateField 
                     id={`member-${member.householdMemberId}-dob`}
-                    variant='past'
+                    variant='adult18'
                     value={member.dob}
                     required
                     onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'dob', e.target.value)}
@@ -899,7 +971,7 @@ useEffect(() => {
                           </label>
                         </div>
 
-                  {calculateAge(member.dob) >= 19 && (
+                  {calculateAge(member.dob) >= 18 && (
                     <>
                   <label htmlFor={`member-${member.householdMemberId}-email`} className="form-control-label">
                     Email<span className="required">*</span>
