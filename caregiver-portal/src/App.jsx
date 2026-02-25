@@ -24,6 +24,8 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import MedicalForms from './pages/MedicalForms';
+import ReferralPackage from './pages/ReferralPackage';
+import ReferralApplicationForm from './pages/ReferralApplicationForm';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
 
@@ -55,6 +57,8 @@ const App = () => {
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
         <Route path="/foster-application/:applicationPackageId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/foster-application/referral-package/:applicationPackageId" element={<ProtectedRoute><ReferralPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/referral-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ReferralApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/referral-form/:applicationFormId" element={<ProtectedRoute><ReferralForm /></ProtectedRoute>}/>
