@@ -10,7 +10,7 @@ const WelcomeCard = ({login, user}) => {
     return (
         <div className="welcome-card-container">
             <div className="welcome-card-element">
-            <h1 className='welcome-card-header'>B.C. Caregiver Portal</h1>
+            <h1 className='welcome-card-header'>Foster &amp; Care Provider Portal</h1>
             </div>
             { login && (
             <>

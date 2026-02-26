@@ -215,7 +215,7 @@ const ConsentOverview = () => {
               )}
               { householdMember?.householdMember?.userId !== null && (
                   <>
-                  <p>{ householdMember?.householdMember?.firstName} has logged into the Caregiver Portal.</p>
+                  <p>{ householdMember?.householdMember?.firstName} has logged into the Portal.</p>
                   </>
               )}
             </div>
