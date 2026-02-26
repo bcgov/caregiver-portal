@@ -17,7 +17,7 @@ const WelcomeCard = ({login, user}) => {
             <p className='welcome-card-content'>Apply to become a foster caregiver in B.C.</p>                
             <div className="welcome-card-element">
 
-            <Button variant="nav" onClick={login}>Create Account / Login</Button>
+            <Button variant="nav" onClick={login}>Create Account / Log In</Button>
             <p className='welcome-card-content'>You need a <a className="welcome-link" href="https://id.gov.bc.ca/account/setup-instruction" target="_blank">BC Services Card Account <ExternalLink className="welcome-link-icon" /></a> to log in.</p>
             </div>
             </>
