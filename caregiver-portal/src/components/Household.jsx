@@ -514,7 +514,7 @@ useEffect(() => {
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
-        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType) {
+        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType && !emailValidationErrors['partner-email'] && !fieldLengthErrors['partner-email']) {
           //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
@@ -522,7 +522,7 @@ useEffect(() => {
 
     return () => clearTimeout(timer); // reset the clock.
 
-    }, [partner.firstName, partner.lastName, partner.dob, partner.email, hasPartner, partner, saveHouseholdMember]);
+    }, [partner.firstName, partner.lastName, partner.dob, partner.email, hasPartner, partner, saveHouseholdMember, emailValidationErrors, fieldLengthErrors]);
 
     // auto save household members when they have completed data
     useEffect(() => { 
@@ -713,7 +713,7 @@ useEffect(() => {
                 </label>
                 {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}
                 <div className="radio-button-group">
-                    <div className="radio-button-header">Gender<span className="required">*</span></div>
+                    <div className="radio-button-header">Please indicate their gender:<span className="required">*</span></div>
                     <label>
                       <input
                         type="radio"
@@ -766,7 +766,11 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.email)}`}
                   maxLength={MAX_EMAIL_LENGTH}
                 />
-                {getErrorMessage('email', partner.relationship) && <span className="error-message">{getErrorMessage('email', partner.relationship)}</span>}              
+                  {(emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']) && (
+                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                      {emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']}
+                    </label>
+                  )}
                 {duplicateErrors['partner'] && (
                 <div style={{
                   padding: '12px 16px',
@@ -928,7 +932,7 @@ useEffect(() => {
                   </label>
                   )}
                         <div className="radio-button-group">
-                          <div className="radio-button-header">Gender<span className="required">*</span></div>
+                          <div className="radio-button-header">Please indicate their gender:<span className="required">*</span></div>
                           <label>
                             <input
                               type="radio"

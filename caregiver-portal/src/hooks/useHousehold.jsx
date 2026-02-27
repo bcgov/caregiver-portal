@@ -298,11 +298,12 @@ export const useHousehold = ({applicationPackageId}) => {
     if (hasPartner === false && hasHousehold === false) {
       return true;
     }
-
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     // Check partner if they have one
     if (hasPartner === true) {
-      if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
-  !partner.relationship || !partner.genderType) {
+
+        if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
+            !emailRegex.test(partner.email) || !partner.relationship || !partner.genderType) {
         return false;
       }
     }
@@ -319,7 +320,8 @@ export const useHousehold = ({applicationPackageId}) => {
             return false;
         }
         // Check required fields
-        if (!member.firstName || !member.lastName || !member.dob || !member.relationship || !member.email) {
+        if (!member.firstName || !member.lastName || !member.dob || !member.relationship || !member.email ||
+            !emailRegex.test(member.email)) {
           return false;
         }
       }
