@@ -1,0 +1,14 @@
+{{- if hasSuffix "-prod" .Release.Namespace }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: caregiver-portal-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: caregiver-portal
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: caregiver-portal
+{{- end }}
