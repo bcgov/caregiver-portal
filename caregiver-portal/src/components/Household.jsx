@@ -713,7 +713,7 @@ useEffect(() => {
                 </label>
                 {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}
                 <div className="radio-button-group">
-                    <div className="radio-button-header">Gender<span className="required">*</span></div>
+                    <div className="radio-button-header">Please indicate their gender:<span className="required">*</span></div>
                     <label>
                       <input
                         type="radio"
@@ -932,7 +932,7 @@ useEffect(() => {
                   </label>
                   )}
                         <div className="radio-button-group">
-                          <div className="radio-button-header">Gender<span className="required">*</span></div>
+                          <div className="radio-button-header">Please indicate their gender:<span className="required">*</span></div>
                           <label>
                             <input
                               type="radio"
