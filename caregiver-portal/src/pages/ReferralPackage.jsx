@@ -151,14 +151,14 @@ const ReferralPackage = () => {
             onChange={setIsDeclarationChecked}
             disabled={isReferralComplete}
           >
-            I declare that the information contained in this application is true to the best of my knowledge and belief, and believe that I have not omitted any information requested.
+            I declare that the information I have provided is true to the best of my knowledge and belief.
           </Declaration>
       
           </>
         }
         <div className="page-details-row">
         {!isReferralComplete ? (
-        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Request'}</Button>
         ) : (
           <div className="section-description">
           <p><strong>Application Submitted on {formatSubmissionDate(appPackage.submittedAt)}</strong></p>
