@@ -12,7 +12,7 @@ const Footer = () => {
         <div className="footer-links-container">
             <div className="footer-links">
             <div className="footer-links-header">
-                B.C. Caregiver Portal
+                Foster &amp; Care Provider Portal
             </div>
             <div className="footer-links-row">
                 <a href="#">Home</a>
@@ -26,7 +26,7 @@ const Footer = () => {
                 <a href="https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth" target="blank">Caring for children and youth in B.C.</a>
             </div>
             <div className="footer-copyright">
-            © 2025 Government of British Columbia.
+            © 2026 Government of British Columbia
             </div>
             </div>
             
