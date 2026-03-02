@@ -15,9 +15,9 @@ const Footer = () => {
                 Foster &amp; Care Provider Portal
             </div>
             <div className="footer-links-row">
-                <a href="#">Home</a>
+                <a href="/login">Home</a>
                 <a href="#">Privacy</a>
-                <a href="#">Contact us</a>
+                <a href="/contactus">Contact us</a>
             </div>
             <div className="footer-links-header">
                 More Information
