@@ -4,6 +4,7 @@ import Button from './Button';
 import DateField from './Date'; 
 import { useHousehold } from '../hooks/useHousehold';
 import { useDates } from '../hooks/useDates';
+import { MIN_ADULT_AGE, MAX_EMAIL_LENGTH, EMAIL_REGEX } from '../constants/household';
 
 const Household = ({ applicationPackageId, applicationFormId, householdHook }) => {
 
@@ -36,9 +37,7 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     const [duplicateErrors, setDuplicateErrors] = useState({});
     const savingMembersRef = useRef(new Set());
 
-    const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const MAX_NAME_LENGTH = 50;
-    const MAX_EMAIL_LENGTH = 255;
 
       // Validate email format
     const validateEmail = (email, fieldKey) => {
@@ -293,7 +292,7 @@ useEffect(() => {
     // Age validation for DOB
     if (field === 'dob' && value) {
       const age = calculateAge(value);
-      if (age < 18) {
+      if (age < MIN_ADULT_AGE) {
         setPartnerAgeValidationError('Caregivers must be 18 years of age or older.');
         updatePartner(field, value);
         return;
@@ -383,10 +382,10 @@ useEffect(() => {
 
     if (field === 'dob' && value) {                                                                                                                         
       const age = calculateAge(value);                                                                                                                      
-      if (age < 18) {                                 
+      if (age < MIN_ADULT_AGE) {                                 
         setFieldLengthErrors(prev => ({
           ...prev,
-          [`member-${memberId}-dob`]: 'Household members must be 18 years of age or older.'
+          [`member-${memberId}-dob`]: 'Adult household members must be 18 years of age or older; you can enter children and youth on the next page.'
         }));
         updateHouseholdMember(memberIndex, field, value);
         return;
@@ -398,7 +397,7 @@ useEffect(() => {
     // Email validation - ONLY for adults (18+)
     if (field === 'email') {
       const age = member.dob ? calculateAge(member.dob) : null;
-      const isAdult = age !== null && age >= 18;
+      const isAdult = age !== null && age >= MIN_ADULT_AGE;
 
       if (isAdult) {
         // Validate email length
@@ -475,7 +474,7 @@ useEffect(() => {
 
       // Clear email validation errors if member becomes a child
       const age = calculateAge(value);
-      if (age < 18) {
+      if (age < MIN_ADULT_AGE) {
         setEmailValidationErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
         setFieldLengthErrors(prev => ({ ...prev, [`member-${memberId}-email`]: '' }));
       }
@@ -514,7 +513,7 @@ useEffect(() => {
     // auto save partner data
     useEffect(() => {
       const timer = setTimeout(() => {
-        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType && !emailValidationErrors['partner-email'] && !fieldLengthErrors['partner-email']) {
+        if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType && !emailValidationErrors['partner-email'] && !fieldLengthErrors['partner-email'] && calculateAge(partner.dob) >= MIN_ADULT_AGE) {
           //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
@@ -522,7 +521,7 @@ useEffect(() => {
 
     return () => clearTimeout(timer); // reset the clock.
 
-    }, [partner.firstName, partner.lastName, partner.dob, partner.email, hasPartner, partner, saveHouseholdMember, emailValidationErrors, fieldLengthErrors]);
+    }, [partner.firstName, partner.lastName, partner.dob, partner.email, hasPartner, partner, saveHouseholdMember, emailValidationErrors, fieldLengthErrors, calculateAge]);
 
     // auto save household members when they have completed data
     useEffect(() => { 
@@ -530,7 +529,7 @@ useEffect(() => {
         if (householdMembers.length > 0) {
           for (const member of householdMembers) {
             const age = calculateAge(member.dob);
-            const isAdult = age >= 18;
+            const isAdult = age >= MIN_ADULT_AGE;
             const isComplete = member.firstName && member.lastName && member.dob && member.relationship && member.genderType;
             const hasEmailIfAdult = !isAdult || (isAdult && member.email);
 
@@ -975,7 +974,7 @@ useEffect(() => {
                           </label>
                         </div>
 
-                  {calculateAge(member.dob) >= 18 && (
+                  {calculateAge(member.dob) >= MIN_ADULT_AGE && (
                     <>
                   <label htmlFor={`member-${member.householdMemberId}-email`} className="form-control-label">
                     Email<span className="required">*</span>
