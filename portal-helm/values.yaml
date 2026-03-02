@@ -4,7 +4,7 @@ portal:
   port: 8080
   replicas: 1
   autoscaling:
-    minReplicas: 1
+    minReplicas: 2
     maxReplicas: 5
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80

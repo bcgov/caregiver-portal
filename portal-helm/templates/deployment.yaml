@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.portal.podlabel }}
-          image: '{{ .Values.portal.image }}:{{ (last (splitList "-" .Release.Namespace)) }}'
+          image: '{{ .Values.portal.image }}:{{ if hasSuffix "-prod" .Release.Namespace }}main{{ else }}{{ (last (splitList "-" .Release.Namespace)) }}{{ end }}'
           ports:
             - containerPort: {{ .Values.portal.port }}
               protocol: TCP
