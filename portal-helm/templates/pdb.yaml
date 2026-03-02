@@ -1,0 +1,14 @@
+{{- if hasSuffix "-prod" .Release.Namespace }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.portal.podlabel }}-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.portal.podlabel }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.portal.podlabel }}
+{{- end }}

@@ -1,0 +1,17 @@
+portal:
+  podlabel: caregiver-portal
+  image: image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal
+  port: 8080
+  replicas: 1
+  autoscaling:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  resources:
+    limits:
+      cpu: "500m"
+      memory: 512Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
