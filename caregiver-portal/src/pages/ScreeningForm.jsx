@@ -48,7 +48,7 @@ const ScreeningForm = () => {
         onSubmitComplete={back} 
         submitPackage={false}
         householdMemberId={householdMemberId}
-        isScreeningContext={true}/>
+        Context={'Screening'}/>
     </div>
     </div>
   );

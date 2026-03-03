@@ -14,6 +14,7 @@ import "./DesignTokens.css";
 
 import LoginPage from './pages/Login';
 import Dashboard from "./pages/Dashboard";
+import ContactUs from "./pages/ContactUs";
 import HouseholdLanding from './pages/HouseholdLanding';
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
@@ -24,6 +25,8 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import MedicalForms from './pages/MedicalForms';
+import ReferralPackage from './pages/ReferralPackage';
+import ReferralApplicationForm from './pages/ReferralApplicationForm';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
 
@@ -32,7 +35,8 @@ const ConditionalFooter = () => {
   const location = useLocation();
   const showFooter = location.pathname === '/' ||
                       location.pathname === '/login' ||
-                      location.pathname === '/dashboard';
+                      location.pathname === '/dashboard' ||
+                      location.pathname === '/contactus';
 
   return showFooter ? <Footer /> : null;
 };
@@ -51,10 +55,13 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/household" element={<HouseholdLanding />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/contactus" element={<ContactUs />} />
 
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
         <Route path="/foster-application/:applicationPackageId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/foster-application/referral-package/:applicationPackageId" element={<ProtectedRoute><ReferralPackage /></ProtectedRoute>}/>
+        <Route path="/foster-application/referral-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ReferralApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/referral-form/:applicationFormId" element={<ProtectedRoute><ReferralForm /></ProtectedRoute>}/>

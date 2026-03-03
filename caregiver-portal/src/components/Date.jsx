@@ -13,6 +13,12 @@ function date19YearsAgo(today = new Date()) {
   d.setFullYear(d.getFullYear() - 19);
   return d;
 }
+
+function date18YearsAgo(today = new Date()) {
+  const d = new Date(today);                                                                                                                                
+  d.setFullYear(d.getFullYear() - 18);                                                                                                                    
+  return d;                                                                                                                                                 
+} 
 /*
 function isAtLeast19(isoDate, today = new Date()) {
   if (!isoDate) return false;
@@ -33,6 +39,8 @@ const DateField = ({variant = 'past', ...props }) => {
     switch(variant) {
         case 'adult':
             return { max: formatYmd(date19YearsAgo())};
+        case 'adult18':
+            return {max: formatYmd(date18YearsAgo())};
         case 'past':
             return { max: formatYmd(new Date())};
         case 'future':
@@ -64,7 +72,7 @@ const DateField = ({variant = 'past', ...props }) => {
 }
 
 DateField.propTypes = {
-  variant: PropTypes.oneOf(['adult', 'future', 'past']),
+  variant: PropTypes.oneOf(['adult', 'adult18','future', 'past']),
   children: PropTypes.node.isRequired,
 };
 

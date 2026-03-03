@@ -10,10 +10,11 @@ body {
 /** Header Styles **/
 
 .bc-logo {
-    width: 69px;
-    height: 66px;
-    aspect-ratio: 23/22;
-    background: url(../assets/BCID_V_RGB_rev.svg) -14px -6.166px / 120.29% 118.683% no-repeat;
+    display: block;
+    max-height: 50px;
+    @media (min-width: 576px) { /* match gov.bc.ca */
+      max-height: 60px;
+    }
   }
 
 /** primary container for top nav **/
@@ -38,12 +39,6 @@ body {
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-}
-
-.nav-left {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
 }
 
 .formError {
@@ -418,7 +413,7 @@ gap: 10px;
     background: rgba(1, 51, 102, 0.70);
     padding: var(--layout-padding-xlarge);
     width: fit-content;
-    max-width: 430px;   
+    max-width: 836px;   
   }
 
   .welcome-card-header {
@@ -591,7 +586,7 @@ gap: 10px;
     .gold-underline-large {
         width: 36px;
         height: 4px;
-        background: var(--theme-gold-40, #FCBA19);
+        background: var(--theme-gold-100);
         border-radius: 2px;
         border: none;
         margin: 0px;
@@ -927,6 +922,10 @@ iframe {
   border-top: 4px solid var(--theme-primaryGold, #FCBA19);
   background: #FFF;
   box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.25);
+}
+
+.task-card:hover {
+  cursor: pointer;
 }
 
 .task-card-minor {
@@ -2214,8 +2213,15 @@ a {
     }
 
     .btn-nav {
-      font-size: 12px;
-      line-height: 12px;
+      //font-size: 12px;
+      //line-height: 12px;
+    }
+
+    .hide-on-tiny-screens {
+      display: none;
+      @media (min-width: 390px) {
+        display: block;
+      }
     }
 
     .task-card {

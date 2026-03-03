@@ -1,5 +1,6 @@
 import { useState, useCallback} from 'react';
 import { useDates } from './useDates';
+import { MIN_ADULT_AGE, EMAIL_REGEX } from '../constants/household';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -15,6 +16,7 @@ export const useHousehold = ({applicationPackageId}) => {
         dob: '',
         email: '',
         relationship: '',
+        genderType: '',
         householdMemberId: null
     });
 
@@ -300,8 +302,13 @@ export const useHousehold = ({applicationPackageId}) => {
 
     // Check partner if they have one
     if (hasPartner === true) {
-      if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
-  !partner.relationship) {
+        const partnerAge = calculateAge(partner.dob);
+        if (partnerAge < MIN_ADULT_AGE) {
+            return false;
+          }
+
+        if (!partner.firstName || !partner.lastName || !partner.dob || !partner.email ||
+            !EMAIL_REGEX.test(partner.email) || !partner.relationship || !partner.genderType) {
         return false;
       }
     }
@@ -314,20 +321,12 @@ export const useHousehold = ({applicationPackageId}) => {
 
       for (const member of householdMembers) {
         const age = calculateAge(member.dob);
-        const isAdult = age >= 19;
-
+        if (age < MIN_ADULT_AGE) {
+            return false;
+        }
         // Check required fields
-        if (!member.firstName || !member.lastName || !member.dob || !member.relationship) {
-          return false;
-        }
-
-        // Adults need email
-        if (isAdult && !member.email) {
-          return false;
-        }
-
-        // Children need gender
-        if (!isAdult && !member.genderType) {
+        if (!member.firstName || !member.lastName || !member.dob || !member.relationship || !member.genderType || !member.email ||
+            !EMAIL_REGEX.test(member.email)) {
           return false;
         }
       }

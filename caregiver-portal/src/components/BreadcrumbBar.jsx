@@ -5,14 +5,19 @@ import Button from './Button';
 import Breadcrumb from '../components/Breadcrumb';
 
 
-const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, isFormValid, navigationTargetRef}) => {
+// TODO: This set of parameters is OUT OF CONTROL
+const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, isFormValid, navigationTargetRef, onNext, onBack}) => {
    const navigate = useNavigate();
 
     // Check if form is complete
     const isFormComplete = isFormValid || applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
     const handleBackClick = () => {
-        console.log("Back: isFormComplete()", isFormComplete);
+        //console.log("Back: isFormComplete()", isFormComplete);
+        if (onBack) {
+            onBack();
+            return;
+        }
         if (iframeRef && navigationTargetRef) {
             if (isFormComplete) {
                 navigationTargetRef.current = home;
@@ -27,19 +32,10 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
     };
 
     const handleNextClick = () => {
-        //console.log("Next: isFormComplete()", isFormComplete);
-        /*
-        if (iframeRef && navigationTargetRef) {
-            if (isFormComplete) {
-                navigationTargetRef.current = next || home;
-                sendComplete();
-            } else {
-                navigate(next || home);
-            }
-        } else {
-        navigate(next);
+        if (onNext) {
+            onNext();
+            return;
         }
-        */
        if (iframeRef && iframeRef.current?.contentWindow) {
         navigationTargetRef.current = next || home;
         sendComplete();
