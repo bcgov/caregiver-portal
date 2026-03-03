@@ -2,13 +2,13 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: caregiver-portal-pdb
+  name: {{ .Values.portal.podlabel }}-pdb
   namespace: {{ .Release.Namespace }}
   labels:
-    app: caregiver-portal
+    app: {{ .Values.portal.podlabel }}
 spec:
   minAvailable: 1
   selector:
     matchLabels:
-      app: caregiver-portal
+      app: {{ .Values.portal.podlabel }}
 {{- end }}

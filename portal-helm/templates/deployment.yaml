@@ -1,35 +1,35 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: caregiver-portal
-  namespace: {{.Release.Namespace}}
+  name: {{ .Values.portal.podlabel }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: caregiver-portal
+    app: {{ .Values.portal.podlabel }}
 spec:
   {{- if not (hasSuffix "-prod" .Release.Namespace) }}
-  replicas: 1
+  replicas: {{ .Values.portal.replicas | default 1 }}
   {{- end }}
   selector:
     matchLabels:
-      app: caregiver-portal
+      app: {{ .Values.portal.podlabel }}
   template:
     metadata:
       labels:
-        app: caregiver-portal
+        app: {{ .Values.portal.podlabel }}
     spec:
       containers:
-        - name: caregiver-portal
-          image: 'image-registry.openshift-image-registry.svc:5000/f6e00d-tools/portal:{{ (last (splitList "-" .Release.Namespace)) }}'
+        - name: {{ .Values.portal.podlabel }}
+          image: '{{ .Values.portal.image }}:{{ if hasSuffix "-prod" .Release.Namespace }}main{{ else }}{{ (last (splitList "-" .Release.Namespace)) }}{{ end }}'
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.portal.port }}
               protocol: TCP
-          resources: 
+          resources:
             limits:
-              cpu: "500m"
-              memory: 512Mi
+              cpu: {{ .Values.portal.resources.limits.cpu | quote }}
+              memory: {{ .Values.portal.resources.limits.memory }}
             requests:
-              cpu: "100m"
-              memory: 128Mi
+              cpu: {{ .Values.portal.resources.requests.cpu | quote }}
+              memory: {{ .Values.portal.resources.requests.memory }}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
@@ -38,7 +38,6 @@ spec:
       dnsPolicy: ClusterFirst
       securityContext: {}
       schedulerName: default-scheduler
-
   strategy:
     type: RollingUpdate
     rollingUpdate:
