@@ -335,6 +335,7 @@ gap: 10px;
   }
   .page-details-row-breadcrumb {
     display: flex;
+    gap: 12px;
     width: 100%;
     max-width: 1120px;
     flex-direction: row;
@@ -1065,6 +1066,13 @@ margin-bottom: 6px;
 
 .breadcrumb-nav {
   padding: var(--layout-padding-small) 0;
+  overflow: scroll;
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar for IE and older Edge */
+}
+
+.breadcrumb-nav::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for Chrome, Safari, and newer Edge (WebKit/Blink) */
 }
 
 .breadcrumb-container {
@@ -1085,6 +1093,7 @@ margin-bottom: 6px;
   text-decoration: underline;
   padding: var(--layout-padding-small);
   border-radius: var(--layout-border-radius-small);
+  white-space: nowrap;
 }
 
 .breadcrumb-back-link:hover {
@@ -1100,6 +1109,7 @@ margin-bottom: 6px;
   color: var(--typography-color-secondary);
   font-size: 1rem;
   padding: var(--layout-padding-small);
+  white-space: nowrap;
 }
 
 
