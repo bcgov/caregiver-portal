@@ -158,7 +158,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
                     cursor: message ? 'not-allowed' : 'pointer'
                 }}
             >
-                Next section <ArrowRight/>
+                Next <span className="hide-on-tiny-screens">section</span> <ArrowRight/>
             </Button>
         </div>
       );
