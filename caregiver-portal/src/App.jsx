@@ -14,6 +14,7 @@ import "./DesignTokens.css";
 
 import LoginPage from './pages/Login';
 import Dashboard from "./pages/Dashboard";
+import ContactUs from "./pages/ContactUs";
 import HouseholdLanding from './pages/HouseholdLanding';
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
@@ -34,7 +35,8 @@ const ConditionalFooter = () => {
   const location = useLocation();
   const showFooter = location.pathname === '/' ||
                       location.pathname === '/login' ||
-                      location.pathname === '/dashboard';
+                      location.pathname === '/dashboard' ||
+                      location.pathname === '/contactus';
 
   return showFooter ? <Footer /> : null;
 };
@@ -53,6 +55,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/household" element={<HouseholdLanding />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/contactus" element={<ContactUs />} />
 
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>

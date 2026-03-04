@@ -129,10 +129,7 @@ const ReferralPackage = () => {
           <h1 className="page-title">Submit an Information Session Request</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">The personal information requested on these forms is being collected by the Ministry of Children and Family Development (MCFD)
-            under Section 26(c) and will be used for the purposes of your Caregiver Application. The information collected on these forms will be strictly used by 
-            MCFD for Caregiver Application and Assessment activities. If you have questions about the collection of your information for this purpose, please contact 
-            the Community Liaison/Quality Assurance Officer, toll free at 1-866-623-3001, or mail PO Box 9776 Station Provincial Government, Victoria BC V8W 9S5.</p>
+          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">
@@ -154,14 +151,14 @@ const ReferralPackage = () => {
             onChange={setIsDeclarationChecked}
             disabled={isReferralComplete}
           >
-            I declare that the information contained in this application is true to the best of my knowledge and belief, and believe that I have not omitted any information requested.
+            I declare that the information I have provided is true to the best of my knowledge and belief.
           </Declaration>
       
           </>
         }
         <div className="page-details-row">
         {!isReferralComplete ? (
-        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
+        <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Request'}</Button>
         ) : (
           <div className="section-description">
           <p><strong>Application Submitted on {formatSubmissionDate(appPackage.submittedAt)}</strong></p>

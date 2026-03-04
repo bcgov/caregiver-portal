@@ -52,7 +52,7 @@ const HamburgerMenu = () => {
              >
                 {!isOpen ? 
                     <>
-                        <CircleUserRound/>{toTitleCase(user.name)}
+                        <CircleUserRound/><span className="hide-on-tiny-screens">{toTitleCase(user.name)}</span>
                     </>
                 :
                     <>Close menu <X/></>

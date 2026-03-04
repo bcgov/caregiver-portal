@@ -2,30 +2,30 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: caregiver-portal
+  name: {{ .Values.portal.podlabel }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: caregiver-portal
+    app: {{ .Values.portal.podlabel }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: caregiver-portal
-  minReplicas: 2
-  maxReplicas: 5
+    name: {{ .Values.portal.podlabel }}
+  minReplicas: {{ .Values.portal.autoscaling.minReplicas | default 2 }}
+  maxReplicas: {{ .Values.portal.autoscaling.maxReplicas | default 10 }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: {{ .Values.portal.autoscaling.targetCPUUtilizationPercentage | default 70 }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 80
+          averageUtilization: {{ .Values.portal.autoscaling.targetMemoryUtilizationPercentage | default 80 }}
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 0

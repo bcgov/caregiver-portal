@@ -10,14 +10,14 @@ const WelcomeCard = ({login, user}) => {
     return (
         <div className="welcome-card-container">
             <div className="welcome-card-element">
-            <h1 className='welcome-card-header'>B.C. Caregiver Portal</h1>
+            <h1 className='welcome-card-header'>Foster &amp; Care Provider Portal</h1>
             </div>
             { login && (
             <>
             <p className='welcome-card-content'>Apply to become a foster caregiver in B.C.</p>                
             <div className="welcome-card-element">
 
-            <Button variant="nav" onClick={login}>Create Account / Login</Button>
+            <Button variant="nav" onClick={login}>Create Account / Log In</Button>
             <p className='welcome-card-content'>You need a <a className="welcome-link" href="https://id.gov.bc.ca/account/setup-instruction" target="_blank">BC Services Card Account <ExternalLink className="welcome-link-icon" /></a> to log in.</p>
             </div>
             </>

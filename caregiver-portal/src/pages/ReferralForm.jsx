@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import { IMaskInput} from 'react-imask';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
-import { Loader2 } from 'lucide-react';
+import { ExternalLink, Loader2 } from 'lucide-react';
 
 
 const ReferralForm = () => {
@@ -16,7 +16,7 @@ const ReferralForm = () => {
   const back = `/foster-application/referral-package/${applicationPackageId}`
 
   const { userProfile, loading: profileLoading, error: profileError } = useUserProfile();  
-  const { saveReferralContactData, getApplicationForm, loading } = useApplicationPackage();
+  const { saveReferralContactData, loading } = useApplicationPackage();
 
   const [home_phone, setHomePhone] = React.useState(userProfile?.home_phone || '');
   const [alternate_phone, setAlternatePhone] = React.useState(userProfile?.alternate_phone || '');
@@ -61,11 +61,6 @@ const ReferralForm = () => {
       });
     }
   }, [applicationPackageId]);
-
-
-  const breadcrumbItems = [
-    { label: 'Request an Information Session', path: back },
-  ];
 
   const validateEmail = (value) => {
     if (!value) {
@@ -115,9 +110,6 @@ const ReferralForm = () => {
     return validatePhone(value, setSecondaryPhoneError, 'phone number');
   };
 
-  const handleBackClick = (item) => {
-    navigate(item.path);
-  };
 
   const handleNext = async () => {
     setSubmitError('');
@@ -167,57 +159,6 @@ const ReferralForm = () => {
     status: (sex && email && home_phone) ? 'Complete' : 'New',
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setSubmitError('');
-
-    // Validate all required fields
-    const isSexValid = validateSex(sex);
-    const isEmailValid = validateEmail(email);
-    const isPhoneValid = validatePrimaryPhone(home_phone);
-
-    if (!isEmailValid || !isPhoneValid | !isSexValid) {
-      setSubmitError('Please fix the errors above before submitting');
-      return;
-    }
-
-    // Check if fields are empty (additional check)
-    if (!email || !email.trim()) {
-      setEmailError('Email is required');
-      setSubmitError('Please complete all required fields');
-      return;
-    }
-
-
-    if(!sex || !sex.trim()) {
-      setSexError('Please provide a value');
-      setSubmitError('Please complete all required fields')
-    }
-    if (!home_phone || !home_phone.trim()) {
-      setPrimaryPhoneError('Primary phone is required');
-      setSubmitError('Please complete all required fields');
-      return;
-    }
-
-    try {
-      const contactData = {
-        sex,
-        email,
-        home_phone,
-        alternate_phone: alternate_phone || undefined, // Only include if provided
-      };
-
-      await saveReferralContactData(applicationPackageId, contactData);
-
-      // Success! Navigate to confirmation or next page
-      navigate(back);
-
-    } catch (err) {
-      setSubmitError(err.message || 'Failed to submit request. Please try again.');
-      console.error('Submission error:', err);
-    }
-  };
   
   if (profileLoading) {
     return <div className="page"><div className="page-details">Loading...</div></div>;
@@ -258,7 +199,7 @@ const ReferralForm = () => {
         </div>
         <div className="page-details-row">
           <div className="section-description">
-            <p>Information sessions are design to help prospective foster caregivers make the decision about fostering.</p>
+            <p>Information sessions are designed to help prospective foster caregivers make the decision about fostering.</p>
 
             <p>Topics include:</p>
             <ul>
@@ -275,7 +216,7 @@ const ReferralForm = () => {
             <form>
               <fieldset className="form-group">
                 <div className="section-description">
-                  <p>This is the name and address on your BC Services Card. If you have changed your legal name or address, please update your BC Services Card before proceeding.</p>
+                  <p>This is the name and address on your BC Services Card. If you have changed your legal name or address, please <a href="https://www2.gov.bc.ca/gov/content/governments/government-id/bc-services-card/your-card/change-personal-information" className="hyperlink" target="_blank">update your BC Services Card <ExternalLink size={16}/></a> before proceeding.</p>
                 </div>
                 <div className="field-control">
                 <label htmlFor={`user-name`} className="form-control-label">
@@ -299,7 +240,7 @@ const ReferralForm = () => {
                 </div>
               <div className="field-control">
                 <div className="radio-button-group">
-                  <div className="radio-button-header">Gender<span className="required">*</span></div>
+                  <div className="radio-button-header">Please indicate your gender:<span className="required">*</span></div>
                   <label>
                     <input
                       type="radio"
