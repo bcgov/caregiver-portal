@@ -252,7 +252,7 @@ const ConsentOverview = () => {
        <div className="page-details-row-small">       
         <div className="page-details-col">          
           <FileUpload
-          attachmentType="Criminal Record Check"
+          attachmentType="_"
           onUpload={handleUpload}
           onDelete={handleDeleteAttachment}
           uploadedFiles={uploadedFiles}
@@ -262,7 +262,7 @@ const ConsentOverview = () => {
           isLocked={isLocked}
           acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
           maxSizeMB={10}
-          description="Criminal Record Check"
+          description="_"
           />   
        </div>
       </div>
