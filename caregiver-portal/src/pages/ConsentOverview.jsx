@@ -210,7 +210,8 @@ const ConsentOverview = () => {
               { !isSpouse && (
                 <>
                 <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
-                <p>Please fill out and sign this <a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent form <ExternalLink/></a>.</p>
+                <p><a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent for Disclosure of Criminal Record Information <ExternalLink size={16}/></a>.</p>
+                <p><a href="/Consent_for_Prior_Contact_Check.pdf" download className="bright">Consent for Prior Contact Check <ExternalLink size={16}/></a>.</p>
                 </>                
               )}
               { householdMember?.householdMember?.userId !== null && (
