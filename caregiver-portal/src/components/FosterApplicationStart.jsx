@@ -28,7 +28,8 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
                     <h2 className="page-heading">Foster caregiving</h2>
                 </div>
                 
-                <p className="page-content">Foster caregiving is about opening your home and sharing your love, nurturing and caring for children and youth in B.C. who are under the age of 19 and who temporarily cannot live with their own families.</p>
+                <p className="page-content">Thank you for your interest in supporting children and youth who need a safe, stable, and nurturing home. Every child deserves care rooted in respect, belonging, and compassion. Your willingness to help makes a meaningful difference.</p>
+                <p className="page-content">Learn more about welcoming a child or youth into your home until they can be reunited with family or community.</p>
                 <div className="buttonGroup">
                 <Button onClick={() => {
                     window.open(
