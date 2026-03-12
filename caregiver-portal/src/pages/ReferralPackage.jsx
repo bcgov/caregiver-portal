@@ -129,7 +129,7 @@ const ReferralPackage = () => {
           <h1 className="page-title">Submit an Information Session Request</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
+          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">
