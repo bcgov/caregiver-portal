@@ -261,7 +261,7 @@ const ConsentOverview = () => {
           householdMemberId={householdMemberId}
           isLocked={isLocked}
           acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-          maxSizeMB={10}
+          maxSizeMB={5}
           description="_"
           />   
        </div>

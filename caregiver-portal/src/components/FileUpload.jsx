@@ -8,7 +8,7 @@ const FileUpload = ({
     onDelete,
     uploadedFiles = [],
     acceptedTypes = ['pdf', 'jpg', 'jpeg', 'png'],
-    maxSizeMB = 10,
+    maxSizeMB = 5,
     applicationPackageId,
     isLocked = false,
     householdMemberId = null,

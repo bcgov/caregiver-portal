@@ -164,7 +164,7 @@ const MedicalForms = () => {
           householdMemberId={householdMemberId}
           isLocked={false}
           acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-          maxSizeMB={10}
+          maxSizeMB={5}
           description="Medical Assessment"
           />   
        </div>
