@@ -9,7 +9,6 @@ const AuthCallback = () => {
 
   useEffect(() => {
     if (auth.isAuthenticated && !auth.isLoading) {
-      console.log('User authenticated, redirecting to dashboard');
       navigate('/dashboard', { replace: true });
     }
   }, [auth.isAuthenticated, auth.isLoading, navigate]);

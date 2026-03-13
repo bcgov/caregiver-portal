@@ -20,7 +20,6 @@ export const useHousehold = ({applicationPackageId}) => {
         householdMemberId: null
     });
 
-    //const [allMembers, setAllMembers] = useState([]);   // all household members (excludes "self")
     const [householdMembers, setHouseholdMembers] = useState([]); // all non-spouse household members 
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
@@ -31,18 +30,15 @@ export const useHousehold = ({applicationPackageId}) => {
       // Add function to load application package
   const loadApplicationPackage = useCallback(async () => {
     try {
-      console.log('Loading application package for:', applicationPackageId); 
       const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}`, {
         method: 'GET',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' }
       });
-      console.log('Response status:', response.status); 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Application package data:', data);
 
       setHasPartner(data.hasPartner === "true" ? true : data.hasPartner === "false" ? false : null);
       setHasHousehold(data.hasHousehold === "true" ? true : data.hasHousehold === "false" ? false : null);
@@ -80,7 +76,6 @@ export const useHousehold = ({applicationPackageId}) => {
             const data = await response.json();
             // remove primary applicant from household data
             const householdData = data.filter(member => member.relationshipToPrimary !== 'Self'); 
-            console.log("Loaded household data: ", householdData);
             // find partner/spouse in household data
             const existingPartner = data.find(member => member.relationshipToPrimary === 'Spouse' || member.relationshipToPrimary === 'Common law' || member.relationshipToPrimary === 'Partner'); // TO DO: Add 'Common-law', 'Partner' when available in dropdown
             if (existingPartner) {
@@ -174,7 +169,6 @@ export const useHousehold = ({applicationPackageId}) => {
 
             setSaveStatus('Household record updated.');
             setLastSaved(new Date().toLocaleString());
-            //console.log(`${memberData.relationship} saved:`);
             return savedMember;
         } catch(error) {
             setSaveStatus('There are errors with the form that are preventing it from being saved.');
@@ -185,7 +179,6 @@ export const useHousehold = ({applicationPackageId}) => {
 
     const deleteHouseholdMember = useCallback(async (householdMemberId) => {
         if (!householdMemberId) {
-            console.error('No householdMemberId provided for deletion.');
             return;
         }
 

@@ -6,8 +6,7 @@ import { useState, useCallback } from 'react';
 
         const [error, setError] = useState(null);
     
-        const getFormAccessToken = useCallback(async () => {
-            console.log('Starting getFormAccessToken call'); // Add this
+        const getFormAccessToken = useCallback(async () => { 
 
           try {
             setError(null);
@@ -17,46 +16,28 @@ import { useState, useCallback } from 'react';
               credentials: 'include',
               headers: { 'Content-Type': 'application/json' },
             });
-
-            console.log('Response status:', response.status); // Add this
-            console.log('Response ok:', response.ok); // Add this
     
             if (!response.ok) {
               const errorData = await response.json().catch(() => ({}));
               throw new Error(errorData.message || 'Failed to create application');
             }
 
-            console.log('About to parse JSON');
-            console.log('Response headers:', response.headers);
-            console.log('Content-Type:', response.headers.get('content-type'));
-
               // Let's try to read the response as text first
             const responseText = await response.text();
-            console.log('Response text:', responseText);
-
               // Then try to parse it
             let data;
             if (responseText) {
                 data = JSON.parse(responseText);
             } else {
-                console.log('Empty response body');
                 return;
-            }
+            }        
     
-            //const data = await response.json();
-            console.log('Token API response:', data);
-            console.log('Type of data:', typeof data);
-            console.log('Data keys:', Object.keys(data));            
-    
-            if (data.formAccessToken) {
-              console.log('Returning token:', data.formAccessToken);
+            if (data.formAccessToken) {;
               if (onSuccess) {
-                console.log('Calling onSuccess with token:', data.formAccessToken);
                 onSuccess(data.formAccessToken);
               }
               return data.formAccessToken;
             } else {
-                console.log('No formAccessToken in response');
                 return null;
             }
           

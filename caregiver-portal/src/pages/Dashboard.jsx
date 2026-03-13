@@ -49,9 +49,6 @@ const Dashboard = () => {
     isLoading: formsLoading
   } = useApplications();
 
-  //console.log('screeningforms:',screeningForms);
-
-
   const loadApplicationForms = useCallback(() => {
     getApplicationForms();
   }, [getApplicationForms]);

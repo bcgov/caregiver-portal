@@ -57,8 +57,7 @@ const ScreeningPackage = () => {
           if (!applicationPackageId) {
             throw new Error('Application package ID not found');
           }
-          const result = await confirmScreeningPackage(applicationPackageId, householdMemberId);
-          console.log('Screening package confirmed', result);
+          await confirmScreeningPackage(applicationPackageId, householdMemberId);
           navigate(back);
         } catch (error) {
           console.error('screening package confirmation failed:', error);
@@ -71,11 +70,8 @@ const ScreeningPackage = () => {
         const loadForms = async () => {
           if (householdMemberId) {
             try {
-              console.log('Loading forms for householdMemberId:', householdMemberId);
               const formsArray = await getApplicationFormsByHouseholdMember(householdMemberId);
-              console.log('loaded forms:', formsArray);
               setForms(formsArray);
-              console.log(formsArray[0].type.toUpperCase());
               setIsSpouse(formsArray[0].type.toUpperCase().includes("SPOUSE"));
             } catch (error) {
               console.error('Failed to load forms:', error);

@@ -31,7 +31,6 @@ const HamburgerMenu = () => {
     };
 
     const handleMenuItemClick = (item) => {
-        console.log(`Clicked: ${item}`);
         switch(item){
             case ("logout"):
                 logout();

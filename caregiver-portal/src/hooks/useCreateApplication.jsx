@@ -27,11 +27,9 @@ import { useState, useCallback } from 'react';
           throw new Error(errorData.message || 'Failed to create application');
         }
 
-        const data = await response.json();
-        console.log('Create application response:', data); // Add this        
+        const data = await response.json(); 
 
         if (data.applicationFormId && onSuccess) {
-          console.log('Calling onSuccess with applicationFormId:', data.applicationFormId); // Add this
           onSuccess(data.applicationFormId);
         }
       } catch (err) {

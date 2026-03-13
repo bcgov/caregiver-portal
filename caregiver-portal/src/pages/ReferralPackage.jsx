@@ -82,17 +82,11 @@ const ReferralPackage = () => {
       React.useEffect(() => {
         const loadPackage = async () => {
           try {
-            console.log('Loading package for packageId:', applicationPackageId)
             const appPackage = await getApplicationPackage(applicationPackageId);
-            console.log('Application package:', appPackage);
             setAppPackage(appPackage);
             if(appPackage.status === 'Submitted') {
-              console.log('locking application');
-              //setIsApplicationLocked(true);
               navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
-            } else {
-              console.log('not locking application');
-            }
+            } 
           } catch (error) {
             console.error('failed to load application package', error);
           }
@@ -104,9 +98,7 @@ const ReferralPackage = () => {
         const loadForms = async () => {
           if (applicationPackageId) {
             try {
-              console.log('Loading forms for packageId:', applicationPackageId);
               const formsArray = await getApplicationForms(applicationPackageId);
-              console.log('loaded forms:', formsArray);
               setForms(formsArray);
             } catch (error) {
               console.error('Failed to load forms:', error);
@@ -115,9 +107,6 @@ const ReferralPackage = () => {
         };
         loadForms();
       }, []);
-
-      console.log('applicationPackageId:', applicationPackageId);
-      console.log('forms:', forms);
 
     return (
       <div className="page">
