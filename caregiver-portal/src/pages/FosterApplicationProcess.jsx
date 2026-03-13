@@ -39,9 +39,6 @@ const FosterApplicationProcess = () => {
   const getCurrentStep = (status) => {
     return statusStepMap[status]
   };
-  
-
-  console.log(`Foster Application Process with: ${applicationPackageId} `);
 
   const breadcrumbItems = [
     { label: 'Dashboard', path: '/dashboard' },
@@ -186,7 +183,6 @@ const FosterApplicationProcess = () => {
         }
       }
       if (step.key === 'consent' && applicationPackage && !['Application', 'New', 'Draft', 'Referral Requested'].includes(applicationPackage?.status)) {
-        console.log('status:',applicationPackage?.status)
         return {
           ...step,
           description: 'All household members have submitted their screening forms.',

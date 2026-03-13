@@ -27,8 +27,6 @@ import { useState, useCallback } from 'react';
         const data = await response.json();
         
         setApplicationForms(data);
-        //console.log(`setting application formsssss to ${data}`)
-        //setApplicationPackages(hasFosterApp);
 
       } catch (err) {
         setError(err.message);

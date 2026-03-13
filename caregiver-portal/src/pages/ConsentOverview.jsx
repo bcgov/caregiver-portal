@@ -69,7 +69,6 @@ const ConsentOverview = () => {
 
                 const accessCodeData = await getAccessCode(householdMemberId);
                 setAccessCode(accessCodeData);
-                //console.log('loaded household member:', member);
             } catch (error) {
                 console.error('Failed to load household member:', error);
             } finally {
@@ -124,9 +123,6 @@ const ConsentOverview = () => {
     const loadAttachments = async () => {
       try {
         const attachments = await getAttachmentsByHouseholdId(householdMemberId);
-        console.info("getting attachments", attachments);
-
-        
         setManualScreeningStatus(attachments.length > 0);
         
         setUploadedFiles(attachments);
@@ -138,8 +134,6 @@ const ConsentOverview = () => {
     React.useEffect(() => {
       if (applicationPackageId) {
         loadAttachments();
-      } else {
-        console.error("no bueno");
       }
     }, []);
 
@@ -150,8 +144,7 @@ const ConsentOverview = () => {
           return;
         }
         
-        const result = await markScreeningDocumentsAttached(applicationPackageId, householdMemberId);
-        console.log(`Marked ${result.formsUpdated} screening form(s) as attached`);
+        await markScreeningDocumentsAttached(applicationPackageId, householdMemberId);
         navigate(back)
       } catch (error) {
         console.error('Failed to mark form as attached:', error);

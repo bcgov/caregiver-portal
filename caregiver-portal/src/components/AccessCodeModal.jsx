@@ -11,13 +11,6 @@ const AccessCodeModal = ({
     isLoading
 }) => {
 
-    //const handleCopyCode = () => {
-    //    navigator.clipboard.writeText(accessCode);
-    //    // toast!
-    //};
-
-    //const formatExpiryDate = 
-
     return (
         <Modal
             isOpen={isOpen}

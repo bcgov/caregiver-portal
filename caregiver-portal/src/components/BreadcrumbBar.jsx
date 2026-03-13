@@ -13,7 +13,6 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
     const isFormComplete = isFormValid || applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
     const handleBackClick = () => {
-        //console.log("Back: isFormComplete()", isFormComplete);
         if (onBack) {
             onBack();
             return;

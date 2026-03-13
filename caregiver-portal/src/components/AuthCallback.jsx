@@ -17,20 +17,16 @@ export const AuthCallback = () => {
     const handleCallback = async () => {
 
       if(USE_KONG_OIDC) {
-              // Kong OIDC mode: Kong already handled OAuth, just verify session
-      console.log('Kong OIDC mode - verifying session exists');
-
+      // Kong OIDC mode: Kong already handled OAuth, just verify session
       try {
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/auth/status`, {
           credentials: 'include',
         });
 
         if (response.ok) {
-          console.log('Session verified, redirecting to dashboard');
           await checkAuthStatus();
           navigate('/dashboard');
         } else {
-          console.error('No session found after Kong authentication');
           navigate('/login?error=no_session');
         }
       } catch (error) {
@@ -46,7 +42,6 @@ export const AuthCallback = () => {
 
         // Check for errors
         if (error) {
-          console.error('OAuth error:', error);
           navigate('/login?error=' + encodeURIComponent(error));
           return;
         }
@@ -54,13 +49,7 @@ export const AuthCallback = () => {
 
         // Verify state parameter
         const savedState = sessionStorage.getItem('oauth_state');
-
-        console.log('Returned state from URL:', state);
-        console.log('Saved state from session:', savedState);
-
-
         if (!state || state !== savedState) {
-          console.error('Invalid state parameter');
           navigate('/login?error=invalid_state');
           return;
         }
@@ -69,7 +58,6 @@ export const AuthCallback = () => {
         sessionStorage.removeItem('oauth_state');
 
         if (!code) {
-          console.error('No authorization code received');
           navigate('/login?error=no_code');
           return;
         }

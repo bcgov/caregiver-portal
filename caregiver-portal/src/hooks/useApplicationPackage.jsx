@@ -38,10 +38,8 @@ export const useApplicationPackage = () => {
     setLoading(true);
     setError(null);
 
-    try {
-      console.log('Fetching application packages');        
+    try {       
       const url = `${API_BASE_URL}/application-package`;
-      console.log(url);
       const response = await fetch(url, {
         method: 'GET',
         credentials: 'include',
@@ -53,7 +51,6 @@ export const useApplicationPackage = () => {
       }
 
       const result = await response.json();
-      console.log(result);
 
       return result;
     } catch (err) {
@@ -104,9 +101,7 @@ export const useApplicationPackage = () => {
   }, []);
 
   const getApplicationForms = useCallback(async (applicationPackageId) => {
-    console.log('Fetching forms for packageId:', applicationPackageId);
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
-    console.log('Request URL:', url);
     const response = await fetch(url, {
         method: 'GET',
         credentials: 'include',

@@ -126,8 +126,6 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
       return false;
     }
 
-    //console.log("checking for duplicate")
-
     const firstInitial = firstName.charAt(0).toUpperCase();
     const normalizedLastName = lastName.toLowerCase().trim();
 
@@ -181,10 +179,6 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     useEffect(() => {
       loadApplicationPackage();
     }, [loadApplicationPackage]);
-
-    //useEffect(() => {
-    //  console.log('Radio button states:', { hasPartner, hasHousehold });
-    //}, [hasPartner, hasHousehold]);
 
     useEffect(() => {
       if (hasHousehold && householdMembers.length === 0) {
@@ -412,7 +406,6 @@ useEffect(() => {
 
         // Duplicate check when email is entered (for adults)
         if (value && member.firstName && member.lastName && member.dob) {
-          //console.log('Running duplicate check on email change');
           const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
           if (dupCheck.isDuplicate) {
             setDuplicateErrors(prev => ({
@@ -434,7 +427,6 @@ useEffect(() => {
     // Duplicate check for relationship changes
     if (field === 'relationship') {
       if (value && member.firstName && member.lastName && member.dob) {
-        //console.log('Running duplicate check on relationship change');
         const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
         if (dupCheck.isDuplicate) {
           setDuplicateErrors(prev => ({
@@ -450,7 +442,6 @@ useEffect(() => {
     // duplicate check for gender changes
     if (field === 'genderType') {
       if (value && member.firstName && member.lastName && member.dob) {
-        //console.log('Running duplicate check on gender change');
         const dupCheck = checkForDuplicate(member.firstName, member.lastName, member.dob, memberId);
         if (dupCheck.isDuplicate) {
           setDuplicateErrors(prev => ({
@@ -514,7 +505,6 @@ useEffect(() => {
     useEffect(() => {
       const timer = setTimeout(() => {
         if (hasPartner && partner.firstName && partner.lastName && partner.dob && partner.email && partner.relationship && partner.genderType && !emailValidationErrors['partner-email'] && !fieldLengthErrors['partner-email'] && calculateAge(partner.dob) >= MIN_ADULT_AGE) {
-          //console.log('Auto-saving partner data:', partner);
           saveHouseholdMember(partner).catch(console.error);
       }
     }, 2000); // 2 seconds delay      
@@ -540,33 +530,13 @@ useEffect(() => {
               fieldLengthErrors[`member-${memberId}-lastName`] ||
               fieldLengthErrors[`member-${memberId}-email`] ||
               fieldLengthErrors[`member-${memberId}-dob`];
-            const hasDuplicateError = duplicateErrors[`member-${memberId}`];      
-          
-          /*
-          // Debug logging
-          console.log('Auto-save check for member:', {
-            memberId,
-            name: `${member.firstName} ${member.lastName}`,
-            age,
-            isAdult,
-            isComplete,
-            hasEmailIfAdult,
-            hasEmailError,
-            hasFieldLengthError,
-            hasDuplicateError,
-            isDirty: member.isDirty,
-            email: member.email,
-            genderType: member.genderType,
-            willSave: isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty
-          });
-          */               
+            const hasDuplicateError = duplicateErrors[`member-${memberId}`];                    
   
           // only save if complete, valid and dirty
           if (isComplete && hasEmailIfAdult && !hasEmailError && !hasFieldLengthError && !hasDuplicateError && member.isDirty) {
             const saveId = member.householdMemberId || `temp-${member.index}`;
 
             if (!savingMembersRef.current.has(saveId)) {
-              console.log('Auto-saving household member:', member);
               savingMembersRef.current.add(saveId);
 
               saveHouseholdMember(member)
@@ -592,9 +562,7 @@ useEffect(() => {
                   }
                   savingMembersRef.current.delete(saveId);
                 });
-            } else {
-              console.log('Already saving this member, skipping:', saveId);
-            }
+            } 
           }
         }
       }
