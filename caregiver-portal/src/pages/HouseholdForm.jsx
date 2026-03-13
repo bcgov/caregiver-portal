@@ -8,7 +8,6 @@ import { useHousehold } from '../hooks/useHousehold';
 
 const HouseholdForm = () => {
   const { applicationPackageId, applicationFormId } = useParams();
-  //const navigate = useNavigate();
 
   const [nextUrl, setNextUrl] = useState('');
   const { getApplicationForms } = useApplicationPackage();  
@@ -22,12 +21,6 @@ const HouseholdForm = () => {
     // Mock applicationForm object for the breadcrumb
     const householdFormStatus = useMemo(() => {
       const isComplete = householdHook.isHouseholdComplete();
-      console.log('Recalculating household status:', {
-        hasPartner: householdHook.hasPartner,
-        hasHousehold: householdHook.hasHousehold,
-        isComplete
-      });
-
 
       return {
         type: 'My household',
@@ -35,8 +28,6 @@ const HouseholdForm = () => {
       };
     }, [householdHook]);
 
-    
-    console.log('Current status:', householdFormStatus.status);
 
   // Load all forms to determine next form in sequence
   useEffect(() => {

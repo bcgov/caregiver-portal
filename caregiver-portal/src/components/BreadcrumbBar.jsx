@@ -13,7 +13,6 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
     const isFormComplete = isFormValid || applicationForm?.status === 'Complete' || applicationForm?.status === 'Submitted';
 
     const handleBackClick = () => {
-        //console.log("Back: isFormComplete()", isFormComplete);
         if (onBack) {
             onBack();
             return;
@@ -158,7 +157,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
                     cursor: message ? 'not-allowed' : 'pointer'
                 }}
             >
-                Next section <ArrowRight/>
+                Next <span className="hide-on-tiny-screens">section</span> <ArrowRight/>
             </Button>
         </div>
       );

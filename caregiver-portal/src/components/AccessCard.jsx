@@ -10,7 +10,6 @@ const AccessCard = ({login, active = true}) => {
     const [showSuccess, setShowSuccess] = React.useState('');
     const { associateAccessCode, isLoading } = useAccessCode();
     const navigate = useNavigate();
-    //const [isLoading, setIsLoading] = React.useState(false);
 
     const handleClick = async(e) => {
 
@@ -27,7 +26,6 @@ const AccessCard = ({login, active = true}) => {
             const result = await associateAccessCode(accessCode.trim());
             setShowSuccess('Access code associated successfully, opening screening form...');
             //setMessage('Access code associated successfully, opening screening form...');
-            console.log("Access code associated, result:", result);
             // navigate to the application page using the returned applicationId
             setTimeout(() => {
                 navigate(`/screening-package/${result.householdMemberId}`);

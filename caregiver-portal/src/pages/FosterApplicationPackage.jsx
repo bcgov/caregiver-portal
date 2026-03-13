@@ -67,9 +67,6 @@ const FosterApplicationPackage = () => {
           !form.type?.toLowerCase().includes('indigenous')
         );
 
-        //console.log("NonHouseholdForms:",nonHouseholdForms)
-
-
         const allFormsComplete = nonHouseholdForms.length > 0 &&
           nonHouseholdForms.every(form => form.status === 'Complete');
         // Both conditions must be true
@@ -80,12 +77,10 @@ const FosterApplicationPackage = () => {
         setIsSubmitting(true);
         try {
           const result = await lockApplicationPackage(applicationPackageId);
-          console.log('lock successful:', result);
           setIsApplicationLocked(true);
           navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
-          console.error('lock failed:', error);
-          alert('Failed to lock application. Please try again.');
+          console.error(error);
         } finally {
           setIsSubmitting(false);
         }
@@ -94,17 +89,12 @@ const FosterApplicationPackage = () => {
       React.useEffect(() => {
         const loadPackage = async () => {
           try {
-            console.log('Loading package for packageId:', applicationPackageId)
             const appPackage = await getApplicationPackage(applicationPackageId);
-            console.log('Application package:', appPackage);
             setAppPackage(appPackage);
             if(appPackage.status === 'Submitted') {
-              console.log('locking application');
               setIsApplicationLocked(true);
               navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
-            } else {
-              console.log('not locking application');
-            }
+            } 
           } catch (error) {
             console.error('failed to load application package', error);
           }
@@ -116,9 +106,7 @@ const FosterApplicationPackage = () => {
         const loadForms = async () => {
           if (applicationPackageId) {
             try {
-              console.log('Loading forms for packageId:', applicationPackageId);
               const formsArray = await getApplicationForms(applicationPackageId);
-              console.log('loaded forms:', formsArray);
               setForms(formsArray);
             } catch (error) {
               console.error('Failed to load forms:', error);
@@ -133,28 +121,10 @@ const FosterApplicationPackage = () => {
           if (applicationPackageId) {
             const householdStatus = await validateHouseholdCompletion(applicationPackageId)
             setHousehold(householdStatus);
-            console.log('household status:', householdStatus);
         }
         };
         loadHouseholdStatus();
       }, []);
-
-      console.log('applicationPackageId:', applicationPackageId);
-      console.log('forms:', forms);
-
-
-  
-      
-    //const applicationPackageItems = [
-/*
-        {key: 'profile', label: 'About me', path: `/foster-application/application-package/${applicationPackageId}/application-form/${applicationFormId}`, description: 'Provide details about your household, lifestyle, and experience.'},
-        {key: 'household', label: 'My household and support network', path: `/foster-application/application-package/household-form/${applicationId}`, description: 'All adults in the household must consent to background checks.'},
-        {key: 'pastinvolvement', label: 'Past involvement with Child Welfare'},
-        {key: 'healthhistory', label: 'Health history'},
-        {key: 'placementconsiderations', label: 'Placement considerations'},
-        {key: 'references', label: 'References', description: 'All adults in the household must consent to background checks.'},        
-        {key: 'consent', label: 'Consent for prior contact check', description: 'Complete required training sessions.'},   
-*/// ]
 
     return (
       <div className="page">
@@ -166,7 +136,7 @@ const FosterApplicationPackage = () => {
           <h1 className="page-title">Application to provide foster family care</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
+          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">
