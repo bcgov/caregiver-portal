@@ -82,17 +82,11 @@ const ReferralPackage = () => {
       React.useEffect(() => {
         const loadPackage = async () => {
           try {
-            console.log('Loading package for packageId:', applicationPackageId)
             const appPackage = await getApplicationPackage(applicationPackageId);
-            console.log('Application package:', appPackage);
             setAppPackage(appPackage);
             if(appPackage.status === 'Submitted') {
-              console.log('locking application');
-              //setIsApplicationLocked(true);
               navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
-            } else {
-              console.log('not locking application');
-            }
+            } 
           } catch (error) {
             console.error('failed to load application package', error);
           }
@@ -104,9 +98,7 @@ const ReferralPackage = () => {
         const loadForms = async () => {
           if (applicationPackageId) {
             try {
-              console.log('Loading forms for packageId:', applicationPackageId);
               const formsArray = await getApplicationForms(applicationPackageId);
-              console.log('loaded forms:', formsArray);
               setForms(formsArray);
             } catch (error) {
               console.error('Failed to load forms:', error);
@@ -115,9 +107,6 @@ const ReferralPackage = () => {
         };
         loadForms();
       }, []);
-
-      console.log('applicationPackageId:', applicationPackageId);
-      console.log('forms:', forms);
 
     return (
       <div className="page">
@@ -129,7 +118,7 @@ const ReferralPackage = () => {
           <h1 className="page-title">Submit an Information Session Request</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
+          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">

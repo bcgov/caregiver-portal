@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('User Data Received:', data.user)
         setUser(data.user);
       } else {
         setUser(null);
@@ -49,7 +48,6 @@ export const AuthProvider = ({ children }) => {
     const USE_KONG_OIDC = import.meta.env.VITE_USE_KONG_OIDC === 'true';
 
     if (USE_KONG_OIDC) { 
-      console.log('KONG')
       window.location.href = `${API_BASE}/auth/login`;
     } else {
 
@@ -65,9 +63,6 @@ export const AuthProvider = ({ children }) => {
       const state = generateRandomState();
       sessionStorage.setItem('oauth_state', state);
 
-      console.log('Generated state:', state);
-      console.log('Session state before redirect:', sessionStorage.getItem('oauth_state'));
-
       // Redirect to BC Services Card authorization
       const params = new URLSearchParams({
         response_type: 'code',
@@ -79,14 +74,11 @@ export const AuthProvider = ({ children }) => {
       });
 
       const authUrl = `${BCSC_AUTHORITY}/protocol/openid-connect/auth?${params}`;
-      console.log('authURL:', authUrl)
       window.location.href = authUrl;
     }
   };
 
   const logout = async () => {
-
-
       window.location.href = `${API_BASE}/auth/logout`;
 
   };

@@ -16,7 +16,6 @@ const MedicalForms = () => {
   const [isDeclarationChecked, setIsDeclarationChecked] = useState(false);
   const { uploadAttachment, getAttachmentsByHouseholdId, deleteAttachment, uploadMedicalAssessment } = useAttachments();
   const [uploadedFiles, setUploadedFiles ] = React.useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const medicalUploadsInPortal = import.meta.env.VITE_UPLOAD_MEDICAL === 'true';
 
   const  back = `/foster-application/${applicationPackageId}`
@@ -30,10 +29,6 @@ const MedicalForms = () => {
 
     const handleUpload = async (uploadData) => {
       try {
-        //const lastDotIndex = uploadData.fileName.lastIndexOf('.');
-        //const fileExtension = uploadData.fileType.startsWith('.')
-        //  ? uploadData.fileType.substring(1)
-        //  : uploadData.fileType;
         
         const existingSequences = uploadedFiles.filter(
           file => file.attachmentType === uploadData.attachmentType
@@ -75,7 +70,6 @@ const MedicalForms = () => {
     const loadAttachments = async () => {
       try {
         const attachments = await getAttachmentsByHouseholdId(householdMemberId);
-        console.info("getting attachments", attachments);
         
         setUploadedFiles(attachments);
       } catch (error) {
@@ -86,20 +80,16 @@ const MedicalForms = () => {
     React.useEffect(() => {
       if (applicationPackageId) {
         loadAttachments();
-      } else {
-        console.error("no bueno");
       }
     }, []);
 
     const handleSubmitMedicalForms = async () => {
       try {
         if(!householdMemberId || !applicationPackageId) {
-          console.error('Missing required IDs');
           return;
         }
         
-        const result = await uploadMedicalAssessment(applicationPackageId);
-        console.log(`Marked ${result.formsUpdated} screening form(s) as attached`);
+        await uploadMedicalAssessment(applicationPackageId);
         navigate(back)
       } catch (error) {
         console.error('Failed to mark form as attached:', error);
@@ -164,7 +154,7 @@ const MedicalForms = () => {
           householdMemberId={householdMemberId}
           isLocked={false}
           acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
-          maxSizeMB={10}
+          maxSizeMB={5}
           description="Medical Assessment"
           />   
        </div>
