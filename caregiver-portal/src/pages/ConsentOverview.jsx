@@ -229,6 +229,14 @@ const ConsentOverview = () => {
     setIsSavingEdit(true);
     try {
       await updateHouseholdMemberInfo(householdMemberId, editFormData);
+      const result = await resendMemberAccessCode(householdMemberId);                                                                                         
+      setAccessCode({
+        accessCode: result.accessCode,                                                                                                                        
+        expiresAt: result.expiresAt,                                                                                                                          
+        isUsed: false,                                                                                                                                        
+        attemptCount: 0,                                                                                                                                      
+      });
+      setResendsRemainingToday(result.resendsRemainingToday);
       const updated = await loadHouseholdMember(householdMemberId);
       setHouseholdMember(updated);
       setIsEditModalOpen(false);
