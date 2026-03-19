@@ -57,7 +57,7 @@ const Modal = ({
                     {title && <h2 className="modal-title">{title}</h2>}
                     {showCloseButton && (
                         <Button
-                            variant="secondary"
+                            variant="white"
                             onClick={onClose}
                             aria-label="Close modal"
                         >x</Button>
