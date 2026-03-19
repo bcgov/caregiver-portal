@@ -55,59 +55,61 @@ const AccessCard = ({login, active = true}) => {
                                     Did you receive an access code?
                                 </h2>
                             </div>    
-                        <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
+                        {!active && (
+                            <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, please log in.</p>
+                        )}
+                        
                         {active && (
                             <>
-                        <p className="task-card-content">
-                        Access code
-                        </p>
-                        <input type="text" 
-                        placeholder="e.g. XY74N9" 
-                        value={accessCode}
-                        onChange={(e) => setAccessCode(e.target.value)}
-                        disabled={isLoading}
-                        className='access-form-control'
-                        maxLength={6}
-                        />
+                                <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
+                                <p className="task-card-content">
+                                Access code
+                                </p>
+                                <input type="text" 
+                                placeholder="e.g. XY74N9" 
+                                value={accessCode}
+                                onChange={(e) => setAccessCode(e.target.value)}
+                                disabled={isLoading}
+                                className='access-form-control'
+                                maxLength={6}
+                                />
 
-                        {message && !showSuccess && (
-                            <p style={{ color: message.includes('verified') ? 'green' : 'red', margin: '10px 0'}}>
-                                {message}
-                            </p>
-                        )}
+                                {message && !showSuccess && (
+                                    <p style={{ color: message.includes('verified') ? 'green' : 'red', margin: '10px 0'}}>
+                                        {message}
+                                    </p>
+                                )}
+                 
+                                <Button 
+                                    variant="primary" 
+                                    onClick={handleClick}
+                                    >
+                                    {isLoading ? 'Verifying...' : 'Continue'}
+                                    <ArrowRight className="minor"></ArrowRight>
+                                    </Button>                    
 
+                                    </>
+                                )}
+
+                                {!active && (
+                                    <Button 
+                                    variant="primary" 
+                                    onClick={login}
+                                    >
+                                    {isLoading ? 'Verifying...' : 'Create Account / Log In'}
+                                    </Button>                    
+                                )}
                         
-                    
-                        <Button 
-                            variant="primary" 
-                            onClick={handleClick}
-                            >
-                            {isLoading ? 'Verifying...' : 'Continue'}
-                            <ArrowRight className="minor"></ArrowRight>
-                            </Button>                    
-
-                            </>
-                        )}
-
-                        {!active && (
-                        <Button 
-                        variant="primary" 
-                        onClick={login}
-                        >
-                        {isLoading ? 'Verifying...' : 'Create Account / Log In'}
-                        </Button>                    
-                        )}
-                        
-                        {/* Access Code Verification Overlay */}
-                        {isLoading && !showSuccess && (
-                            <div className="submission-overlay">
-                            <div className="submission-modal">
-                                <Loader2 className="submission-spinner" />
-                                <p className="submission-title">Verifying Access Code</p>
-                                <p className="submission-text">{message}</p>
-                            </div>
-                            </div>
-                        )}
+                                {/* Access Code Verification Overlay */}
+                                {isLoading && !showSuccess && (
+                                    <div className="submission-overlay">
+                                    <div className="submission-modal">
+                                        <Loader2 className="submission-spinner" />
+                                        <p className="submission-title">Verifying Access Code</p>
+                                        <p className="submission-text">{message}</p>
+                                    </div>
+                                    </div>
+                                )}
         
 
               {showSuccess && (
