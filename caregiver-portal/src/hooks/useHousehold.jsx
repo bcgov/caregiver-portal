@@ -384,7 +384,38 @@ export const useHousehold = ({applicationPackageId}) => {
     }, [applicationPackageId]);
 
 
+  const updateHouseholdMemberInfo = useCallback(async (householdMemberId, { lastName, dateOfBirth, email
+  }) => {
+      const response = await fetch(`${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}`,
+          {
+              method: 'PATCH',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ lastName, dateOfBirth, email }),
+          }
+      );
+      if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+  }, [applicationPackageId]);
 
+  const resendMemberAccessCode = useCallback(async (householdMemberId) => {
+    const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/household-members/${householdMemberId}/access-code/resend`,
+        {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+        }
+    );
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    }
+    return await response.json(); // { accessCode, expiresAt, isNew, resendsRemainingToday }
+}, [applicationPackageId]);
   
     return {
         // state
@@ -410,6 +441,8 @@ export const useHousehold = ({applicationPackageId}) => {
         saveHouseholdMember,
         addHouseholdMember,
         updatePartner,
+        updateHouseholdMemberInfo,
+        resendMemberAccessCode,
         updateHouseholdMember,
         removeHouseholdMember,
         removePartner,
