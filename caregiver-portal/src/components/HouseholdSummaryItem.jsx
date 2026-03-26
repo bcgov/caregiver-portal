@@ -17,15 +17,15 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                     }
 
                     { member.screeningInfoProvided && (
-                    <div className="caption">Tasks completed</div>
+                    <div>Tasks completed</div>
                     )}
 
                     { !member.screeningInfoProvided && member.requireScreening && (
-                    <div className="caption">Tasks still outstanding</div>
+                    <div>Tasks still outstanding</div>
                     )}
 
                     { !member.requireScreening && (
-                    <div className="caption">Screening information is not required for non-adult household members.</div>
+                    <div>Screening information is not required for non-adult household members.</div>
                     )}
                 </div>
             </div>
