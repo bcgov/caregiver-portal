@@ -149,7 +149,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
                 variant='next' 
                 onClick={handleNextClick}
                 //disabled={!isFormComplete && applicationForm?.status}
-                disable={!!message}
+                disabled={!!message}
                 style={{
                     //opacity: (!isFormComplete && applicationForm?.status) ? 0.5 : 1,
                     //cursor: (!isFormComplete && applicationForm?.status) ? 'not-allowed' : 'pointer'

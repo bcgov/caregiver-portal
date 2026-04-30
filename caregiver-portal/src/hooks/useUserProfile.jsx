@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8090/api';
 
@@ -37,5 +37,23 @@ export const useUserProfile = () => {
     fetchUserProfile();
   }, []);
 
-  return { userProfile, loading, error };
+  const getHouseholdMemberScreeningStatus = useCallback(async () => {                                                            
+    try {                                     
+      const response = await fetch(`${API_BASE_URL}/household/members`, {                                            
+        method: 'GET',                                                                                               
+        credentials: 'include',                                                                                      
+        headers: { 'Content-Type': 'application/json' },                                                             
+      });                                                                                                            
+      if (!response.ok) {
+        throw new Error(`Failed to fetch household member screening status: ${response.status}`);                    
+      }                                   
+      return await response.json();
+    } catch (err) {                                                                                                  
+      console.error('Error fetching household member screening status:', err);
+      return [];                                                                                                     
+    }             
+  }, []);                                                                                                                 
+  
+
+  return { userProfile, loading, error, getHouseholdMemberScreeningStatus };
 };

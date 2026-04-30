@@ -6,7 +6,7 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
-import OOCApplicationStart from '../components/OOCApplicationStart';
+//import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
@@ -16,6 +16,7 @@ import { Loader2 } from 'lucide-react';
 const Dashboard = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [householdMemberships, setHouseholdMemberships] = React.useState([]);
 
   const {
     createApplicationPackage,
@@ -24,7 +25,7 @@ const Dashboard = () => {
     //error
   } = useApplicationPackage();
 
-  const { userProfile } = useUserProfile();
+  const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
   const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
@@ -41,7 +42,6 @@ const Dashboard = () => {
       console.error('Failed to load applications:', err);
     }
   }, []);
-
 
   const {
     getApplicationForms,
@@ -67,11 +67,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!auth.loading && auth.user) {
+      getHouseholdMemberScreeningStatus().then(setHouseholdMemberships);
       loadApplicationPackages();
       loadApplicationForms();
     }
 
-  }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms]);
+  }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms, getHouseholdMemberScreeningStatus]);
 
     if (auth.loading) {
     return (            
@@ -109,7 +110,7 @@ const Dashboard = () => {
             <div className="task-content-row">
               <div className="task-list">
               
-                {(applicationPackages?.length > 0 || screeningForms?.length > 0) && (
+                {(applicationPackages?.length > 0 || householdMemberships?.length > 0) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">My tasks</h2>
@@ -122,11 +123,16 @@ const Dashboard = () => {
                     )}
                   </>
                 ))}
-                {screeningForms?.map((app, index) => (
-                  <div key={app[0]?.householdMemberId || index}>
-                    <ScreeningTaskCard applicationFormSet={app} />
-                  </div>
-                ))}
+                {householdMemberships?.map((membership) => {
+                  const formGroup = screeningForms?.find(group =>
+                    group[0]?.householdMemberId === membership.householdMemberId
+                  ) ?? [];
+                  return (
+                    <div key={membership.householdMemberId}>
+                    <ScreeningTaskCard applicationFormSet={formGroup} householdMembership={membership} />
+                    </div>
+                  );
+                })}
                 {(applicationPackages?.length ===0) && (
                   <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}

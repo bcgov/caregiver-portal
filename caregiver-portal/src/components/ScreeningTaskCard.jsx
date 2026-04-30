@@ -3,20 +3,13 @@ import Button from './Button';
 import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const ScreeningTaskCard = ({applicationFormSet}) => {
+const ScreeningTaskCard = ({applicationFormSet, householdMembership}) => {
     const navigate = useNavigate();
-      // Guard: return null if no forms provided
-      if (!applicationFormSet || applicationFormSet.length === 0) {
-        return null;
-      }
 
-    const householdMemberId = applicationFormSet[0]?.householdMemberId;
-    const numberOfForms = applicationFormSet.length;
-    const numberOfCompleteForms = applicationFormSet.filter(form => form.status === "Complete").length;
-
+    const householdMemberId = applicationFormSet?.[0]?.householdMemberId ?? householdMembership?.householdMemberId;
     // Get latest submission date
     const latestSubmittedAt = applicationFormSet
-    .filter(form => form.submittedAt)
+    ?.filter(form => form.submittedAt)
     .reduce((latest, form) => {
       const currentDate = new Date(form.submittedAt);
       return !latest || currentDate > new Date(latest) ? form.submittedAt : latest;
@@ -29,9 +22,9 @@ const ScreeningTaskCard = ({applicationFormSet}) => {
     };
 
     return (
-      <div className="task-card" onClick={() => numberOfCompleteForms === numberOfForms ? null : handleClick()}>
+      <div className="task-card" onClick={() => householdMembership?.screeningInfoProvided ? null : handleClick()}>
 
-      {numberOfCompleteForms === numberOfForms && 
+      {householdMembership?.screeningInfoProvided && 
         <div className="task-card-content">
                 
             <div className="task-card-title">Your household screening form was successfully submitted</div>
@@ -39,11 +32,11 @@ const ScreeningTaskCard = ({applicationFormSet}) => {
 
         </div>
       }
-      {numberOfCompleteForms < numberOfForms && 
+      {!householdMembership?.screeningInfoProvided && 
         <div className="task-card-content">
                 
             <div className="task-card-title">Complete your foster caregiver household screening</div>
-            <div className="caption-small">{numberOfCompleteForms} of {numberOfForms} complete</div>
+
             <Button variant="primary">Continue<ArrowRight></ArrowRight></Button>
         </div>
       }
