@@ -21,7 +21,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
 
     return (
         <div className="page-details-content-col">
-        <h1 className="page-title">Consents from household members</h1>
+        <h1>Consents from household members</h1>
         <div className="section-description">
         In order to process your application, each adult you listed as residing in your household will need to submit to a screening process.
         </div>

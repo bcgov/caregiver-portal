@@ -6,6 +6,13 @@ body {
     color: var(--typography-color-primary);
   }
 
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
 
 /** Header Styles **/
 

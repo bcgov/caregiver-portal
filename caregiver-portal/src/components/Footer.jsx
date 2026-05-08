@@ -16,7 +16,7 @@ const Footer = () => {
             </div>
             <div className="footer-links-row">
                 <a href="/login">Home</a>
-                <a href="#">Privacy</a>
+                <a href="/privacy">Privacy</a>
                 <a href="/contactus">Contact us</a>
             </div>
             <div className="footer-links-header">
