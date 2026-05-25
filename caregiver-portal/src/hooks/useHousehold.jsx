@@ -21,6 +21,7 @@ export const useHousehold = ({applicationPackageId}) => {
         isDirty: false
     });
 
+    const [primaryApplicant, setPrimaryApplicant] = useState(null);
     const [householdMembers, setHouseholdMembers] = useState([]); // all non-spouse household members 
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
@@ -75,6 +76,15 @@ export const useHousehold = ({applicationPackageId}) => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            // locate the primary applicant and save it
+            const selfMember = data.find(member => member.relationshipToPrimary === 'Self');
+            if (selfMember) {
+                setPrimaryApplicant({
+                    firstName: selfMember.firstName,
+                    lastName: selfMember.lastName,
+                    dob: selfMember.dateOfBirth,
+                }); 
+            } 
             // remove primary applicant from household data
             const householdData = data.filter(member => member.relationshipToPrimary !== 'Self'); 
             // find partner/spouse in household data
@@ -422,6 +432,7 @@ export const useHousehold = ({applicationPackageId}) => {
   
     return {
         // state
+        primaryApplicant,
         partner,
         householdMembers,
         isLoading,
@@ -454,6 +465,7 @@ export const useHousehold = ({applicationPackageId}) => {
         loadApplicationPackage,
         getAccessCode,
         isHouseholdComplete,
+        
       };
 
 };
