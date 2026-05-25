@@ -79,10 +79,15 @@ export const useHousehold = ({applicationPackageId}) => {
             // locate the primary applicant and save it
             const selfMember = data.find(member => member.relationshipToPrimary === 'Self');
             if (selfMember) {
+                const rawDob = selfMember.dateOfBirth || '';
+                const parts = rawDob.split('/');
+                const normalizedDob = parts.length === 3
+                    ? `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`
+                    : rawDob.substring(0, 10);
                 setPrimaryApplicant({
                     firstName: selfMember.firstName,
                     lastName: selfMember.lastName,
-                    dob: selfMember.dateOfBirth,
+                    dob: normalizedDob,
                 }); 
             } 
             // remove primary applicant from household data
