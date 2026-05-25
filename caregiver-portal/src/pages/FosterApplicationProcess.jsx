@@ -14,7 +14,6 @@ const FosterApplicationProcess = () => {
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [showReferralModal, setShowReferralModal] = React.useState(false);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
-  //const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const [householdMemberId, setHouseholdMemberId] = React.useState(null);
   const resubmitLink = `/foster-application/${applicationPackageId}/resubmit`;
   const navigate = useNavigate();
@@ -36,6 +35,8 @@ const FosterApplicationProcess = () => {
     'Submitted': 4,
     'Complete': 5
   }
+
+  const resubmit_on = import.meta.env.VITE_RESUBMIT_ON === 'true' || false;
 
   const getCurrentStep = (status) => {
     return statusStepMap[status]
@@ -83,9 +84,6 @@ const FosterApplicationProcess = () => {
     }
 
     switch(step.key) {
-      //case "referral":
-      //  navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
-      //  break;
       case "consent":
         navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
         break;
@@ -291,11 +289,12 @@ return (
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
 
+                { resubmit_on && (
                 <Button variant="white"
                   onClick={() => navigate(resubmitLink)}
                   disabled={isDeleting}
                   ><FilePlus size="16" />Add/Update Application Forms</Button>                  
-                  
+                )}
 
                   <ConfirmationModal
                     isOpen={showDeleteModal}
