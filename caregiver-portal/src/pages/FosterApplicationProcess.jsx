@@ -289,7 +289,7 @@ return (
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
 
-                { resubmit_on && (
+                { (resubmit_on && applicationPackage?.status === 'Submitted' ) && (
                 <Button variant="white"
                   onClick={() => navigate(resubmitLink)}
                   disabled={isDeleting}
