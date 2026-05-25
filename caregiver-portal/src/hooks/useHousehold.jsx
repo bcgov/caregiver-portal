@@ -231,9 +231,9 @@ export const useHousehold = ({applicationPackageId}) => {
                         let updatedMember = { ...member, [field]: value };
                         // Clear gender/email when crossing adult/non-adult boundary
                         
-                        if (field === 'dob' && value) {
+                        if (field === 'dob' && value && member.dob) {
                             const newAge = calculateAge(value);
-                            const oldAge = member.dob ? calculateAge(member.dob) : 0;
+                            const oldAge = calculateAge(member.dob);
                             // Changed from non-adult to adult - clear gender
                             if (oldAge < 19 && newAge >= 19) {
                                 updatedMember.genderType = '';
