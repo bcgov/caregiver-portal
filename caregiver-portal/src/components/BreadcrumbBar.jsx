@@ -6,7 +6,7 @@ import Breadcrumb from '../components/Breadcrumb';
 
 
 // TODO: This set of parameters is OUT OF CONTROL
-const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, isFormValid, navigationTargetRef, onNext, onBack}) => {
+const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, isFormValid, navigationTargetRef, onNext, onBack, nextLabel}) => {
    const navigate = useNavigate();
 
     // Check if form is complete
@@ -157,7 +157,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
                     cursor: message ? 'not-allowed' : 'pointer'
                 }}
             >
-                Next <span className="hide-on-tiny-screens">section</span> <ArrowRight/>
+                {nextLabel ?? <>Next <span className="hide-on-tiny-screens">section</span></>} <ArrowRight/>
             </Button>
         </div>
       );

@@ -6,7 +6,6 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
-//import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
@@ -133,7 +132,7 @@ const Dashboard = () => {
                     </div>
                   );
                 })}
-                {(applicationPackages?.length ===0) && (
+                {(applicationPackages?.length === 0) && (
                   <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}
 

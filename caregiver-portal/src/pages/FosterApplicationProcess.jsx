@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import "../DesignTokens.css";
 import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
-import { Trash } from 'lucide-react';
+import { Trash, FilePlus } from 'lucide-react';
 import Button from '../components/Button';
 import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
@@ -14,8 +14,8 @@ const FosterApplicationProcess = () => {
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [showReferralModal, setShowReferralModal] = React.useState(false);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
-  const [referralApplicationFormId, setReferralApplicationFormId] = React.useState(null);
   const [householdMemberId, setHouseholdMemberId] = React.useState(null);
+  const resubmitLink = `/foster-application/${applicationPackageId}/resubmit`;
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
@@ -35,6 +35,8 @@ const FosterApplicationProcess = () => {
     'Submitted': 4,
     'Complete': 5
   }
+
+  const resubmit_on = import.meta.env.VITE_RESUBMIT_ON === 'true' || false;
 
   const getCurrentStep = (status) => {
     return statusStepMap[status]
@@ -60,8 +62,10 @@ const FosterApplicationProcess = () => {
           //setForms(formsArray);
           setApplicationPackage(packageData);
 
+          console.log(packageData);
+
           const referralForm = formsArray.find(form => form.type === 'Referral');
-          setReferralApplicationFormId(referralForm?.applicationFormId || null);
+          //setReferralApplicationFormId(referralForm?.applicationFormId || null);
           setHouseholdMemberId(referralForm?.householdMemberId || null);
         } catch (error) {
           console.error('Failed to load forms:', error);
@@ -80,9 +84,6 @@ const FosterApplicationProcess = () => {
     }
 
     switch(step.key) {
-      //case "referral":
-      //  navigate(`/foster-application/application-package/${applicationPackageId}/referral-form/${referralApplicationFormId}`);
-      //  break;
       case "consent":
         navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
         break;
@@ -164,7 +165,7 @@ const FosterApplicationProcess = () => {
           iconType: 'start',
         }
       } 
-      if (step.key === 'application' && (applicationPackage?.status === 'Consent' || applicationPackage?.status === 'Submitted')) {
+      if (step.key === 'application' && (applicationPackage?.status === 'Consent' || applicationPackage?.status === 'Submitted' || applicationPackage?.status === 'Ready')) {
 
         return {
           ...step,
@@ -197,6 +198,14 @@ const FosterApplicationProcess = () => {
           description: 'Screening process is underway. You may proceed to complete your medical forms with the assistance of an authorized healthcare practitioner.',
           disabled: false,
           iconType: 'start',
+        }
+      }
+
+      if (step.key === 'screening' && (applicationPackage?.status === 'Ready')) {
+        // to cover the 2 minute interval that happens before the screening forms are completed that the cron job picks up the package to submit it
+        return {
+          ...step,
+          iconType: 'waiting',
         }
       }
 
@@ -243,9 +252,6 @@ const FosterApplicationProcess = () => {
 
         }
       }
-
-      
-
       return step;
     });
   }
@@ -282,6 +288,13 @@ return (
                   onClick={() => handleCancel(applicationPackageId)}
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
+
+                { (resubmit_on && applicationPackage?.status === 'Submitted' ) && (
+                <Button variant="white"
+                  onClick={() => navigate(resubmitLink)}
+                  disabled={isDeleting}
+                  ><FilePlus size="16" />Add/Update Application Forms</Button>                  
+                )}
 
                   <ConfirmationModal
                     isOpen={showDeleteModal}

@@ -13,6 +13,7 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
   const {calculateAge} = useDates();
 
   const {
+    primaryApplicant,
     partner,
     householdMembers,
     saveStatus,
@@ -173,6 +174,17 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
 
     return { isDuplicate: false };
   };
+  
+  // helper to check of the household member is also the primary applicant; this is an error
+  const isPrimaryApplicantDuplicate = (firstName, lastName, dob) => {
+    if (!primaryApplicant || !firstName || !lastName || !dob) return false;
+    console.log('primary dob:', JSON.stringify(primaryApplicant.dob), 'entered dob:', JSON.stringify(dob));
+    return (
+        firstName.charAt(0).toUpperCase() === primaryApplicant.firstName.charAt(0).toUpperCase() &&
+        lastName.toLowerCase().trim() === primaryApplicant.lastName.toLowerCase().trim() &&
+        dob === primaryApplicant.dob
+    );  
+}; 
 
     // set initial UI state based on loaded data
 
@@ -210,6 +222,12 @@ useEffect(() => {
         }
       }
     }
+    if (
+      !newDuplicateErrors['partner'] &&
+      isPrimaryApplicantDuplicate(partner.firstName, partner.lastName, partner.dob)
+  ) { 
+      newDuplicateErrors['partner'] = 'This person matches the primary applicant and cannot be added as a household member.';
+  }
   }
 
   // Validate each household member
@@ -257,16 +275,23 @@ useEffect(() => {
           }
         }
       }
+
+      if (
+        !newDuplicateErrors[`member-${memberId}`] &&
+        isPrimaryApplicantDuplicate(member.firstName, member.lastName, member.dob)
+    ) { 
+        newDuplicateErrors[`member-${memberId}`] = 'This person matches the primary applicant and cannot be added as a household member.';
+    }
     });
   }
 
   setDuplicateErrors(newDuplicateErrors);
-}, [householdMembers, hasHousehold, hasPartner, partner.firstName, partner.lastName, partner.dob]);
+}, [primaryApplicant, householdMembers, hasHousehold, hasPartner, partner.firstName, partner.lastName, partner.dob]);
 
     // updatePartner with age validation
     const handleUpdatePartner = (field, value) => {
 
-      console.log("handleUpdatePartner:", field, value);
+      //console.log("handleUpdatePartner:", field, value);
       // Field length validation
       if (field === 'firstName' || field === 'lastName') {
         if (!validateFieldLength(value, MAX_NAME_LENGTH, field === 'firstName' ? 'First name' : 'Last name', `partner-${field}`)) {
@@ -324,7 +349,7 @@ useEffect(() => {
           ...prev,
           'partner': `This person (${dupCheck.name}) is already in your household; they can be removed.`
         }));
-        setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
+        //setDuplicateErrors(prev => ({ ...prev, 'partner': '' }));
         updatePartner(field, value);
         return;
       } else {
@@ -346,6 +371,20 @@ useEffect(() => {
           }
         }
       }    
+
+    // check against primary applicant
+    const partnerFirstName = field === 'firstName' ? value : partner.firstName;
+    const partnerLastName = field === 'lastName' ? value : partner.lastName;
+    const partnerDob = field === 'dob' ? value : partner.dob;
+
+    if (isPrimaryApplicantDuplicate(partnerFirstName, partnerLastName, partnerDob)) {
+      setDuplicateErrors(prev => ({
+        ...prev,
+        'partner': 'This person matches the primary applicant and cannot be added as the spouse.'
+      }));
+    } else if (!duplicateErrors['partner']) {
+      setDuplicateErrors(prev => ({ ...prev, 'partner': ''}));
+    }
 
     updatePartner(field, value);
   };
@@ -483,6 +522,19 @@ useEffect(() => {
       }
     }
 
+     // Check against primary applicant
+  const memberFirstName = field === 'firstName' ? value : member.firstName;
+  const memberLastName = field === 'lastName' ? value : member.lastName;
+  const memberDob = field === 'dob' ? value : member.dob;
+  if (isPrimaryApplicantDuplicate(memberFirstName, memberLastName, memberDob)) {
+      setDuplicateErrors(prev => ({
+          ...prev,
+          [`member-${memberId}`]: 'This person matches the primary applicant and cannot be added as a household member.'
+      }));  
+  } else if (!duplicateErrors[`member-${memberId}`]) {
+      setDuplicateErrors(prev => ({ ...prev, [`member-${memberId}`]: '' }));
+  } 
+
     // update the state at the end
     updateHouseholdMember(memberIndex, field, value);
   };
@@ -508,7 +560,18 @@ useEffect(() => {
       };            
     }, []); 
 
-    const isPartnerSaveable = (p) => hasPartner && p.isDirty && p.firstName && p.lastName && p.dob && p.email && p.relationship && p.genderType && !emailValidationErrors['partner-email'] && !fieldLengthErrors['partner-email'] && calculateAge(p.dob) >= MIN_ADULT_AGE;
+    const isPartnerSaveable = (p) => hasPartner && 
+                                      p.isDirty && 
+                                      p.firstName && 
+                                      p.lastName && 
+                                      p.dob && 
+                                      p.email && 
+                                      p.relationship && 
+                                      p.genderType && 
+                                      !emailValidationErrors['partner-email'] && 
+                                      !fieldLengthErrors['partner-email'] && 
+                                      !duplicateErrors['partner'] &&
+                                      calculateAge(p.dob) >= MIN_ADULT_AGE;
 
     const isMemberSaveable = (member) => {
       const isAdult = calculateAge(member.dob) >= MIN_ADULT_AGE; 
