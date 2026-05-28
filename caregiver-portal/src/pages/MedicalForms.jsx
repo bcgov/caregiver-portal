@@ -18,11 +18,15 @@ const MedicalForms = () => {
   const [uploadedFiles, setUploadedFiles ] = React.useState([]);
   const medicalUploadsInPortal = import.meta.env.VITE_UPLOAD_MEDICAL === 'true';
 
-  const  back = `/foster-application/${applicationPackageId}`
+  const basePath = location.pathname.startsWith('/kinship-application')
+  ? `/kinship-application/${applicationPackageId}`
+  : `/foster-application/${applicationPackageId}`;
+
+  const  back = basePath;
 
 
   const breadcrumbItems = [
-    { label: 'Become a foster caregiver', path: back },
+    { label: 'Back', path: back },
     { label: 'Providing your medical assessment forms'}
   ];
 
