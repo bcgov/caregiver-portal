@@ -18,7 +18,9 @@ import ContactUs from "./pages/ContactUs";
 import Privacy from './pages/Privacy';
 import HouseholdLanding from './pages/HouseholdLanding';
 import FosterApplicationProcess from './pages/FosterApplicationProcess';
+import KinshipApplicationProcess from './pages/KinshipApplicationProcess';
 import FosterApplicationPackage from './pages/FosterApplicationPackage';
+import KinshipApplicationPackage from './pages/KinshipApplicationPackage';
 import ApplicationForm from './pages/ApplicationForm';
 import ProfileForm from './pages/ProfileForm';
 import HouseholdForm from './pages/HouseholdForm';
@@ -64,19 +66,39 @@ const App = () => {
 
         {/* Protected routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
+        {/* Process */}
         <Route path="/foster-application/:applicationPackageId" element={<ProtectedRoute><FosterApplicationProcess /></ProtectedRoute>}/>
+        <Route path="/kinship-application/:applicationPackageId" element={<ProtectedRoute><KinshipApplicationProcess /></ProtectedRoute>}/>
+        {/* Form Resubmission */}
         <Route path="/foster-application/:applicationPackageId/resubmit" element={<ProtectedRoute><FormResubmissionList/></ProtectedRoute>}/>
+        <Route path="/kinship-application/:applicationPackageId/resubmit" element={<ProtectedRoute><FormResubmissionList/></ProtectedRoute>}/>
         <Route path="/foster-application/:applicationPackageId/resubmit/:applicationFormId" element={<ProtectedRoute><FormResubmission /></ProtectedRoute>}/>
+        <Route path="/kinship-application/:applicationPackageId/resubmit/:applicationFormId" element={<ProtectedRoute><FormResubmission /></ProtectedRoute>}/>
+        {/* Referral Package */}
         <Route path="/foster-application/referral-package/:applicationPackageId" element={<ProtectedRoute><ReferralPackage /></ProtectedRoute>}/>
         <Route path="/foster-application/referral-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ReferralApplicationForm /></ProtectedRoute>}/>
+        {/* Application Package*/}
         <Route path="/foster-application/application-package/:applicationPackageId" element={<ProtectedRoute><FosterApplicationPackage /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId" element={<ProtectedRoute><KinshipApplicationPackage /></ProtectedRoute>}/>
+        {/* Forms */}
         <Route path="/foster-application/application-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId/application-form/:applicationFormId" element={<ProtectedRoute><ApplicationForm /></ProtectedRoute>}/>
+
         <Route path="/foster-application/application-package/:applicationPackageId/referral-form/:applicationFormId" element={<ProtectedRoute><ReferralForm /></ProtectedRoute>}/>
+        {/* Household Form */}
         <Route path="/foster-application/application-package/:applicationPackageId/household-form/:applicationFormId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId/household-form/:applicationFormId" element={<ProtectedRoute><HouseholdForm /></ProtectedRoute>}/>
+        {/* Consent Summary */}
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
+        {/* Medical Forms */}
         <Route path="/foster-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
+        <Route path="/kinship-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
+        
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
+        {/* Screening Package */}
         <Route path="/screening-package/:householdMemberId" element={<ProtectedRoute><ScreeningPackage /></ProtectedRoute>}/>
         <Route path="/screening-package/:householdMemberId/screening-form/:applicationFormId" element={<ProtectedRoute><ScreeningForm /></ProtectedRoute>}/>
 
