@@ -7,7 +7,6 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileText, ArrowRight } from 'lucide-react';
 
-const EXCLUDED_TYPES = ['Referral', 'Adults in household', 'Indigenous Background and Preferences'];
 const HOUSEHOLD_FORM_TYPES = [
   'About Me (Spouse)',
   'Consent for Disclosure of Criminal Record Information',
@@ -29,6 +28,8 @@ const FormResubmissionList = () => {
     const location = useLocation();
     const basePath = location.pathname.replace(/\/resubmit$/, '');  
     const isKinship = location.pathname.startsWith('/kinship-application');
+
+    const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in household', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in household'];
 
     const breadcrumbItems = [
       { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
@@ -58,7 +59,22 @@ const FormResubmissionList = () => {
             getApplicationForms(applicationPackageId),
             //loadHousehold(),
           ]);
-          setApplicantForms(forms.filter(f => !EXCLUDED_TYPES.includes(f.type)));
+          const filtered  = forms.filter(f => !EXCLUDED_TYPES.includes(f.type));
+          // keep the newest form per type, in the original form's position
+          const positionByType = new Map(); // type -> index in de-duped array
+          const deduped = [];
+          for (const form of filtered) {
+            if (positionByType.has(form.type)) {
+              const idx = positionByType.get(form.type);
+              if (new Date(form.createdAt) > new Date(deduped[idx].createdAt)) {
+                deduped[idx] = form;
+              }
+            } else {
+              positionByType.set(form.type, deduped.length);
+              deduped.push(form);
+            }
+          }
+          setApplicantForms(deduped);
         } catch (err) {
           console.error('Failed to load forms:', err);
         } finally {
