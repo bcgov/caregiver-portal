@@ -2255,21 +2255,56 @@ a {
 
   }
 
+  .resubmission-subtitle {
+    display: flex;
+    max-width: 1120px;
+    flex-direction: column;
+    align-items:baseline;
+    margin: auto;    
+    padding-top: 60px;
+    padding-bottom: 20px;
+  }
+
+  .resubmission-group {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    
+  }
+
   .resubmission-form-row {
-    flex-direction: row;
-    gap: 20px;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
   }
 
   .resubmission-form-type {
     font-size: 18px;
     font-weight: 800;
-    line-height: 150%
+    line-height: 150%;
+    gap: 20px;
+    flex-direction: row;
+    padding-top: 24px;
   }
 
   .resubmission-form-date {
+    font-size: 16px;
+    font-weight: 200;
+    padding-left: 24px;
+  }
+
+  .inline-icon {
+    padding-right: 4px;
+  }
+
+  .resubmission-form-button {
     font-size: 18px;
     font-style:italic;
+    padding-left: 24px;
+    
   }
 
   @media (min-width: 641px) and (max-width: 960px) {

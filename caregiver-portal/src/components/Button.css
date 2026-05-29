@@ -77,12 +77,13 @@
     font-style: normal;
     font-weight: 400;
     line-height: 27.008px; /* 168.8% */
+    text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
     text-decoration-thickness: auto;
     text-underline-offset: auto;
     text-underline-position: from-font;
-    border: 1px solid  var(--typography-color-link, #255A90);
+   
   }
 
   .btn-learnmore {
