@@ -30,9 +30,9 @@ const KinshipApplicationProcess = () => {
   const statusStepMap = {
     'Draft': 1,
     'Referral Requested': 1,
-    'Application': 2,
-    'Consent': 3,
-    'Submitted': 4,
+    'Application': 1,
+    'Consent': 2,
+    'Submitted': 3,
     'Complete': 5
   }
 
