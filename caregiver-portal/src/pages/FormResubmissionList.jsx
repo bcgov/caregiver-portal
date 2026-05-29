@@ -126,10 +126,13 @@ const FormResubmissionList = () => {
     }, [isLoading, partner?.householdMemberId, householdMembers.length]);
     */
 
-    const renderFormRow = (form) => (
+    const renderFormRow = (form) => {
+      const isToday = form.submittedAt && new Date(form.submittedAt).toDateString() === new Date().toDateString();
+
+      return (  
       <div key={form.applicationFormId} className="resubmission-form-row">
         <span className="resubmission-form-type"><FileText size="20" className="inline-icon" />{form.type}</span>
-        <span className="resubmission-form-date">
+        <span className={`resubmission-form-date${isToday ? ' resubmission-form-date--today' : ''}`}>
           {form.submittedAt ? `Submitted on ${formatShortDate(form.submittedAt)}` : 'Not yet submitted'}
         </span>
         <span className="resubmission-form-button">
@@ -144,6 +147,7 @@ const FormResubmissionList = () => {
         </span>
       </div>
     );
+    }
 
     return (
       <div className="page">

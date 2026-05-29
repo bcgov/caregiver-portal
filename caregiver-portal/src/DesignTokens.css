@@ -2296,6 +2296,10 @@ a {
     padding-left: 24px;
   }
 
+  .resubmission-form-date--today {
+    font-weight: 600;
+  }
+
   .inline-icon {
     padding-right: 4px;
   }
