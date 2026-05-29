@@ -17,7 +17,8 @@ const Application = ({
   nextLabel, 
   submitPackage = false, 
   householdMemberId, 
-  Context = 'Application' }) => {
+  Context = 'Application',
+  basePath, }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -35,11 +36,13 @@ const Application = ({
 
     const navigate = useNavigate();
 
+    const resolvedBasePath = basePath || `/foster-application/application-package/${applicationPackageId}`;
+
     const home = Context === 'Screening' && householdMemberId
     ? `/screening-package/${householdMemberId}`
     : Context === 'Referral'
     ? `/foster-application/referral-package/${applicationPackageId}`
-    : `/foster-application/application-package/${applicationPackageId}`;
+    : resolvedBasePath;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
@@ -96,9 +99,9 @@ const Application = ({
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
               } else if (nextForm.type && nextForm.type === 'Adults in household') {
                 // Build URL based on form type (household vs regular)
-                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
+                nextFormUrl = `${resolvedBasePath}/household-form/${nextForm.applicationFormId}`;
               } else {
-                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`;
+                nextFormUrl = `${resolvedBasePath}/application-form/${nextForm.applicationFormId}`;
               }
               setNextUrl(nextFormUrl);
             } else {
@@ -165,12 +168,12 @@ const Application = ({
  */
     useEffect(() => {
       async function handleMessage(event) {  
-        
+        /*
         console.log('submit event received');
         console.log('typeof onSubmitComplete:', typeof onSubmitComplete);
         console.log('submitPackage:', submitPackage);
         console.log('event.data raw:', event.data, typeof event.data);
-        
+        */
 
         if (event.data === '{"event":"errorOnSave"}') {
           setIsFormValid(false);

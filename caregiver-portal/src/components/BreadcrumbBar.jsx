@@ -134,7 +134,7 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
 
 
     const breadcrumbItems = [
-        { label: 'Foster Caregiver Application Package', path: home},
+        { label: 'Application package', path: home},
         { label: getCurrentPageLabel(), path: next}
     ];
 

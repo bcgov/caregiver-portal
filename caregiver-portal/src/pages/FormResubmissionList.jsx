@@ -1,19 +1,17 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 //import { useHousehold } from '../hooks/useHousehold';
 import { useDates } from '../hooks/useDates';
-import { FilePlus } from 'lucide-react';
+import { FilePlus, FileText, ArrowRight } from 'lucide-react';
 
-const EXCLUDED_TYPES = ['Referral', 'Adults in household', 'Indigenous Background and Preferences'];
 const HOUSEHOLD_FORM_TYPES = [
   'About Me (Spouse)',
   'Consent for Disclosure of Criminal Record Information',
   'Consent for Prior Contact Check',
 ];
-
 
 const FormResubmissionList = () => {
     const { applicationPackageId } = useParams();
@@ -27,10 +25,16 @@ const FormResubmissionList = () => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [cloningId, setCloningId] = React.useState(null);
 
+    const location = useLocation();
+    const basePath = location.pathname.replace(/\/resubmit$/, '');  
+    const isKinship = location.pathname.startsWith('/kinship-application');
+
+    const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in household', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in household'];
+
     const breadcrumbItems = [
-        { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
-        { label: 'Update Application Forms' },
-      ];
+      { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
+      { label: 'Update Application Forms' },
+  ];
 
     const handleBackClick = (item) => navigate(item.path);
 
@@ -38,7 +42,8 @@ const FormResubmissionList = () => {
     setCloningId(form.applicationFormId);
     try {
         const { applicationFormId: newId } = await cloneApplicationForm(form.applicationFormId);
-        navigate(`/foster-application/${applicationPackageId}/resubmit/${newId}`);
+        const prefix = isKinship ? 'kinship-application' : 'foster-application';
+        navigate(`/${prefix}/${applicationPackageId}/resubmit/${newId}`);
     } catch (err) {
         console.error('Failed to clone form:', err);
         setCloningId(null);
@@ -54,7 +59,22 @@ const FormResubmissionList = () => {
             getApplicationForms(applicationPackageId),
             //loadHousehold(),
           ]);
-          setApplicantForms(forms.filter(f => !EXCLUDED_TYPES.includes(f.type)));
+          const filtered  = forms.filter(f => !EXCLUDED_TYPES.includes(f.type));
+          // keep the newest form per type, in the original form's position
+          const positionByType = new Map(); // type -> index in de-duped array
+          const deduped = [];
+          for (const form of filtered) {
+            if (positionByType.has(form.type)) {
+              const idx = positionByType.get(form.type);
+              if (new Date(form.createdAt) > new Date(deduped[idx].createdAt)) {
+                deduped[idx] = form;
+              }
+            } else {
+              positionByType.set(form.type, deduped.length);
+              deduped.push(form);
+            }
+          }
+          setApplicantForms(deduped);
         } catch (err) {
           console.error('Failed to load forms:', err);
         } finally {
@@ -106,21 +126,28 @@ const FormResubmissionList = () => {
     }, [isLoading, partner?.householdMemberId, householdMembers.length]);
     */
 
-    const renderFormRow = (form) => (
+    const renderFormRow = (form) => {
+      const isToday = form.submittedAt && new Date(form.submittedAt).toDateString() === new Date().toDateString();
+
+      return (  
       <div key={form.applicationFormId} className="resubmission-form-row">
-        <span className="resubmission-form-type">{form.type}</span>
-        <span className="resubmission-form-date">
+        <span className="resubmission-form-type"><FileText size="20" className="inline-icon" />{form.type}</span>
+        <span className={`resubmission-form-date${isToday ? ' resubmission-form-date--today' : ''}`}>
           {form.submittedAt ? `Submitted on ${formatShortDate(form.submittedAt)}` : 'Not yet submitted'}
         </span>
+        <span className="resubmission-form-button">
         <Button
-          variant="white"
+          variant="secondary"
           onClick={() => handleResubmit(form)}
           disabled={!!cloningId}
-        ><FilePlus size="16" />
-          {cloningId === form.applicationFormId ? 'Opening...' : 'Resubmit'}
+        >
+          {cloningId === form.applicationFormId ? 'Opening...' : 'Resubmit form'}
+          <ArrowRight size="16" />
         </Button>
+        </span>
       </div>
     );
+    }
 
     return (
       <div className="page">
@@ -129,7 +156,12 @@ const FormResubmissionList = () => {
             <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
           </div>
           <div className="page-details-row-small">
-            <h1 className="page-title">Update Application Forms</h1>
+            <h1 className="page-title">Add or resubmit forms</h1>
+          </div>
+
+          <div className="resubmission-subtitle">
+            <hr className="gold-underline-large" />
+            <h2 className="page-heading">Application package forms</h2>
           </div>
   
           {isLoading ? (
@@ -137,7 +169,8 @@ const FormResubmissionList = () => {
           ) : (
             <>
               <div className="page-details-row-small">
-                <div className="application-package">
+                
+                <div className="resubmission-group">
                   {applicantForms.map(renderFormRow)}
                 </div>
               </div>
@@ -148,7 +181,7 @@ const FormResubmissionList = () => {
                   {householdForms.map(({ member, forms }) => (
                     <div key={member.id} className="resubmission-member-section">
                       <h3 className="resubmission-member-label">{member.label}</h3>
-                      <div className="application-package">
+                      <div className="resubmission-group">
                         {forms.map(renderFormRow)}
                       </div>
                     </div>

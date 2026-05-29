@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import ConfirmationModal from '../components/ConfirmationModal';
 import Application from '../components/Application';
@@ -9,7 +9,12 @@ const FormResubmission = () => {
   const { applicationPackageId, applicationFormId } = useParams();
   const navigate = useNavigate();
   const { submitFormToICM, deleteApplicationForm } = useApplicationPackage();
-  const listPath = `/foster-application/${applicationPackageId}/resubmit`;
+  const location = useLocation();
+  const isKinship = location.pathname.startsWith('/kinship-application');
+  const prefix = isKinship ? 'kinship-application' : 'foster-application';
+  const listPath = `/${prefix}/${applicationPackageId}/resubmit`;
+  const basePath = `/${prefix}/application-package/${applicationPackageId}`;
+
   const [showConfirmBack, setShowConfirmBack] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
 
@@ -51,6 +56,7 @@ const FormResubmission = () => {
             nextLabel="Submit form"
             submitPackage={false}
             Context="Application"
+            basePath={basePath}
             />
                   <ConfirmationModal
             isOpen={showConfirmBack}
