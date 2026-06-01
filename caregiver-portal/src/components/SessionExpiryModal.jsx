@@ -1,18 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 const REDIRECT_DELAY_S = 5;
 
 const SessionExpiryModal = () => {
-    const { sessionExpiring } = useAuth();
-    const navigate = useNavigate();
+    const { sessionExpiring, logout } = useAuth();
     const [countdown, setCountdown] = useState(REDIRECT_DELAY_S);
-    const hasTriggered = useRef(false);
 
     useEffect(() => { 
-      if (!sessionExpiring || hasTriggered.current) return;
-      hasTriggered.current = true;
+      if (!sessionExpiring) return;
 
       setCountdown(REDIRECT_DELAY_S);
   
@@ -22,14 +18,14 @@ const SessionExpiryModal = () => {
   
       const redirect = setTimeout(() => {
         clearInterval(tick);
-        navigate('/');
+        logout();
       }, REDIRECT_DELAY_S * 1000);
 
       return () => {  
         clearInterval(tick);
         clearTimeout(redirect);
       };
-    }, [sessionExpiring, navigate]);
+    }, [sessionExpiring, logout]);
   
     if (!sessionExpiring) return null;
 

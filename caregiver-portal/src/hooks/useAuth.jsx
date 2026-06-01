@@ -13,21 +13,6 @@ export const useAuth = () => {
 
 const WARNING_LEAD_MS = 60_000; // show modal 60s before session expiry
 
-const decodeSessionExpiry = () => {
-  const match = document.cookie
-    .split('; ')
-    .find(row => row.startsWith('app_session='));
-
-  if (!match) return null;
-
-  try {
-    const payload = JSON.parse(atob(match.split('=')[1].split('.')[1]));
-    return typeof payload.exp === 'number' ? payload.exp * 1000 : null;
-  } catch {
-    return null;
-  }
-};
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,10 +28,9 @@ export const AuthProvider = ({ children }) => {
     clearTimeout(expiryTimerRef.current);
   };
 
-  const scheduleExpiryTimers = () => {
+  const scheduleExpiryTimers = (expiresAt) => {
     clearExpiryTimers();
 
-    const expiresAt = decodeSessionExpiry();
     if (!expiresAt) return;
 
     const now = Date.now();
@@ -82,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         setUser(data.user);
         setSessionExpiring(false);
-        scheduleExpiryTimers();
+        scheduleExpiryTimers(data.expiresAt);
       } else {
         setUser(null);
         clearExpiryTimers();  
