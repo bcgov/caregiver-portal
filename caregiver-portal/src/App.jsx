@@ -6,6 +6,7 @@ import "@bcgov/bc-sans/css/BC_Sans.css"
 // Components
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
+import SessionExpiryModal from './components/SessionExpiryModal';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import EnvironmentBanner from './components/EnvironmentBanner';
@@ -54,6 +55,7 @@ const App = () => {
     <div className="page-wrapper">
     <EnvironmentBanner />
     <Header />
+    <SessionExpiryModal />
     <main className="main-content">
       <Routes>
         {/* Public routes */}
