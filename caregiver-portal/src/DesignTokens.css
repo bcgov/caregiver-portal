@@ -359,6 +359,14 @@ gap: 10px;
     margin: auto;    
   }
 
+  .page-details-row-col {
+    display: flex;
+    max-width: 1120px;
+    flex-direction: column;
+    padding-bottom: 24px;
+    margin: auto;    
+  }
+
   .page-details-row-small-right {
     display: flex;
     max-width: 1120px;
@@ -2309,6 +2317,19 @@ a {
     font-style:italic;
     padding-left: 24px;
     
+  }
+
+  .upload-docs-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: flex-end;
+  }
+
+  .upload-docs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   @media (min-width: 641px) and (max-width: 960px) {
