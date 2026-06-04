@@ -88,6 +88,7 @@ export const useHousehold = ({applicationPackageId}) => {
                     firstName: selfMember.firstName,
                     lastName: selfMember.lastName,
                     dob: normalizedDob,
+                    householdMemberId: selfMember.householdMemberId,
                 }); 
             } 
             // remove primary applicant from household data
