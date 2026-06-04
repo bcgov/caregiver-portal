@@ -25,7 +25,13 @@ const FileUpload = ({
 
     const validateFile = (file) => {
       // Check file type
-      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+      //const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+      if (file.size === 0) {
+        return 'File is empty and cannot be uploaded';
+      }
+
+      const fileExtension = file.name.split('.').pop().toLowerCase();
       if (!acceptedTypes.includes(fileExtension)) {
         return `File type not supported. Accepted types: ${acceptedTypes.join(', ')}`;
       }
@@ -153,7 +159,7 @@ const FileUpload = ({
         <input
           ref={fileInputRef}
           type="file"
-          accept={acceptedTypes.join(',')}
+          accept={acceptedTypes.map(t => `.${t}`).join(',')}
           onChange={handleFileInputChange}
           style={{ display: 'none' }}
         />
