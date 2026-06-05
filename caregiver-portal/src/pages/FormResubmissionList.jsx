@@ -7,7 +7,7 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useHousehold } from '../hooks/useHousehold';
 import { useAttachments } from '../hooks/useAttachments';
 import { useDates } from '../hooks/useDates';
-import { FilePlus, FileText, ArrowRight } from 'lucide-react';
+import { FilePlus, File, FileText, ArrowRight, Download } from 'lucide-react';
 
 const DOC_TYPES_BY_ROLE = {
   primary: [
@@ -60,7 +60,7 @@ const FormResubmissionList = () => {
 
     const breadcrumbItems = [
       { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
-      { label: 'Update Application Forms' },
+      { label: 'Submit additional documents' },
   ];
 
     const handleBackClick = (item) => navigate(item.path);
@@ -238,12 +238,13 @@ const FormResubmissionList = () => {
             <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
           </div>
           <div className="page-details-row-small">
-            <h1 className="page-title">Add or resubmit forms</h1>
+            <h1 className="page-title">Submit additional documents</h1>
           </div>
 
           <div className="resubmission-subtitle">
             <hr className="gold-underline-large" />
-            <h2 className="page-heading">Application package forms</h2>
+            <h2 className="page-heading">Resubmit information from my application</h2>
+            <div className="info-box">If you made a mistake or forgot something in your application, you can resubmit information here.</div>
           </div>
   
           {isLoading ? (
@@ -256,11 +257,47 @@ const FormResubmissionList = () => {
                   {applicantForms.map(renderFormRow)}
                 </div>
               </div>
+
+              <div className="resubmission-subtitle">
+                <hr className="gold-underline-large" />
+                <h2 className="page-heading">Other forms you may need</h2>
+              </div>
+
+              <div className="page-details-row-small">
+                
+                <div className="resubmission-group">
+
+                <div className="resubmission-form-row">
+                  <span className="resubmission-form-download"><File size="20" className="inline-icon" /><a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download target="_blank" className="resub">Consent for Disclosure of Criminal Record Information  <Download size="20" className="inline-icon" /></a></span>
+                  <span className="resubmission-form-date">
+                    PDF 220 KB
+                  </span>
+                </div>
+                <div className="resubmission-form-row">
+                  <span className="resubmission-form-download"><File size="20" className="inline-icon" /><a href="/Consent_for_Prior_Contact_Check.pdf" download target="_blank" className="resub">Consent for Prior Contact Check  <Download size="20" className="inline-icon" /></a></span>
+                  <span className="resubmission-form-date">
+                    PDF 214 KB
+                  </span>
+                </div>
+                <div className="resubmission-form-row">
+                  <span className="resubmission-form-download"><File size="20" className="inline-icon" /><a href="/Medical-Report-on-Applicant.pdf" download target="_blank" className="resub">Medical Report on Applicant  <Download size="20" className="inline-icon" /></a></span>
+                  <span className="resubmission-form-date">
+                    PDF 424 KB
+                  </span>
+                </div>
+                
+                
+                </div>
+              </div>
+
+
               {/* Upload Documents section */}
               <div className="resubmission-subtitle">
                 <hr className="gold-underline-large" />
                 <h2 className="page-heading">Upload Documents</h2>
               </div>
+
+              
   
               <div className="page-details-row-col">
                 <div className="upload-docs-controls">
