@@ -338,6 +338,7 @@ const FormResubmissionList = () => {
               </div>
 
               {submittedAttachments.length > 0 && (
+                
                 <div className="page-details-row-small">
                   <div className="resubmission-group">
                     {submittedAttachments.map(att => {
