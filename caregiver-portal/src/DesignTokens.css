@@ -1320,15 +1320,15 @@ a {
   .modal-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-top: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-bottom: solid #ccc 1px;
   }
 
   .modal-title {
     margin: 0;
     font-size: 24px;
     font-weight: 700;
-    text-align:center;
     width: 100%;
     line-height: normal;
   }
@@ -1753,6 +1753,25 @@ a {
     width: 1000px;
   }
 
+  .upload-container-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+
+    border-radius: 4px;
+    background: #FFF;
+    margin-bottom: 24px;
+  }
+
+  .upload-button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-end;
+  }
+
 /* Dropzone */
 .file-upload-dropzone {
   display: flex;
@@ -1767,6 +1786,21 @@ a {
   transition: all 0.2s ease;
   min-height: 200px;
   width:940px;
+}
+
+.file-upload-dropzone-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  border: 2px dashed var(--surface-color-border-default, #D8D8D8);
+  border-radius: var(--layout-borderRadius-medium, 4px);
+  background-color: #FAFAFA;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 650px;
+  margin-top: 24px;
 }
 
 .file-upload-dropzone:hover {
@@ -2365,6 +2399,13 @@ a {
     flex-direction: row;
     gap: 1.5rem;
     align-items: flex-end;
+  }
+
+  .upload-docs-controls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
   }
 
   .upload-docs-field {
