@@ -15,6 +15,7 @@ const KinshipApplicationPackage = () => {
   const [forms, setForms] = React.useState([]);
   const [household, setHousehold] = React.useState();
   const [appPackage, setAppPackage] = React.useState();
+  const isSubmittingRef = React.useRef(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
@@ -67,14 +68,17 @@ const KinshipApplicationPackage = () => {
       };
 
       const handleSubmit = async () => {
+        if(isSubmittingRef.current) return;
+        isSubmitting.current = true;
         setIsSubmitting(true);
         try {
-          const result = await lockApplicationPackage(applicationPackageId);
+          await lockApplicationPackage(applicationPackageId);
           setIsApplicationLocked(true);
           navigate(`/kinship-application/${applicationPackageId}`);
         } catch (error) {
           console.error(error);
         } finally {
+          isSubmitting.current = false;
           setIsSubmitting(false);
         }
       }

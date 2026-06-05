@@ -15,6 +15,7 @@ const FosterApplicationPackage = () => {
   const [forms, setForms] = React.useState([]);
   const [household, setHousehold] = React.useState();
   const [appPackage, setAppPackage] = React.useState();
+  const isSubmittingRef = React.useRef(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
@@ -74,14 +75,17 @@ const FosterApplicationPackage = () => {
       };
 
       const handleSubmit = async () => {
+        if (isSubmittingRef.current) return;
+        isSubmittingRef.current = true;
         setIsSubmitting(true);
         try {
-          const result = await lockApplicationPackage(applicationPackageId);
+          await lockApplicationPackage(applicationPackageId);
           setIsApplicationLocked(true);
           navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error(error);
         } finally {
+          isSubmittingRef.current = false;
           setIsSubmitting(false);
         }
       }
