@@ -95,6 +95,13 @@ const FosterApplicationPackage = () => {
           try {
             const appPackage = await getApplicationPackage(applicationPackageId);
             setAppPackage(appPackage);
+
+            // Redirect if wrong application type
+            if (appPackage.subtype === 'OOC') {
+              navigate(`/kinship-application/application-package/${applicationPackageId}`);
+              return;
+            }
+            
             if(appPackage.status === 'Submitted') {
               setIsApplicationLocked(true);
               navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
