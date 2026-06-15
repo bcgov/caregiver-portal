@@ -24,12 +24,18 @@ const AccessCard = ({login, active = true}) => {
 
         try {
             const result = await associateAccessCode(accessCode.trim());
-            setShowSuccess('Access code associated successfully, opening screening form...');
-            //setMessage('Access code associated successfully, opening screening form...');
-            // navigate to the application page using the returned applicationId
-            setTimeout(() => {
-                navigate(`/screening-package/${result.householdMemberId}`);
-            }, 1500);
+            if (result.type === 'NEW_APPLICATION') {
+                setShowSuccess('Opening your application package...');
+                setTimeout(() => {
+                  navigate(`/kinship-application/application-package/${result.applicationPackageId}`);
+                }, 1500);
+              } else {
+                setShowSuccess('Opening your screening package...');
+                setTimeout(() => {
+                  navigate(`/screening-package/${result.householdMemberId}`);
+                }, 1500);
+              }
+            
         } catch (err) {
             
             switch (err.message.trim()) {
@@ -106,7 +112,7 @@ const AccessCard = ({login, active = true}) => {
                                     <div className="submission-modal">
                                         <Loader2 className="submission-spinner" />
                                         <p className="submission-title">Verifying Access Code</p>
-                                        <p className="submission-text">{message}</p>
+                                        <p className="submission-text">{showSuccess}</p>
                                     </div>
                                     </div>
                                 )}
