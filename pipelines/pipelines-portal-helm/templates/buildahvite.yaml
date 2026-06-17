@@ -47,6 +47,8 @@ spec:
         buildah --storage-driver=$(params.STORAGE_DRIVER) bud --no-cache \
           --build-arg VITE_API_URL=$VITE_API_URL \
           --build-arg VITE_ACCESS_CODE_RESET=$VITE_ACCESS_CODE_RESET \
+          --build-arg VITE_KINSHIP_START_ON=$VITE_KINSHIP_START_ON \
+          --build-arg VITE_RESUBMIT_ON=$VITE_RESUBMIT_ON \
           --build-arg VITE_ENV=$VITE_ENV \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
           --build-arg VITE_KILN_URL=$VITE_KILN_URL \
@@ -73,6 +75,16 @@ spec:
             secretKeyRef:
               name: $(params.VITE_SECRET_NAME)
               key: VITE_ACCESS_CODE_RESET
+        - name: VITE_KINSHIP_START_ON
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_KINSHIP_START_ON    
+        - name: VITE_RESUBMIT_ON
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_RESUBMIT_ON        
         - name: VITE_ENV
           valueFrom:
             secretKeyRef:
