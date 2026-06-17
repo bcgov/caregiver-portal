@@ -62,7 +62,12 @@ const KinshipApplicationProcess = () => {
           //setForms(formsArray);
           setApplicationPackage(packageData);
 
-          console.log(packageData);
+          // Redirect if wrong application type
+          if (packageData.subtype === 'FCH') {
+            navigate(`/foster-application/${applicationPackageId}`);
+            return;
+          }
+          //console.log(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
           //setReferralApplicationFormId(referralForm?.applicationFormId || null);

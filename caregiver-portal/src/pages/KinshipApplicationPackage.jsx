@@ -88,6 +88,13 @@ const KinshipApplicationPackage = () => {
           try {
             const appPackage = await getApplicationPackage(applicationPackageId);
             setAppPackage(appPackage);
+
+            // Redirect if wrong application type
+            if (appPackage.subtype === 'FCH') {
+              navigate(`/foster-application/application-package/${applicationPackageId}`);
+              return;
+            }
+
             if(appPackage.status === 'Submitted') {
               setIsApplicationLocked(true);
               navigate(`/kinship-application/${applicationPackageId}`); // navigate back to the process page

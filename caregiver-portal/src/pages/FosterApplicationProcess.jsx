@@ -62,7 +62,13 @@ const FosterApplicationProcess = () => {
           //setForms(formsArray);
           setApplicationPackage(packageData);
 
-          console.log(packageData);
+          // Redirect if wrong application type
+          if (packageData.subtype === 'OOC') {
+            navigate(`/kinship-application/${applicationPackageId}`);
+            return;
+          }
+
+          //console.log(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
           //setReferralApplicationFormId(referralForm?.applicationFormId || null);
