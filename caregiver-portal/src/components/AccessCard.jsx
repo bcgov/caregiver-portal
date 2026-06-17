@@ -48,7 +48,7 @@ const AccessCard = ({login, active = true}) => {
                 default:
                     setMessage(`Error: ${err.message}`);
             }
-            setMessage(`Error: ${err.message}`);
+            //setMessage(`Error: ${err.message}`);
         }
     };
 
@@ -156,7 +156,7 @@ const AccessCard = ({login, active = true}) => {
                               color: '#606060',
                               fontSize: '1.1rem'
                           }}>
-                              Opening your screening package...
+                              {showSuccess}
                           </p>
 
                           {/* Progress Bar */}
