@@ -11,7 +11,7 @@ import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 import WelcomeCard from '../components/WelcomeCard';
-import { Loader2 } from 'lucide-react';
+import { Loader2, HandMetal, Panda } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -128,7 +128,14 @@ const Dashboard = () => {
           <>
           <div className="task-frame-image">
             <div className="task-content">
-              <WelcomeCard user={auth.user}></WelcomeCard>
+              <WelcomeCard user={auth.user}>
+              {userProfile?.resource_case_active_date && (
+                <>
+                  <Panda size={20}/>{' '}Resource case active since{' '}
+                  {new Date(userProfile.resource_case_active_date).toLocaleDateString('en-CA')}
+                </>
+              )}
+              </WelcomeCard>
             </div>
           </div>
           <div className="task-frame-main-body">
