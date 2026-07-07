@@ -3,7 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import Button from './Button';
 import { useCommon } from '../hooks/useCommon';
 
-const WelcomeCard = ({login, user}) => {
+const WelcomeCard = ({login, user, children}) => {
 
     const {toTitleCase} = useCommon();
 
@@ -24,6 +24,9 @@ const WelcomeCard = ({login, user}) => {
             )}
             { !login && user && (
             <p className='welcome-card-content'>Welcome, {toTitleCase(user.name)}!</p>    
+            )}
+            { children && (
+            <p className='welcome-card-content'>{children}</p>                    
             )}
 
         </div>

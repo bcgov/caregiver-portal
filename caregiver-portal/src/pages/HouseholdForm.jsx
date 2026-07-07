@@ -18,6 +18,7 @@ const HouseholdForm = () => {
   // Single source of truth for household data (the component page uses it as well)
   const householdHook = useHousehold({applicationPackageId});
   const [formMessage, setFormMessage] = React.useState('');
+  const HOUSEHOLDFORM = 'Adults in my home';
 
 
   const home = basePath;
@@ -27,7 +28,7 @@ const HouseholdForm = () => {
       const isComplete = householdHook.isHouseholdComplete();
 
       return {
-        type: 'My household',
+        type: HOUSEHOLDFORM,
         status: isComplete && householdHook.hasHousehold !== null && householdHook.hasPartner !== null ? 'Complete' : 'Draft'
       };
     }, [householdHook]);
@@ -55,7 +56,7 @@ const HouseholdForm = () => {
             const nextForm = formsArray[nextIndex];
 
             // Build URL based on form type
-            if (nextForm.type && nextForm.type === 'Adults in household') {
+            if (nextForm.type && nextForm.type === HOUSEHOLDFORM) {
               setNextUrl(`${basePath}/household-form/${nextForm.applicationFormId}`);
             } else {
               setNextUrl(`${basePath}/application-form/${nextForm.applicationFormId}`);
@@ -91,7 +92,7 @@ const HouseholdForm = () => {
     <div className="household-content">
       <div className="household-content-inner">
         <div className="page-details-row-small">
-          <h1 className="page-title">My household</h1>
+          <h1 className="page-title">{HOUSEHOLDFORM}</h1>
         </div>
 
         <div className="page-details-row">
