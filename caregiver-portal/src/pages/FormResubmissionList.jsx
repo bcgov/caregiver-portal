@@ -61,7 +61,7 @@ const FormResubmissionList = () => {
     const basePath = location.pathname.replace(/\/resubmit$/, '');  
     const isKinship = location.pathname.startsWith('/kinship-application');
 
-    const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in household', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in household'];
+    const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in my home', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in my home'];
 
     const breadcrumbItems = [
       { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
