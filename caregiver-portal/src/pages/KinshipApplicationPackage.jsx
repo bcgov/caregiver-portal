@@ -22,6 +22,7 @@ const KinshipApplicationPackage = () => {
   const navigate = useNavigate();     
   const { getApplicationForms, getApplicationPackage, lockApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
   const { formatSubmissionDate } = useDates();
+  const HOUSEHOLDFORM = 'Adults in my home';
 
     const breadcrumbItems = [
         { label: 'Become a kinship caregiver', path: `/kinship-application/${applicationPackageId}` },
@@ -33,7 +34,7 @@ const KinshipApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        if (item.type && item.type === 'Adults in household') {
+        if (item.type && item.type === HOUSEHOLDFORM) {
           // Special case for household form
           navigate(`/kinship-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
           return;
@@ -44,7 +45,7 @@ const KinshipApplicationPackage = () => {
       }
 
       const handleState = (item) => {
-        if (item.type === 'Adults in household' && household?.isComplete) {
+        if (item.type === HOUSEHOLDFORM && household?.isComplete) {
           return 'Complete';
         } else {
           return item.status;
