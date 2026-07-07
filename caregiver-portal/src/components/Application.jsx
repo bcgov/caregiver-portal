@@ -33,6 +33,7 @@ const Application = ({
     const iframeRef = useRef(null);
     const iframeUrlRef = useRef(null);
     const navigationTargetRef = useRef(null);
+    const HOUSEHOLDFORM = 'Adults in my home';
 
     const navigate = useNavigate();
 
@@ -97,7 +98,7 @@ const Application = ({
               let nextFormUrl;
               if (Context === 'Screening' && householdMemberId) {
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
-              } else if (nextForm.type && nextForm.type === 'Adults in household') {
+              } else if (nextForm.type && nextForm.type === HOUSEHOLDFORM) {
                 // Build URL based on form type (household vs regular)
                 nextFormUrl = `${resolvedBasePath}/household-form/${nextForm.applicationFormId}`;
               } else {
