@@ -22,6 +22,7 @@ const FosterApplicationPackage = () => {
   const navigate = useNavigate();     
   const { getApplicationForms, getApplicationPackage, lockApplicationPackage, validateHouseholdCompletion } = useApplicationPackage();
   const { formatSubmissionDate } = useDates();
+  const HOUSEHOLDFORM = 'Adults in my home';
 
     const breadcrumbItems = [
         { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
@@ -33,7 +34,8 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        if (item.type && item.type === 'Adults in household') {
+        console.log(item);
+        if (item.type && item.type === HOUSEHOLDFORM) {
           // Special case for household form
           navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
           return;
@@ -51,7 +53,7 @@ const FosterApplicationPackage = () => {
         // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
         // state
 
-        if (item.type === 'Adults in household' && household?.isComplete) {
+        if (item.type === HOUSEHOLDFORM && household?.isComplete) {
           return 'Complete';
         } else {
           return item.status;
