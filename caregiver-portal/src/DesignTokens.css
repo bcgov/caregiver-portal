@@ -1081,6 +1081,15 @@ margin-bottom: 6px;
 
 }
 
+.task-card-text--cancelled {
+  font-size: 18px;
+  font-weight: normal;
+  align-items: center;
+  display: flex;
+  gap: 12px;
+
+}
+
 .breadcrumb-nav {
   padding: var(--layout-padding-small) 0;
   overflow: scroll;
