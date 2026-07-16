@@ -6,17 +6,19 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
-//import OOCApplicationStart from '../components/OOCApplicationStart';
+import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 import WelcomeCard from '../components/WelcomeCard';
-import { Loader2 } from 'lucide-react';
+import { Loader2, HandMetal, Panda } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [householdMemberships, setHouseholdMemberships] = React.useState([]);
+
+  const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
 
   const {
     createApplicationPackage,
@@ -29,15 +31,25 @@ const Dashboard = () => {
   const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
+  const [fosterApplications, setFosterApplications] = React.useState([]);
+  const [kinshipApplications, setKinshipApplications] = React.useState([]);
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
+  }, [navigate]);
+
+  const handleNavigateToOOCApplication = useCallback((applicationPackageId) => {
+    navigate(`/kinship-application/${applicationPackageId}`);
   }, [navigate]);
 
   const loadApplicationPackages = useCallback(async () => {
     try {
       const apps = await getApplicationPackages();
       setApplicationPackages(apps);
+      setFosterApplications(apps.filter(app => app.subtype === 'FCH'));
+      setKinshipApplications(apps.filter(app => app.subtype === 'OOC'));
+      //console.log('foster applications:', apps.filter(app => app.subtype === 'FCH'));
+      //console.log('kinship:', kinshipApplications);
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
@@ -53,7 +65,7 @@ const Dashboard = () => {
     getApplicationForms();
   }, [getApplicationForms]);
 
-  const handleCreateApplication = async () => {
+  const handleCreateFCHApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
         subtype: 'FCH',
@@ -64,6 +76,19 @@ const Dashboard = () => {
       console.error('Failed to create application:', err);
     }
   };
+
+  const handleCreateOOCApplication = async () => {
+    try {
+      const newPackage = await createApplicationPackage({
+        subtype: 'OOC',
+        subsubtype: 'EFP'
+      });
+      handleNavigateToOOCApplication(newPackage.applicationPackageId);
+    } catch (err) {
+      console.error('Failed to create application:', err);
+    }
+  };
+
 
   useEffect(() => {
     if (!auth.loading && auth.user) {
@@ -103,7 +128,14 @@ const Dashboard = () => {
           <>
           <div className="task-frame-image">
             <div className="task-content">
-              <WelcomeCard user={auth.user}></WelcomeCard>
+              <WelcomeCard user={auth.user}>
+              {userProfile?.resource_case_active_date && (
+                <>
+                  <Panda size={20}/>{' '}Resource case active since{' '}
+                  {new Date(userProfile.resource_case_active_date).toLocaleDateString('en-CA')}
+                </>
+              )}
+              </WelcomeCard>
             </div>
           </div>
           <div className="task-frame-main-body">
@@ -118,9 +150,9 @@ const Dashboard = () => {
                 )}
                 {applicationPackages?.map((app) => (
                   <>
-                    {app.subtype === "FCH" && (
-                      <TaskCard applicationPackage={app} />
-                    )}
+                    
+                      <TaskCard subtype={app.subtype} applicationPackage={app} />
+                    
                   </>
                 ))}
                 {householdMemberships?.map((membership) => {
@@ -133,9 +165,13 @@ const Dashboard = () => {
                     </div>
                   );
                 })}
-                {(applicationPackages?.length ===0) && (
-                  <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+                {(fosterApplications?.length === 0) && (
+                  <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}
+                {(KINSHIP_START_ON && kinshipApplications?.length === 0) && (
+                  <OOCApplicationStart onClick={handleCreateOOCApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+                )}
+
 
               </div>
               <AccessCard />

@@ -359,6 +359,14 @@ gap: 10px;
     margin: auto;    
   }
 
+  .page-details-row-col {
+    display: flex;
+    max-width: 1120px;
+    flex-direction: column;
+    padding-bottom: 24px;
+    margin: auto;    
+  }
+
   .page-details-row-small-right {
     display: flex;
     max-width: 1120px;
@@ -374,6 +382,7 @@ gap: 10px;
     max-width: 1120px;
     flex-direction: column;
     align-items: flex-start;
+    gap: 24px;
     margin: var(--layout-margin-large) auto auto;
   }
 
@@ -599,6 +608,7 @@ gap: 10px;
         border: none;
         margin: 0px;
         padding: 0px;
+        margin-bottom: 8px;
     }
 
 .buttonIcon {
@@ -1071,6 +1081,15 @@ margin-bottom: 6px;
 
 }
 
+.task-card-text--cancelled {
+  font-size: 18px;
+  font-weight: normal;
+  align-items: center;
+  display: flex;
+  gap: 12px;
+
+}
+
 .breadcrumb-nav {
   padding: var(--layout-padding-small) 0;
   overflow: scroll;
@@ -1310,15 +1329,15 @@ a {
   .modal-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-top: 1.5rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-bottom: solid #ccc 1px;
   }
 
   .modal-title {
     margin: 0;
     font-size: 24px;
     font-weight: 700;
-    text-align:center;
     width: 100%;
     line-height: normal;
   }
@@ -1743,6 +1762,25 @@ a {
     width: 1000px;
   }
 
+  .upload-container-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    align-self: stretch;
+
+    border-radius: 4px;
+    background: #FFF;
+    margin-bottom: 24px;
+  }
+
+  .upload-button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-end;
+  }
+
 /* Dropzone */
 .file-upload-dropzone {
   display: flex;
@@ -1757,6 +1795,21 @@ a {
   transition: all 0.2s ease;
   min-height: 200px;
   width:940px;
+}
+
+.file-upload-dropzone-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  border: 2px dashed var(--surface-color-border-default, #D8D8D8);
+  border-radius: var(--layout-borderRadius-medium, 4px);
+  background-color: #FAFAFA;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 650px;
+  margin-top: 24px;
 }
 
 .file-upload-dropzone:hover {
@@ -2067,6 +2120,25 @@ a {
     color: #6b7280;
     line-height: 1.5;
   }
+  
+  .info-box {
+    background: var(--support-surfaceColor-info, #F7F9FC);
+    border: 1px solid var(--support-borderColor-info, #053662);
+    width: 790px;
+    height: 59px;
+    opacity: 1;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 6px;
+    padding-right: 12px;
+    padding-bottom: 6px;
+    padding-left: 24px;
+    border-radius: 8px;
+    border-width: 1px;
+    align-items: center;
+    display: flex;
+
+  }
 
   @keyframes spin {
     from {
@@ -2229,10 +2301,6 @@ a {
       font-size: 18px;
     }
 
-    .btn-nav {
-      //font-size: 12px;
-      //line-height: 12px;
-    }
 
     .hide-on-tiny-screens {
       display: none;
@@ -2256,6 +2324,103 @@ a {
       padding: 0;
     }
 
+  }
+
+  .resubmission-subtitle {
+    display: flex;
+    max-width: 1120px;
+    flex-direction: column;
+    align-items:baseline;
+    margin: auto;    
+    padding-top: 60px;
+    padding-bottom: 20px;
+  }
+
+  .resubmission-group {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    
+  }
+
+  .resubmission-form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+  }
+
+  .resubmission-form-type {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 150%;
+    gap: 8px;
+    flex-direction: row;
+    padding-top: 24px;
+    display: flex;
+  }
+
+  .resubmission-form-download {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 150%;
+    gap: 8px;
+    flex-direction: row;
+    padding-top: 24px;
+    color: #053662;
+    display: flex;
+  }
+
+  .resubmission-form-date {
+    font-size: 16px;
+    font-weight: 200;
+    padding-left: 30px;
+  }
+
+  .resub {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #053662;
+    text-decoration: none;
+
+  }
+
+  .resubmission-form-date--today {
+    font-weight: 600;
+  }
+
+  .inline-icon {
+    padding-right: 0px;
+  }
+
+  .resubmission-form-button {
+    font-size: 18px;
+    font-style:italic;
+    padding-left: 30px;
+    
+  }
+
+  .upload-docs-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: flex-end;
+  }
+
+  .upload-docs-controls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .upload-docs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   @media (min-width: 641px) and (max-width: 960px) {

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from './Button';
+import { X } from 'lucide-react';
 //import { isJsxOpeningElement } from 'typescript';
 
 const Modal = ({
@@ -57,10 +58,10 @@ const Modal = ({
                     {title && <h2 className="modal-title">{title}</h2>}
                     {showCloseButton && (
                         <Button
-                            variant="white"
+                            variant="secondary"
                             onClick={onClose}
                             aria-label="Close modal"
-                        >x</Button>
+                        ><X size={24} /></Button>
                     )}
                 </div>
                 <div className="modal-body">

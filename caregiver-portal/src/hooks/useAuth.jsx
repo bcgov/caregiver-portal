@@ -1,5 +1,5 @@
 // hooks/useAuth.js
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, useRef, createContext, useContext } from 'react';
 
 const AuthContext = createContext();
 
@@ -11,36 +11,80 @@ export const useAuth = () => {
   return context;
 };
 
+const WARNING_LEAD_MS = 60_000; // show modal 60s before session expiry
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sessionExpiring, setSessionExpiring] = useState(false);
+  
+  const warningTimerRef = useRef(null);
+  const expiryTimerRef = useRef(null);
 
   const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-  // Check authentication status on app load
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+  const clearExpiryTimers = () => {
+    clearTimeout(warningTimerRef.current);
+    clearTimeout(expiryTimerRef.current);
+  };
+
+  const scheduleExpiryTimers = (expiresAt) => {
+    clearExpiryTimers();
+
+    if (!expiresAt) return;
+
+    const now = Date.now();
+    const msUntilExpiry = expiresAt - now;
+    const msUntilWarning = msUntilExpiry - WARNING_LEAD_MS;
+
+    if (msUntilExpiry <= 0) {
+      setSessionExpiring(true);
+      return;
+    }
+
+    if (msUntilWarning > 0) {
+      warningTimerRef.current = setTimeout(() => {
+        setSessionExpiring(true);
+      }, msUntilWarning);
+    } else {
+      // Less than 60s remaining on mount — show warning immediately
+      setSessionExpiring(true);
+    }
+
+    expiryTimerRef.current = setTimeout(() => {
+      setUser(null);
+    }, msUntilExpiry);
+  };
 
   const checkAuthStatus = async () => {
     try {
       const response = await fetch(`${API_BASE}/auth/status`, {
-        credentials: 'include', // Important for cookies
+        credentials: 'include',
       });
 
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
+        setSessionExpiring(false);
+        scheduleExpiryTimers(data.expiresAt);
       } else {
         setUser(null);
+        clearExpiryTimers();  
       }
     } catch (error) {
       console.error('Auth status check failed:', error);
       setUser(null);
+      clearExpiryTimers();
     } finally {
       setLoading(false);
     }
   };
+
+  // Check authentication status on app load
+  useEffect(() => {
+    checkAuthStatus();
+    return () => clearExpiryTimers();
+  }, []);
 
   const login = () => {
     // Get environment variables with fallbacks
@@ -58,7 +102,6 @@ export const AuthProvider = ({ children }) => {
         return;
       }
     
-
       // Generate and store state for security
       const state = generateRandomState();
       sessionStorage.setItem('oauth_state', state);
@@ -79,13 +122,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-      window.location.href = `${API_BASE}/auth/logout`;
-
+    clearExpiryTimers();
+    setSessionExpiring(false);
+    window.location.href = `${API_BASE}/auth/logout`;
   };
 
   const value = {
     user,
     loading,
+    sessionExpiring,
     login,
     logout,
     checkAuthStatus,

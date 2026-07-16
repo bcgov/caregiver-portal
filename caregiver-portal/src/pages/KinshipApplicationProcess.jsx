@@ -9,13 +9,13 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
-const FosterApplicationProcess = () => {
+const KinshipApplicationProcess = () => {
   const { applicationPackageId } = useParams();
   const [showDeleteModal, setShowDeleteModal] = React.useState(false);
   const [showReferralModal, setShowReferralModal] = React.useState(false);
   const [applicationPackage, setApplicationPackage] = React.useState(null);
   const [householdMemberId, setHouseholdMemberId] = React.useState(null);
-  const resubmitLink = `/foster-application/${applicationPackageId}/resubmit`;
+  const resubmitLink = `/kinship-application/${applicationPackageId}/resubmit`;
   const navigate = useNavigate();
   const { getApplicationForms, getApplicationPackage } = useApplicationPackage();
   const { cancelApplicationPackage, isDeleting, error } = useCancelApplicationPackage(() => {
@@ -30,9 +30,9 @@ const FosterApplicationProcess = () => {
   const statusStepMap = {
     'Draft': 1,
     'Referral Requested': 1,
-    'Application': 2,
-    'Consent': 3,
-    'Submitted': 4,
+    'Application': 1,
+    'Consent': 2,
+    'Submitted': 3,
     'Complete': 5
   }
 
@@ -44,7 +44,7 @@ const FosterApplicationProcess = () => {
 
   const breadcrumbItems = [
     { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Become a foster caregiver', path: '/dashboard' },
+    { label: 'Become a kinship caregiver', path: '/dashboard' },
   ];
 
   const handleBackClick = (item) => {
@@ -63,11 +63,10 @@ const FosterApplicationProcess = () => {
           setApplicationPackage(packageData);
 
           // Redirect if wrong application type
-          if (packageData.subtype === 'OOC') {
-            navigate(`/kinship-application/${applicationPackageId}`);
+          if (packageData.subtype === 'FCH') {
+            navigate(`/foster-application/${applicationPackageId}`);
             return;
           }
-
           //console.log(packageData);
 
           const referralForm = formsArray.find(form => form.type === 'Referral');
@@ -91,13 +90,13 @@ const FosterApplicationProcess = () => {
 
     switch(step.key) {
       case "consent":
-        navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary`);
+        navigate(`/kinship-application/application-package/${applicationPackageId}/consent-summary`);
         break;
       case "screening":
-        navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
+        navigate(`/kinship-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
       default: 
-        navigate(`/foster-application/application-package/${applicationPackageId}`);
+        navigate(`/kinship-application/application-package/${applicationPackageId}`);
         break;
     }
   };
@@ -126,7 +125,7 @@ const FosterApplicationProcess = () => {
 
   const handleConfirmReferral = () => {
     setShowReferralModal(false);
-    navigate(`/foster-application/referral-package/${applicationPackageId}`);
+    navigate(`/kinship-application/referral-package/${applicationPackageId}`);
   }
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
@@ -134,34 +133,13 @@ const FosterApplicationProcess = () => {
   
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'referral', label: 'Attend an information session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start', buttonLabel: 'Submit request to attend info session'},
-      {key: 'application', label: 'Submit caregiver application', description: 'After attending an information session, you may submit an application to become a foster caregiver.', disabled: true},
+      {key: 'application', label: 'Submit caregiver application', description: 'You may submit an application to become a kinship caregiver.', disabled: false},
       {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
       {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
       {key: 'training', label: 'Training', description: 'Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
-      {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your motivations for fostering, your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
+      {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
     ];
     return baseSteps.map(step => {
-      if (step.key === 'referral' && applicationPackage?.status === 'Referral Requested') {
-
-        return {
-          ...step,
-          label: 'Information Session Requested',
-          description: 'Your request for an information session has been submitted. You will be contacted to schedule your session shortly.',
-          disabled: true,
-          iconType: 'waiting',
-        };
-      }
-      if (step.key === 'referral' && applicationPackage?.status !== 'Draft' && applicationPackage?.status != 'Referral Requested') {
-
-        return {
-          ...step,
-          label: 'Information Session Completed',
-          description: 'You have attended an information session.',
-          disabled: true,
-          iconType: 'complete',
-        };
-      }
       if (step.key === 'application' && applicationPackage?.status === 'Application') {
 
         return {
@@ -229,7 +207,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'The foster caregiver screening has been completed.',
+          description: 'The kinship caregiver screening has been completed.',
           disabled: true,
           iconType: 'complete',
         }
@@ -239,7 +217,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
+          description: 'Kinship caregiver applicants are required to complete training before receiving approval as a kinship caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register kinship caregiver applicants for this training.',
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
@@ -275,10 +253,10 @@ return (
           <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Become a foster caregiver</h1>
+          <h1 className="page-title">Become a kinship caregiver</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 6</p>
+          <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 5</p>
         </div>
         <div className='page-details-row-small'>
         <div className="application-package">
@@ -307,7 +285,7 @@ return (
                     onClose={handleCancelDelete}
                     onConfirm={handleConfirmDelete}
                     title="Delete Application"
-                    message="Are you sure you want to delete your application to become a foster caregiver? All the work you've done so far will be lost. This cannot be undone."
+                    message="Are you sure you want to delete your application to become a kinship caregiver? All the work you've done so far will be lost. This cannot be undone."
                     confirmText="Delete my application"
                     cancelText="Cancel"
                     confirmVariant="danger"
@@ -324,8 +302,8 @@ return (
                       confirmVariant="primary-bold"
                       isLoading={false}
                     >
-                      <p className="confirmation-modal-text">Foster caregiving is about opening your home and caring for children and youth in B.C who are under the age of 19 and who temporarily cannot live with their own families.</p>
-                      <p>To provide foster family care in B.C.:</p>
+                      <p className="confirmation-modal-text">Kinship caregiving is about opening your home and caring for children and youth in B.C who are under the age of 19 and who temporarily cannot live with their own families.</p>
+                      <p>To provide kinship family care in B.C.:</p>
                       <ul>
                         <li>You understand that Indigenous children and youth are entitled to learn about and practice their Indigenous traditions, customs, and languages, and to belong to their Indigenous communities</li>
                         <li>You understand the need to support a child or youth's sense of self, including cultural, racial, religious, gender, sexual identity</li>
@@ -343,4 +321,4 @@ return (
   );
 };
 
-export default FosterApplicationProcess;
+export default KinshipApplicationProcess;

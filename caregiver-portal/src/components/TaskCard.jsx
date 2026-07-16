@@ -3,71 +3,69 @@ import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { ArrowRight, CircleCheck } from 'lucide-react';
 
-const TaskCard = ({applicationPackage}) => {
+const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
     const navigate = useNavigate();
+
+    const label = subtype === 'FCH' ? "Foster" : "Kinship";
 
     const handleClick = () => {
       if (applicationPackage.applicationPackageId) {
+        if (subtype === 'FCH') {
         navigate(`/foster-application/${applicationPackage.applicationPackageId}`);
+        } else if (subtype === 'OOC') {
+          navigate(`/kinship-application/${applicationPackage.applicationPackageId}`);
+        }
         }
     };
 
-    const {srStage} = applicationPackage;
-
+    const {srStage, status} = applicationPackage;
+    
     const getStatusInfo = () => {
       if (!applicationPackage){
         return {
-          text: 'Loading...',
+          title: 'Loading...',
+          click: false,
+          icon: '',
           className: 'task-card-status--loading'
         }
       }
 
-      const {status, srStage, referralstate} = applicationPackage;
-
-      if (referralstate === 'Requested' && srStage !== 'Application') {
+      if (status === 'Withdrawn') {
         return {
-          text: 'Information Session Requested',
-          className: 'task-card-status--requested'
-        }
+          title: `Become a ${label} caregiver`,
+          click: false, 
+        };
       }
 
-
-      if (srStage === 'Application') {
+      if (srStage === 'Completed') {
         return {
-          text: 'Complete Your Application',
-          className: 'task-card-status--submitted'
-        }
-      }
-
-      if (srStage === 'Screening') {
-        return {
-          text: 'Screening in Progress',
-          className: 'task-card-status--requested'
+          title: '',
+          click: false,
         }
       }
 
       return {
-        text: 'In progress',
-        className: ''
+        title: `Become a ${label} caregiver`,
+        click: true,
       };
 
     };
 
     const statusInfo = getStatusInfo();
-
+  
     return (
-        <div className="task-card" onClick={() => srStage !== 'Compleed' ? handleClick() : null}>
+        <div className="task-card" onClick={() => statusInfo.click ? handleClick() : null}>
         <div className="task-card-content">
-
-            {srStage !== 'Completed' && (
-            <div className="task-card-title">Become a foster caregiver</div>
-          )}    
-            {srStage === 'Completed' && ( 
-              <div className="task-card-text">
-              <CircleCheck size={50} className="success-icon"/> Approved Foster Caregiver
-              </div>
-              )}
-            {srStage !== 'Completed' && (<Button variant="primary">Continue<ArrowRight></ArrowRight></Button>)}
+          {srStage !== 'Completed' && status !== 'Withdrawn' && (
+            <div className="task-card-title">Become a {label} caregiver</div>
+          )}
+          {status === 'Withdrawn' && (
+            <div className="task-card-text--cancelled"><p>Your {label} caregiver application has been cancelled<br/><br/><small>This message will disappear on your next login.</small></p></div>
+          )}
+          {srStage === 'Completed' && (
+            <div className="task-card-text"><CircleCheck size={50} className="success-icon" />Approved {label} Caregiver</div>
+          )}
+            {statusInfo.click && (<Button variant="primary">Continue<ArrowRight></ArrowRight></Button>)}
         </div>
       </div>
     );

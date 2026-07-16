@@ -20,9 +20,8 @@ const OOCApplicationStart = ({onClick, disabled = false}) => {
 
             <div className="page-details-frame">
                 <div className="image-frame">
-                    <img src={Family} alt="Explore Out-of-Care (kinship)" className="hero-image" />
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Out-of-Care (kinship)</h2>
+                    <h2 className="page-heading">Kinship Care</h2>
                 </div>
                 <p className="page-content">When a chid or youth is unable to live with their parents, it's best if they can live with someone they know.</p>
                 <div className="buttonGroup">

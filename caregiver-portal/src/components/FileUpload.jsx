@@ -13,7 +13,8 @@ const FileUpload = ({
     isLocked = false,
     householdMemberId = null,
     applicationFormId = null,
-    description = ''
+    description = '',
+    isModal = false,
   }) => {
     const [file, setFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -22,10 +23,17 @@ const FileUpload = ({
     const fileInputRef = useRef(null);
 
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const uploadDisabled = isLocked || (isModal && uploadedFiles.length >= 1);
 
     const validateFile = (file) => {
       // Check file type
-      const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+      //const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+
+      if (file.size === 0) {
+        return 'File is empty and cannot be uploaded';
+      }
+
+      const fileExtension = file.name.split('.').pop().toLowerCase();
       if (!acceptedTypes.includes(fileExtension)) {
         return `File type not supported. Accepted types: ${acceptedTypes.join(', ')}`;
       }
@@ -147,34 +155,34 @@ const FileUpload = ({
     };
 
     return (
-      <div className="upload-container">
-        {!isLocked && (
+      <div className={`upload-container${isModal ? '-modal' : ''}`}>
+        {!uploadDisabled && (
           <>
         <input
           ref={fileInputRef}
           type="file"
-          accept={acceptedTypes.join(',')}
+          accept={acceptedTypes.map(t => `.${t}`).join(',')}
           onChange={handleFileInputChange}
           style={{ display: 'none' }}
         />
 
-        {!file ? (
-          <div
-            className={`file-upload-dropzone ${isDragging ? 'dragging' : ''}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={handleBrowseClick}
-          >
-            <Upload className="file-upload-icon" size={48} />
-            <p className="file-upload-text">
-              <strong>Click to browse</strong> or drag and drop
-            </p>
-            <p className="file-upload-hint">
-              {acceptedTypes.join(', ')} (max {maxSizeMB}MB)
-            </p>
-          </div>
-        ) : (
+          {!file ? (
+            <div
+              className={`file-upload-dropzone${isModal ? '-modal' : ''} ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={handleBrowseClick}
+            >
+              {!isModal && (<Upload className="file-upload-icon" size={48} />)}
+              <p className="file-upload-text">
+                <strong>Click to browse</strong> or drag and drop
+              </p>
+              <p className="file-upload-hint">
+                {acceptedTypes.join(', ')} (max {maxSizeMB}MB)
+              </p>
+            </div>
+          ) : (
             <div className="file-upload-preview">
               <div className="file-upload-preview-content">
                 <File size={24} />
@@ -202,9 +210,9 @@ const FileUpload = ({
                   </div>
                 </div>
               )}
-            </div>
-          
+            </div>        
         )}
+    
 
         {error && (
           <div className="file-upload-error">
@@ -217,7 +225,7 @@ const FileUpload = ({
 
       {uploadedFiles && uploadedFiles.length > 0 && (
         <div className="uploaded-files-section">
-          <h3 className="uploaded-files-title">Uploaded Files</h3>
+          <h3 className="uploaded-files-title">{!isModal ? 'Uploaded Files' : 'File to submit'}</h3>
           <div className="uploaded-files-list">
             {uploadedFiles.map((uploadedFile) => (
               <div key={uploadedFile.attachmentId} className="uploaded-file-item">
