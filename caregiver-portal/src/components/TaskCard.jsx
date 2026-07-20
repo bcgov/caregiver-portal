@@ -37,13 +37,6 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
         };
       }
 
-      if (srStage === 'Completed') {
-        return {
-          title: '',
-          click: false,
-        }
-      }
-
       return {
         title: `Become a ${label} caregiver`,
         click: true,
@@ -54,6 +47,8 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
     const statusInfo = getStatusInfo();
   
     return (
+      <>
+        {srStage !== 'Completed' && (
         <div className="task-card" onClick={() => statusInfo.click ? handleClick() : null}>
         <div className="task-card-content">
           {srStage !== 'Completed' && status !== 'Withdrawn' && (
@@ -62,12 +57,11 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
           {status === 'Withdrawn' && (
             <div className="task-card-text--cancelled"><p>Your {label} caregiver application has been cancelled<br/><br/><small>This message will disappear on your next login.</small></p></div>
           )}
-          {srStage === 'Completed' && (
-            <div className="task-card-text"><CircleCheck size={50} className="success-icon" />Approved {label} Caregiver</div>
-          )}
             {statusInfo.click && (<Button variant="primary">Continue<ArrowRight></ArrowRight></Button>)}
         </div>
       </div>
+        )}
+        </>
     );
   };
 
