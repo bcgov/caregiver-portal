@@ -47,7 +47,6 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
     const statusInfo = getStatusInfo();
   
     return (
-
       <>
         {srStage !== 'Completed' && (
         <div className="task-card" onClick={() => statusInfo.click ? handleClick() : null}>
