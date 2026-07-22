@@ -70,7 +70,7 @@ const KinshipApplicationPackage = () => {
 
       const handleSubmit = async () => {
         if(isSubmittingRef.current) return;
-        isSubmitting.current = true;
+        isSubmittingRef.current = true;
         setIsSubmitting(true);
         try {
           await lockApplicationPackage(applicationPackageId);
@@ -79,7 +79,7 @@ const KinshipApplicationPackage = () => {
         } catch (error) {
           console.error(error);
         } finally {
-          isSubmitting.current = false;
+          isSubmittingRef.current = false;
           setIsSubmitting(false);
         }
       }
