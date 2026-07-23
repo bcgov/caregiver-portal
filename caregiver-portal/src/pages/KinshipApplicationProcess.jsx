@@ -130,7 +130,6 @@ const KinshipApplicationProcess = () => {
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
 
-  
   const getSteps = (applicationPackage) => {
     const baseSteps = [
       {key: 'application', label: 'Submit caregiver application', description: 'You may submit an application to become a kinship caregiver.', disabled: false},
@@ -139,6 +138,7 @@ const KinshipApplicationProcess = () => {
       {key: 'training', label: 'Training', description: 'Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
       {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
     ];
+
     return baseSteps.map(step => {
       if (step.key === 'application' && applicationPackage?.status === 'Application') {
 
@@ -148,7 +148,7 @@ const KinshipApplicationProcess = () => {
           disabled: false,
           iconType: 'start',
         }
-      } 
+      }
       if (step.key === 'application' && (applicationPackage?.status === 'Consent' || applicationPackage?.status === 'Submitted' || applicationPackage?.status === 'Ready')) {
 
         return {
@@ -175,7 +175,7 @@ const KinshipApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && !hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment' && applicationPackage?.srStage !== 'Completed') && !hasMedicalAssessment) {
 
         return {
           ...step,
@@ -192,8 +192,7 @@ const KinshipApplicationProcess = () => {
           iconType: 'waiting',
         }
       }
-
-      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment' && applicationPackage?.srStage !== 'Completed') && hasMedicalAssessment) {
 
         return {
           ...step,
@@ -203,7 +202,7 @@ const KinshipApplicationProcess = () => {
         }
       }
 
-      if (step.key === 'screening' && applicationPackage?.srStage === 'Assessment') {
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage === 'Completed')) {
 
         return {
           ...step,
@@ -225,6 +224,17 @@ const KinshipApplicationProcess = () => {
         }
       }
 
+      if (step.key === 'training' && (applicationPackage?.srStage === 'Completed')) {
+
+        return {
+          ...step,
+          description: 'The training requirements have been assessed.',
+          disabled: true,
+          iconType: 'complete',
+
+        }
+      }
+
       if (step.key === 'homevisits' && (applicationPackage?.srStage === 'Assessment')) {
 
         return {
@@ -233,6 +243,17 @@ const KinshipApplicationProcess = () => {
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
+
+        }
+      }
+
+      if (step.key === 'homevisits' && (applicationPackage?.srStage === 'Completed')) {
+
+        return {
+          ...step,
+          description: 'Your homestudy has been assessed.',
+          disabled: true,
+          iconType: 'complete',
 
         }
       }
@@ -268,16 +289,18 @@ return (
         </div>
         </div>
         <div className="page-details-row-footer">
+        {applicationPackage?.srStage !== 'Completed' && (
                 <Button variant="danger"
                   onClick={() => handleCancel(applicationPackageId)}
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
+                )}
 
-                { (resubmit_on && applicationPackage?.status === 'Submitted' ) && (
+                { (resubmit_on && applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Completed') && (
                 <Button variant="white"
                   onClick={() => navigate(resubmitLink)}
                   disabled={isDeleting}
-                  ><FilePlus size="16" />Add/Update Application Forms</Button>                  
+                  ><FilePlus size="16" />Add/Update Application Forms</Button>
                 )}
 
                   <ConfirmationModal
