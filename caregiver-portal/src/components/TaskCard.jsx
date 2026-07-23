@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
-import { ArrowRight, CircleCheck } from 'lucide-react';
+import { ArrowRight, CircleCheck, Info } from 'lucide-react';
 
 const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
     const navigate = useNavigate();
