@@ -197,7 +197,7 @@ const FosterApplicationProcess = () => {
           iconType: 'complete',
         }
       }
-      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && !hasMedicalAssessment) {
+      if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment' && applicationPackage?.srStage !== 'Completed') && !hasMedicalAssessment) {
 
         return {
           ...step,
@@ -215,6 +215,16 @@ const FosterApplicationProcess = () => {
         }
       }
 
+      if (step.key === 'screening' && (applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage ==='Completed')) {
+
+        return {
+          ...step,
+          description: 'The foster caregiver screening has been completed.',
+          disabled: true,
+          iconType: 'complete',
+        }
+      }
+
       if (step.key === 'screening' && (applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Assessment') && hasMedicalAssessment) {
 
         return {
@@ -225,15 +235,7 @@ const FosterApplicationProcess = () => {
         }
       }
 
-      if (step.key === 'screening' && applicationPackage?.srStage === 'Assessment') {
 
-        return {
-          ...step,
-          description: 'The foster caregiver screening has been completed.',
-          disabled: true,
-          iconType: 'complete',
-        }
-      }
 
       if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment')) {
 
@@ -247,6 +249,17 @@ const FosterApplicationProcess = () => {
         }
       }
 
+      if (step.key === 'training' && (applicationPackage?.srStage === 'Completed')) {
+
+        return {
+          ...step,
+          description: 'The training requirements have been assessed.',
+          disabled: true,
+          iconType: 'complete',
+
+        }
+      }
+
       if (step.key === 'homevisits' && (applicationPackage?.srStage === 'Assessment')) {
 
         return {
@@ -255,6 +268,18 @@ const FosterApplicationProcess = () => {
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
+
+        }
+      }
+
+
+      if (step.key === 'homevisits' && (applicationPackage?.srStage === 'Completed')) {
+
+        return {
+          ...step,
+          description: 'Your homestudy has been assessed.',
+          disabled: true,
+          iconType: 'complete',
 
         }
       }
@@ -275,7 +300,7 @@ return (
           <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Become a foster caregiver</h1>
+          <h1 className="page-title">Become a foster caregiver {applicationPackage?.srStage}</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 6</p>
@@ -290,12 +315,13 @@ return (
         </div>
         </div>
         <div className="page-details-row-footer">
+               {applicationPackage?.srStage !== 'Completed' &&(
                 <Button variant="danger"
                   onClick={() => handleCancel(applicationPackageId)}
                   disabled={isDeleting}
                   ><Trash size="16" />Cancel application</Button>
-
-                { (resubmit_on && applicationPackage?.status === 'Submitted' ) && (
+                )}
+                { (resubmit_on && applicationPackage?.status === 'Submitted' && applicationPackage?.srStage !== 'Completed' ) && (
                 <Button variant="white"
                   onClick={() => navigate(resubmitLink)}
                   disabled={isDeleting}
