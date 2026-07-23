@@ -471,6 +471,27 @@ gap: 10px;
     
   }
 
+  .welcome-badge-container {
+    background-color:white;
+    border-radius: 4px;
+    color: var(--icons-color-success, #42814A);
+    width: 245px;
+    font-weight: bold;
+    font-size: medium;
+    align-items: center;
+    display: flex;
+
+  }
+
+  .task-item {
+    display: flex;
+    gap:8px;
+  }
+
+  .approved-badge {
+    color: var(--icons-color-success, #42814A); 
+  }
+
   .declaration {
     display: flex;
     align-items: flex-start;
