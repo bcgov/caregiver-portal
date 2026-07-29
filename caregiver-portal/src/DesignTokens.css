@@ -292,12 +292,15 @@ li {
 
 .task-content-row {
 /* used */
-display: flex;
+display: grid;
+grid-template-columns: auto;
+grid-gap: 24px;
 width: 100%;
 max-width: 1120px;
-justify-content: space-between;
-align-items: flex-start;
-gap: 32px;
+@media (min-width: 768px) {
+  grid-template-columns: minmax(min-content, 50%) minmax(min-content, 50%);
+  grid-gap: 32px;
+  }
 }
 
 
@@ -1008,8 +1011,8 @@ iframe {
   padding: var(--layout-padding-large);
   border-radius: 6px;
   background: var(--theme-blue-10, #F1F8FE);
-  width: -webkit-fill-available;
-  max-width: 300px;
+  //width: -webkit-fill-available;
+  //max-width: 300px;
 }
 
 .task-card-content {
@@ -1651,8 +1654,8 @@ a {
   .task-list {
     /* used */
     display: flex;
-    width: 422px;
-    max-width: 560px;
+    //width: 422px;
+    //max-width: 560px;
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
@@ -2339,12 +2342,6 @@ a {
       width: 302px;
     }
 
-    .task-content-row {
-      flex-direction: column;
-      gap: 20px;
-      padding: 0;
-    }
-
   }
 
   .resubmission-subtitle {
@@ -2464,14 +2461,6 @@ a {
       }
     }
   
-  
-
     
 
-    @media (max-width: 960px) {
-      .task-content-row {
-        flex-direction: column;
-        gap: 24px;
-      }
-  
-    }
+    
