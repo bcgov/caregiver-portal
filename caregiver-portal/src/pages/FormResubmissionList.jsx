@@ -12,7 +12,7 @@ import Modal from '../components/Modal';
 
 const DOC_TYPES_BY_ROLE = {
   primary: [
-    'Medical Assessment',
+    //'Medical Assessment',
     'International Criminal Record Check',
     'Other Document',
   ],
@@ -20,14 +20,14 @@ const DOC_TYPES_BY_ROLE = {
     'About Me (Spouse)',
     'Consent for Disclosure of Criminal Record Information',
     'Consent for Prior Contact Check',
-    'Medical Assessment',
+    //'Medical Assessment',
     'International Criminal Record Check',
     'Other Document',
   ],
   adult: [
     'Consent for Disclosure of Criminal Record Information',
     'Consent for Prior Contact Check',
-    'Medical Assessment',
+    //'Medical Assessment',
     'Other Document',
   ],
 };
@@ -311,12 +311,7 @@ const FormResubmissionList = () => {
                     PDF 214 KB
                   </span>
                 </div>
-                <div className="resubmission-form-row">
-                  <span className="resubmission-form-download"><File size="20" className="inline-icon" /><a href="/Medical-Report-on-Applicant.pdf" download target="_blank" className="resub">Medical Report on Applicant  <Download size="20" className="inline-icon" /></a></span>
-                  <span className="resubmission-form-date">
-                    PDF 424 KB
-                  </span>
-                </div>
+
                 
                 
                 </div>
