@@ -61,6 +61,50 @@ export const useAttachments = () => {
     }
   }, []);
 
+  const getAttachmentsByApplicationPackageId = useCallback(async (applicationPackageId) => {
+    setIsLoading(true);
+    setError(null);   
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/attachments/application-package/${applicationPackageId}`,
+        { credentials: 'include' },
+      );    
+      if (!response.ok) throw new Error('Failed to fetch attachments');
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const uploadDocuments = useCallback(async (applicationPackageId, householdMemberId, attachmentType) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/submit-documents-to-icm`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ householdMemberId, attachmentType }),
+        },
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to submit documents: ${response.status}`);
+      }
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const downloadAttachment = useCallback(async (attachmentId) => {
     setIsLoading(true);
     setError(null);
@@ -148,7 +192,9 @@ export const useAttachments = () => {
   return {
     uploadAttachment,
     getAttachmentsByHouseholdId,
+    getAttachmentsByApplicationPackageId,
     uploadMedicalAssessment,
+    uploadDocuments,
     downloadAttachment,
     deleteAttachment,
     isLoading,

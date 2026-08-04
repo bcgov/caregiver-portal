@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import "../DesignTokens.css";
 import BreadcrumbBar from '../components/BreadcrumbBar';
 import Household from '../components/Household';
@@ -8,22 +8,27 @@ import { useHousehold } from '../hooks/useHousehold';
 
 const HouseholdForm = () => {
   const { applicationPackageId, applicationFormId } = useParams();
-
   const [nextUrl, setNextUrl] = useState('');
-  const { getApplicationForms } = useApplicationPackage();  
+  const { getApplicationForms } = useApplicationPackage();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith('/kinship-application')
+    ? `/kinship-application/application-package/${applicationPackageId}`
+    : `/foster-application/application-package/${applicationPackageId}`;
+      
   // Single source of truth for household data (the component page uses it as well)
   const householdHook = useHousehold({applicationPackageId});
   const [formMessage, setFormMessage] = React.useState('');
+  const HOUSEHOLDFORM = 'Adults in my home';
 
 
-  const home = `/foster-application/application-package/${applicationPackageId}`;
+  const home = basePath;
 
     // Mock applicationForm object for the breadcrumb
     const householdFormStatus = useMemo(() => {
       const isComplete = householdHook.isHouseholdComplete();
 
       return {
-        type: 'My household',
+        type: HOUSEHOLDFORM,
         status: isComplete && householdHook.hasHousehold !== null && householdHook.hasPartner !== null ? 'Complete' : 'Draft'
       };
     }, [householdHook]);
@@ -51,10 +56,10 @@ const HouseholdForm = () => {
             const nextForm = formsArray[nextIndex];
 
             // Build URL based on form type
-            if (nextForm.type && nextForm.type === 'Adults in household') {
-              setNextUrl(`/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`);
+            if (nextForm.type && nextForm.type === HOUSEHOLDFORM) {
+              setNextUrl(`${basePath}/household-form/${nextForm.applicationFormId}`);
             } else {
-              setNextUrl(`/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`);
+              setNextUrl(`${basePath}/application-form/${nextForm.applicationFormId}`);
             }
           }
         }
@@ -87,7 +92,7 @@ const HouseholdForm = () => {
     <div className="household-content">
       <div className="household-content-inner">
         <div className="page-details-row-small">
-          <h1 className="page-title">My household</h1>
+          <h1 className="page-title">{HOUSEHOLDFORM}</h1>
         </div>
 
         <div className="page-details-row">

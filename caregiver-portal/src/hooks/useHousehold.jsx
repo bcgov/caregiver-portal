@@ -21,6 +21,7 @@ export const useHousehold = ({applicationPackageId}) => {
         isDirty: false
     });
 
+    const [primaryApplicant, setPrimaryApplicant] = useState(null);
     const [householdMembers, setHouseholdMembers] = useState([]); // all non-spouse household members 
     const [hasPartner, setHasPartner] = useState(null);
     const [hasHousehold, setHasHousehold] = useState(null);
@@ -75,6 +76,21 @@ export const useHousehold = ({applicationPackageId}) => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            // locate the primary applicant and save it
+            const selfMember = data.find(member => member.relationshipToPrimary === 'Self');
+            if (selfMember) {
+                const rawDob = selfMember.dateOfBirth || '';
+                const parts = rawDob.split('/');
+                const normalizedDob = parts.length === 3
+                    ? `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`
+                    : rawDob.substring(0, 10);
+                setPrimaryApplicant({
+                    firstName: selfMember.firstName,
+                    lastName: selfMember.lastName,
+                    dob: normalizedDob,
+                    householdMemberId: selfMember.householdMemberId,
+                }); 
+            } 
             // remove primary applicant from household data
             const householdData = data.filter(member => member.relationshipToPrimary !== 'Self'); 
             // find partner/spouse in household data
@@ -231,9 +247,9 @@ export const useHousehold = ({applicationPackageId}) => {
                         let updatedMember = { ...member, [field]: value };
                         // Clear gender/email when crossing adult/non-adult boundary
                         
-                        if (field === 'dob' && value) {
+                        if (field === 'dob' && value && member.dob) {
                             const newAge = calculateAge(value);
-                            const oldAge = member.dob ? calculateAge(member.dob) : 0;
+                            const oldAge = calculateAge(member.dob);
                             // Changed from non-adult to adult - clear gender
                             if (oldAge < 19 && newAge >= 19) {
                                 updatedMember.genderType = '';
@@ -422,6 +438,7 @@ export const useHousehold = ({applicationPackageId}) => {
   
     return {
         // state
+        primaryApplicant,
         partner,
         householdMembers,
         isLoading,
@@ -454,6 +471,7 @@ export const useHousehold = ({applicationPackageId}) => {
         loadApplicationPackage,
         getAccessCode,
         isHouseholdComplete,
+        
       };
 
 };

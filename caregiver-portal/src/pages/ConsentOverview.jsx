@@ -399,7 +399,7 @@ const ConsentOverview = () => {
           applicationFormId={screeningFormId}
           householdMemberId={householdMemberId}
           isLocked={isLocked}
-          acceptedTypes={['.pdf', '.jpg', '.jpeg', '.png']}
+          acceptedTypes={['pdf', 'jpg', 'jpeg', 'png']}
           maxSizeMB={5}
           description="_"
           />   

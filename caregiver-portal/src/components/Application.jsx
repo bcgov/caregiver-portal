@@ -9,7 +9,16 @@ import BreadcrumbBar from './BreadcrumbBar';
 
 
 
-const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmitComplete, submitPackage = false, householdMemberId, Context = 'Application' }) => {
+const Application = ({ 
+  applicationPackageId, 
+  applicationFormId, 
+  onBack, 
+  onSubmitComplete,
+  nextLabel, 
+  submitPackage = false, 
+  householdMemberId, 
+  Context = 'Application',
+  basePath, }) => {
     const [iframeUrl, setIframeUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,14 +33,17 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
     const iframeRef = useRef(null);
     const iframeUrlRef = useRef(null);
     const navigationTargetRef = useRef(null);
+    const HOUSEHOLDFORM = 'Adults in my home';
 
     const navigate = useNavigate();
+
+    const resolvedBasePath = basePath || `/foster-application/application-package/${applicationPackageId}`;
 
     const home = Context === 'Screening' && householdMemberId
     ? `/screening-package/${householdMemberId}`
     : Context === 'Referral'
     ? `/foster-application/referral-package/${applicationPackageId}`
-    : `/foster-application/application-package/${applicationPackageId}`;
+    : resolvedBasePath;
       
     const { getApplicationForm, submitApplicationPackage, getApplicationForms } = useApplicationPackage();
 
@@ -86,11 +98,11 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
               let nextFormUrl;
               if (Context === 'Screening' && householdMemberId) {
                 nextFormUrl =`/screening-package/${householdMemberId}/screening-form/${nextForm.applicationFormId}`;
-              } else if (nextForm.type && nextForm.type === 'Adults in household') {
+              } else if (nextForm.type && nextForm.type === HOUSEHOLDFORM) {
                 // Build URL based on form type (household vs regular)
-                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/household-form/${nextForm.applicationFormId}`;
+                nextFormUrl = `${resolvedBasePath}/household-form/${nextForm.applicationFormId}`;
               } else {
-                nextFormUrl = `/foster-application/application-package/${applicationPackageId}/application-form/${nextForm.applicationFormId}`;
+                nextFormUrl = `${resolvedBasePath}/application-form/${nextForm.applicationFormId}`;
               }
               setNextUrl(nextFormUrl);
             } else {
@@ -156,7 +168,14 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
  * if there are errors on the page it will return errorOnComplete otherwise it will return 'submit' as a success
  */
     useEffect(() => {
-      async function handleMessage(event) {        
+      async function handleMessage(event) {  
+        /*
+        console.log('submit event received');
+        console.log('typeof onSubmitComplete:', typeof onSubmitComplete);
+        console.log('submitPackage:', submitPackage);
+        console.log('event.data raw:', event.data, typeof event.data);
+        */
+
         if (event.data === '{"event":"errorOnSave"}') {
           setIsFormValid(false);
           setApplicationForm(prev => ({
@@ -190,10 +209,14 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
           setIsSubmitting(true);
 
           if (!submitPackage) {
-            // Check if navigation was triggered from breadcrumb actions first
-            const targetUrl = navigationTargetRef.current || nextUrl || onSubmitComplete || home;
-            navigationTargetRef.current = null; // Reset after reading
-            navigate(targetUrl);
+            if (typeof onSubmitComplete === 'function') {
+              await onSubmitComplete();
+            } else {
+              // Check if navigation was triggered from breadcrumb actions first
+              const targetUrl = navigationTargetRef.current || nextUrl || onSubmitComplete || home;
+              navigationTargetRef.current = null; // Reset after reading
+              navigate(targetUrl);
+            }
             setIsSubmitting(false);
           } else {       
             try {
@@ -282,9 +305,9 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
                   <RefreshCw className="w-4 h-4 inline mr-2" />
                   Retry
                 </button>
-                {onClose && (
+                {onBack && (
                   <button
-                    onClick={onClose}
+                    onClick={onBack}
                     className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md transition-colors"
                   >
                     Close
@@ -304,7 +327,7 @@ const Application = ({ applicationPackageId, applicationFormId, onClose, onSubmi
         {/* Top breadcrumb - aligned with page content */}
         <div className="breadcrumb-top">
           <div className="breadcrumb-top-content">
-            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} isFormValid={isFormValid} iframeRef={iframeRef} message={formMessage} navigationTargetRef={navigationTargetRef}/>
+            <BreadcrumbBar home={home} next={nextUrl} applicationForm={applicationForm} isFormValid={isFormValid} iframeRef={iframeRef} message={formMessage} navigationTargetRef={navigationTargetRef} onBack={onBack} nextLabel={nextLabel}/>
           </div>
         </div>
           <div className="iframe-content">

@@ -10,7 +10,7 @@ import Declaration from '../components/Declaration';
 import { Loader2 } from 'lucide-react';
 
 
-const FosterApplicationPackage = () => {
+const KinshipApplicationPackage = () => {
   const { applicationPackageId } = useParams();
   const [forms, setForms] = React.useState([]);
   const [household, setHousehold] = React.useState();
@@ -25,8 +25,8 @@ const FosterApplicationPackage = () => {
   const HOUSEHOLDFORM = 'Adults in my home';
 
     const breadcrumbItems = [
-        { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
-        { label: 'Application to provide foster family care' },
+        { label: 'Become a kinship caregiver', path: `/kinship-application/${applicationPackageId}` },
+        { label: 'Application to provide kinship family care' },
       ];
 
       const handleBackClick = (item) => {
@@ -34,25 +34,17 @@ const FosterApplicationPackage = () => {
       };
 
       const handleContinue = (item) => {
-        console.log(item);
         if (item.type && item.type === HOUSEHOLDFORM) {
           // Special case for household form
-          navigate(`/foster-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
+          navigate(`/kinship-application/application-package/${applicationPackageId}/household-form/${item.applicationFormId}`);
           return;
         } else { 
-          navigate(`/foster-application/application-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
+          navigate(`/kinship-application/application-package/${applicationPackageId}/application-form/${item.applicationFormId}`);
           return
         }
       }
 
       const handleState = (item) => {
-        // TODO: Finish this
-
-        //household will need a verify complet function that looks into the hasHoushold, hasSpouse, etc to verify they are not null
-        //and for either of those that are true, verify that there is at least one household member that matches those criterion
-        // the other types will be based off the applicationForm.status; which may not be right yet until we figure out the submission
-        // state
-
         if (item.type === HOUSEHOLDFORM && household?.isComplete) {
           return 'Complete';
         } else {
@@ -66,8 +58,8 @@ const FosterApplicationPackage = () => {
         // Check if all non-household forms have status 'Complete'
         const nonHouseholdForms = forms.filter(form =>
           !form.type?.toLowerCase().includes ('adults') &&
-          !form.type?.toLowerCase().includes('referral') &&
-          !form.type?.toLowerCase().includes('indigenous')
+          !form.type?.toLowerCase().includes('referral') //&&
+          //!form.type?.toLowerCase().includes('indigenous')
         );
 
         const allFormsComplete = nonHouseholdForms.length > 0 &&
@@ -77,13 +69,13 @@ const FosterApplicationPackage = () => {
       };
 
       const handleSubmit = async () => {
-        if (isSubmittingRef.current) return;
+        if(isSubmittingRef.current) return;
         isSubmittingRef.current = true;
         setIsSubmitting(true);
         try {
           await lockApplicationPackage(applicationPackageId);
           setIsApplicationLocked(true);
-          navigate(`/foster-application/${applicationPackageId}`);
+          navigate(`/kinship-application/${applicationPackageId}`);
         } catch (error) {
           console.error(error);
         } finally {
@@ -99,14 +91,14 @@ const FosterApplicationPackage = () => {
             setAppPackage(appPackage);
 
             // Redirect if wrong application type
-            if (appPackage.subtype === 'OOC') {
-              navigate(`/kinship-application/application-package/${applicationPackageId}`);
+            if (appPackage.subtype === 'FCH') {
+              navigate(`/foster-application/application-package/${applicationPackageId}`);
               return;
             }
-            
+
             if(appPackage.status === 'Submitted') {
               setIsApplicationLocked(true);
-              navigate(`/foster-application/${applicationPackageId}`); // navigate back to the process page
+              navigate(`/kinship-application/${applicationPackageId}`); // navigate back to the process page
             } 
           } catch (error) {
             console.error('failed to load application package', error);
@@ -146,15 +138,14 @@ const FosterApplicationPackage = () => {
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Application to provide foster family care</h1>
+          <h1 className="page-title">Application to provide kinship care</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">
-            {forms.map((step, index) => (
-              (step.type !== 'Referral' && step.type.indexOf('Indigenous') < 0) && // Exclude 'Referral' type steps
+            {forms.map((step, index) => (              
                <ApplicationPackageStep key={step.key} step={step} index={index} onContinue={() => {handleContinue(step)}} state={handleState(step)}/>
             ))}
         </div>
@@ -204,4 +195,4 @@ const FosterApplicationPackage = () => {
     )
 };
 
-export default FosterApplicationPackage;
+export default KinshipApplicationPackage;

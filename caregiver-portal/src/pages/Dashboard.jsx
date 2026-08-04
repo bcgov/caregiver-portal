@@ -6,17 +6,20 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
-//import OOCApplicationStart from '../components/OOCApplicationStart';
+import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/TaskCard';
+import TaskItem from '../components/TaskItem';
 import ScreeningTaskCard from '../components/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 import WelcomeCard from '../components/WelcomeCard';
-import { Loader2 } from 'lucide-react';
+import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
   const navigate = useNavigate();
   const [householdMemberships, setHouseholdMemberships] = React.useState([]);
+
+  const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
 
   const {
     createApplicationPackage,
@@ -26,22 +29,42 @@ const Dashboard = () => {
   } = useApplicationPackage();
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
+  const [hasResourceCase, setHasResourceCase] = React.useState([]);
   const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
+  const [fosterApplications, setFosterApplications] = React.useState([]);
+  const [kinshipApplications, setKinshipApplications] = React.useState([]);
+
+
+  //
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
+  const handleNavigateToOOCApplication = useCallback((applicationPackageId) => {
+    navigate(`/kinship-application/${applicationPackageId}`);
+  }, [navigate]);
+
   const loadApplicationPackages = useCallback(async () => {
     try {
       const apps = await getApplicationPackages();
-      setApplicationPackages(apps);
+      const incompleteApps = apps.filter(app => app.srStage !== 'Completed')
+      setApplicationPackages(incompleteApps);
+      setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
+      setKinshipApplications(incompleteApps.filter(app => app.subtype === 'OOC'));
+      //setHasResourceCase(userProfile?.resource_case_active_date);
+      //console.log('foster applications:', apps.filter(app => app.subtype === 'FCH'));
+      //console.log(userProfile);
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
   }, []);
+
+  useEffect(() => {
+    setHasResourceCase(userProfile?.resource_case_active_date);
+  }, [userProfile]);
 
   const {
     getApplicationForms,
@@ -53,7 +76,7 @@ const Dashboard = () => {
     getApplicationForms();
   }, [getApplicationForms]);
 
-  const handleCreateApplication = async () => {
+  const handleCreateFCHApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
         subtype: 'FCH',
@@ -64,6 +87,19 @@ const Dashboard = () => {
       console.error('Failed to create application:', err);
     }
   };
+
+  const handleCreateOOCApplication = async () => {
+    try {
+      const newPackage = await createApplicationPackage({
+        subtype: 'OOC',
+        subsubtype: 'EFP'
+      });
+      handleNavigateToOOCApplication(newPackage.applicationPackageId);
+    } catch (err) {
+      console.error('Failed to create application:', err);
+    }
+  };
+
 
   useEffect(() => {
     if (!auth.loading && auth.user) {
@@ -103,7 +139,14 @@ const Dashboard = () => {
           <>
           <div className="task-frame-image">
             <div className="task-content">
-              <WelcomeCard user={auth.user}></WelcomeCard>
+              <WelcomeCard user={auth.user}>
+              {hasResourceCase && (
+                <div className="welcome-badge-container">
+                  <ShieldCheck size={20} className="welcome-badge" />{' '}
+                  Approved Foster Caregiver
+                </div>
+              )}
+              </WelcomeCard>
             </div>
           </div>
           <div className="task-frame-main-body">
@@ -113,14 +156,16 @@ const Dashboard = () => {
                 {(applicationPackages?.length > 0 || householdMemberships?.length > 0) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">My tasks</h2>
+                    <h2 className="page-heading">Outstanding tasks</h2>
                   </div>
                 )}
+
+
                 {applicationPackages?.map((app) => (
                   <>
-                    {app.subtype === "FCH" && (
-                      <TaskCard applicationPackage={app} />
-                    )}
+                    
+                      <TaskCard subtype={app.subtype} applicationPackage={app} />
+                    
                   </>
                 ))}
                 {householdMemberships?.map((membership) => {
@@ -133,9 +178,24 @@ const Dashboard = () => {
                     </div>
                   );
                 })}
-                {(applicationPackages?.length ===0) && (
-                  <FosterApplicationStart onClick={handleCreateApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+
+                {hasResourceCase && (
+                  <div className="image-frame">
+                    <hr className="gold-underline-large" />
+                    <h2 className="page-heading">Completed tasks</h2>
+                    <TaskItem></TaskItem>
+                  </div>
+                  
+                )
+                  
+                }
+                {(fosterApplications?.length === 0 && !hasResourceCase) && (
+                  <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}
+                {(KINSHIP_START_ON && kinshipApplications?.length === 0) && (
+                  <OOCApplicationStart onClick={handleCreateOOCApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+                )}
+
 
               </div>
               <AccessCard />

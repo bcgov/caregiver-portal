@@ -51,6 +51,7 @@ export const useApplicationPackage = () => {
       }
 
       const result = await response.json();
+      console.log(result);
 
       return result;
     } catch (err) {
@@ -60,6 +61,27 @@ export const useApplicationPackage = () => {
       setLoading(false);
     }
   };
+
+   // Creates a new ApplicationForm record (new UUID) cloned from an existing form.
+ // Returns { applicationFormId: newId }
+ const cloneApplicationForm = async (applicationFormId) => {
+  const response = await fetch(
+    `${API_BASE_URL}/application-forms/${applicationFormId}/clone`,
+    { method: 'POST', credentials: 'include' }
+  );
+  if (!response.ok) throw new Error('Failed to clone application form');
+  return response.json();
+};
+
+// Marks the form SUBMITTED and immediately enqueues it for ICM.
+const submitFormToICM = async (applicationFormId) => {
+  const response = await fetch(
+    `${API_BASE_URL}/application-forms/${applicationFormId}/submit-to-icm`,
+    { method: 'POST', credentials: 'include' }
+  );
+  if (!response.ok) throw new Error('Failed to submit form to ICM');
+  return response.json();
+};
 
   const getApplicationPackage = async (applicationPackageId) => {
     setLoading(true);
@@ -99,6 +121,14 @@ export const useApplicationPackage = () => {
     }
     return await response.json();
   }, []);
+
+  const deleteApplicationForm = async (applicationFormId) => {
+    const response = await fetch(
+      `${API_BASE_URL}/application-forms/${applicationFormId}`,
+      { method: 'DELETE', credentials: 'include' }
+    );
+    if (!response.ok) throw new Error('Failed to delete application form');
+  };
 
   const getApplicationForms = useCallback(async (applicationPackageId) => {
     const url = `${API_BASE_URL}/application-package/${applicationPackageId}/application-form`
@@ -276,6 +306,9 @@ export const useApplicationPackage = () => {
     requestInfoSession,
     validateHouseholdCompletion,
     saveReferralContactData,
+    cloneApplicationForm,
+    deleteApplicationForm,
+    submitFormToICM,
     loading,
     error,
   };
