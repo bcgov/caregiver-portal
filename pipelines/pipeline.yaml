@@ -163,6 +163,8 @@ spec:
           value: $(params.imageUrl)
         - name: IMAGE_TAG
           value: $(params.branchName)
+        - name: NAMESPACE
+          value: $(tasks.set-vite-secret.results.namespace)
       taskRef:
         kind: Task
         name: helm-deploy
