@@ -13,19 +13,14 @@ spec:
             - key: branchName
               # Extract branch name from refs/heads/<branch>
               expression: "body.ref.split('/')[2]"
+        # Matches the filter running in f6e00d-tools. The webhook sends both
+        # push and pull_request, so each event type is guarded explicitly:
+        # push payloads carry body.ref, pull_request payloads do not.
         - name: filter
-          value: |
-            (
-              body.ref.split('/')[2] in ['main', 'prod', 'dev', 'develop', 'test']
-            )
-            &&
-            (
-              body.head_commit.modified.exists(file,
-                file.startsWith('caregiver-portal')
-                || file.startsWith('portal-helm')
-                || file.startsWith('pipelines')
-              )
-            )
+          value: >-
+            (header.match("X-GitHub-Event", "push") && body.ref.split("/")[2] in ["main", "prod", "dev", "develop", "test"])
+            ||
+            (header.match("X-GitHub-Event", "pull_request") && body.pull_request.head.ref in ["main", "prod", "dev", "develop", "test"] && body.action in ["opened", "synchronize", "reopened"])
     - ref:
         name: github
         kind: ClusterInterceptor
