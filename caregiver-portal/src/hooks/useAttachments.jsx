@@ -189,12 +189,43 @@ export const useAttachments = () => {
     }
   }, []);
 
+  const submitTrainingCertificates = useCallback(async (applicationPackageId) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/submit-training-certificates`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Failed to submit training certificates: ${response.status}`,
+        );
+      }
+
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
     uploadAttachment,
     getAttachmentsByHouseholdId,
     getAttachmentsByApplicationPackageId,
     uploadMedicalAssessment,
     uploadDocuments,
+    submitTrainingCertificates,
     downloadAttachment,
     deleteAttachment,
     isLoading,
