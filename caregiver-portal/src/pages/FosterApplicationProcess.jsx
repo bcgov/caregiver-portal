@@ -96,6 +96,9 @@ const FosterApplicationProcess = () => {
       case "screening":
         navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
+      case "training":
+        navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
+        break;
       default: 
         navigate(`/foster-application/application-package/${applicationPackageId}`);
         break;
@@ -238,14 +241,13 @@ const FosterApplicationProcess = () => {
 
 
 
-      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment' && !hasTrainingCertificates)) {
+      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage === 'Screening') && !hasTrainingCertificates) {
 
         return {
           ...step,
           description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
-          disabled: true,
-          iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
+          disabled: false,
+          iconType: 'start',
 
         }
       }
