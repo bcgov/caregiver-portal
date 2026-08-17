@@ -130,6 +130,7 @@ const FosterApplicationProcess = () => {
   }
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
+  const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
 
   
   const getSteps = (applicationPackage) => {
@@ -237,7 +238,7 @@ const FosterApplicationProcess = () => {
 
 
 
-      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment')) {
+      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment' && !hasTrainingCertificates)) {
 
         return {
           ...step,
@@ -247,6 +248,15 @@ const FosterApplicationProcess = () => {
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
 
         }
+      }
+
+      if (step.key === 'training' && hasTrainingCertificates && applicationPackage?.srStage !== 'Completed') {
+        return {
+          ...step,
+          description: 'Your training certificates have been submitted. A social worker will review them as part of your assessment.',
+          disabled: true,
+          iconType: 'complete',
+        };
       }
 
       if (step.key === 'training' && (applicationPackage?.srStage === 'Completed')) {
