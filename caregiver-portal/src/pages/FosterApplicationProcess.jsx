@@ -97,7 +97,7 @@ const FosterApplicationProcess = () => {
         navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
       case "training":
-        navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
+        navigate(`/foster-application/application-package/${applicationPackageId}/training`);
         break;
       default: 
         navigate(`/foster-application/application-package/${applicationPackageId}`);
