@@ -132,11 +132,11 @@ const KinshipApplicationProcess = () => {
 
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'application', label: 'Submit caregiver application', description: 'You may submit an application to become a kinship caregiver.', disabled: false},
-      {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
-      {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
-      {key: 'training', label: 'Training', description: 'Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
-      {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
+      {key: 'application', label: 'Submit caregiver application', description: 'Complete and submit your application package, which includes questions about you and your household.', disabled: false},
+      {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application package, all adults in your home need to provide information and consents for the screening process to begin.', disabled: true},
+      {key: 'screening', label: 'Screening', description: 'Once your application and consents forms are received, the screening process will begin. This includes: references, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
+      {key: 'training', label: 'Training', description: 'Depending on circumstance, Kinship training may be required.', disabled: true },
+      {key: 'homevisits', label: 'Home Study', description: 'Completion of a home assessment which will include in-home visits that discuss topics such as your connection to the child or youth and family, how you can meet the child or youth’s needs, and what supports you and the child or youth might need. Please note that the assessment may occur at the same time as the screening phase.', disabled: true},
     ];
 
     return baseSteps.map(step => {
