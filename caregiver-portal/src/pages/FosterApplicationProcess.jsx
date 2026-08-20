@@ -37,6 +37,7 @@ const FosterApplicationProcess = () => {
   }
 
   const resubmit_on = import.meta.env.VITE_RESUBMIT_ON === 'true' || false;
+  const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
 
   const getCurrentStep = (status) => {
     return statusStepMap[status]
@@ -59,7 +60,6 @@ const FosterApplicationProcess = () => {
             getApplicationForms(applicationPackageId),
             getApplicationPackage(applicationPackageId)
           ]);
-          //setForms(formsArray);
           setApplicationPackage(packageData);
 
           // Redirect if wrong application type
@@ -130,6 +130,10 @@ const FosterApplicationProcess = () => {
   const handleConfirmReferral = () => {
     setShowReferralModal(false);
     navigate(`/foster-application/referral-package/${applicationPackageId}`);
+  }
+
+  const showAppPackage = () => {
+    console.log(applicationPackage);
   }
 
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
@@ -241,7 +245,7 @@ const FosterApplicationProcess = () => {
 
 
 
-      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage === 'Screening') && !hasTrainingCertificates) {
+      if (step.key === 'training' && training_on && (applicationPackage?.status === 'Submitted' || applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage === 'Screening') && !hasTrainingCertificates) {
 
         return {
           ...step,
