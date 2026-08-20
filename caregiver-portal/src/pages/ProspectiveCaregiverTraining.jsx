@@ -11,7 +11,7 @@ import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X } from 'lucide-react';
 import "../DesignTokens.css";
 
-const TRAINING_CERTIFICATE_TYPE = 'Training Certificate';
+const TRAINING_CERTIFICATE_TYPE = 'PRIDE Certificate';
 
 const ProspectiveCaregiverTraining = () => {
     const { applicationPackageId } = useParams();
@@ -37,6 +37,7 @@ const ProspectiveCaregiverTraining = () => {
     const [submitError, setSubmitError] = React.useState(null);
   
     const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
+
   
     const breadcrumbItems = [
       { label: 'Dashboard', path: '/dashboard' },
@@ -65,6 +66,13 @@ const ProspectiveCaregiverTraining = () => {
       }
       return opts;
     }, [primaryApplicant, partner]);
+
+    const allMembersCovered = React.useMemo(() =>
+      memberOptions.every(opt =>
+        allPendingFiles.some(f => (f.householdMemberId ?? null) === (opt.householdMemberId ?? null))
+      ),
+      [memberOptions, allPendingFiles],
+    );
   
     const getMemberLabel = (householdMemberId) => {
       const match = memberOptions.find(o => (o.householdMemberId ?? null) === (householdMemberId ?? null));
@@ -194,12 +202,8 @@ const ProspectiveCaregiverTraining = () => {
           <div className="resubmission-subtitle">
             <hr className="gold-underline-large" />
             <h2 className="page-heading">Pre-service training</h2>
-            <div>
-              <p>PRIDE Pre-Service training is required for all new prospective caregivers. PRIDE Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period. Your social worker has registered you for the training and will have forwarded you a link where you can complete it online.</p>
-
-              <p>Once you have completed the training, upload the training certificate <strong>for yourself and for any other co-applicants</strong>. </p>
-            </div>
           </div>
+      
   
           {isLoadingData ? (
             <p>Loading...</p>
@@ -243,6 +247,13 @@ const ProspectiveCaregiverTraining = () => {
             </>
           ) : (
             <>
+
+            <div>
+              <p>PRIDE Pre-Service training is required for all new prospective caregivers. PRIDE Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period. Your social worker has registered you for the training and will have forwarded you a link where you can complete it online.</p>
+
+              <p>Once you have completed the training, upload the training certificate <strong>for yourself and for any other co-applicants</strong>. </p>
+            </div>
+          
               <div className="page-details-row-small">
                 <Button variant="primary" onClick={() => setIsModalOpen(true)}>
                   <FilePlus size="16" />
@@ -282,7 +293,11 @@ const ProspectiveCaregiverTraining = () => {
               >
                 <div className="upload-docs-controls-list">
                   <div className="upload-docs-field">
-                    <label htmlFor="member-select" className="form-control-label">Which person is this document for?</label>
+                    {memberOptions.length == 2 && (<p>Upload training documents for every applicant</p>)}
+                    <label htmlFor="member-select" className="form-control-label">
+                      {allPendingFiles.length === 0 && ("Which person is this document for?")}
+                      {allPendingFiles.length === 1 && memberOptions.length === 2 && ("Add another document")}
+                      </label>
                     <select
                       id="member-select"
                       value={selectedMember?.householdMemberId ?? ''}
@@ -347,6 +362,12 @@ const ProspectiveCaregiverTraining = () => {
                     <span>{submitError}</span>
                   </div>
                 )}
+
+                {allPendingFiles.length > 0 && !allMembersCovered && (
+                  <div className="file-upload-error">
+                    <span>Upload a training certificate for each applicant before submitting.</span>
+                  </div>
+                )}
   
                 <div className="upload-button-row">
                   <Button
@@ -356,9 +377,9 @@ const ProspectiveCaregiverTraining = () => {
                     Cancel
                   </Button>
                   <Button
-                    variant={isSubmitting || allPendingFiles.length === 0 ? "disabled" : "primary"}
+                    variant={isSubmitting || !allMembersCovered ? "disabled" : "primary"}
                     onClick={handleSubmitToICM}
-                    disabled={isSubmitting || allPendingFiles.length === 0}
+                    disabled={isSubmitting || !allMembersCovered}
                   >
                     {isSubmitting ? 'Submitting...' : 'Submit File(s) to MCFD'}
                   </Button>
