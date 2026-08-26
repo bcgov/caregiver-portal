@@ -248,7 +248,7 @@ const ProspectiveCaregiverTraining = () => {
           ) : (
             <>
 
-            <div>
+            <div className="page-details-row">
               <p>PRIDE Pre-Service training is required for all new prospective caregivers. PRIDE Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period. Your social worker has registered you for the training and will have forwarded you a link where you can complete it online.</p>
 
               <p>Once you have completed the training, upload the training certificate <strong>for yourself and for any other co-applicants</strong>. </p>
