@@ -501,7 +501,7 @@ gap: 10px;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    width: 20px;
+    width: 18px;
     height: 20px;
     border: 3px solid #000;
     border-radius: 4px;
@@ -518,7 +518,7 @@ gap: 10px;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    width: 20px;
+    width: 18px;
     height: 20px;
     border: 3px solid #cccccc;
     border-radius: 4px;
@@ -545,14 +545,15 @@ gap: 10px;
   
   /* Checkmark — centered “X” */
   .declaration-checkbox:checked::after {
-    content: '✕'; /* nicer X symbol */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    color: #fff;
-    font-size: 14px;
-    line-height: 1;
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 1px;
+    width: 9px;
+    height: 5px;
+    border-bottom: 2px solid #fff;
+    border-left: 2px solid #fff;
+    transform: rotate(-50deg);
   }
   
   /* Optional: focus for accessibility */
