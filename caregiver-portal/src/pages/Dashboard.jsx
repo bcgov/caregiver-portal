@@ -7,9 +7,10 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import OOCApplicationStart from '../components/OOCApplicationStart';
-import TaskCard from '../components/TaskCard';
+import TaskCard from '../components/cards/TaskCard';
+import GenericTaskCard from '../components/cards/GenericTaskCard';
 import TaskItem from '../components/TaskItem';
-import ScreeningTaskCard from '../components/ScreeningTaskCard';
+import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 import WelcomeCard from '../components/WelcomeCard';
 import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [householdMemberships, setHouseholdMemberships] = React.useState([]);
 
   const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
+  const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
 
   const {
     createApplicationPackage,
@@ -125,7 +127,7 @@ const Dashboard = () => {
 
     <div className="page">
       
-        {isLoading || formsLoading && 
+        {(isLoading || formsLoading) && 
           <div className="submission-overlay">
             <div className="submission-modal">
               <Loader2 className="submission-spinner" />
@@ -187,6 +189,20 @@ const Dashboard = () => {
                   </div>
                   
                 )
+              }
+                { hasResourceCase && training_on && (
+    <GenericTaskCard
+    title="In-service training"
+    
+    buttonLabel="Continue"
+    onClick={() => navigate('/caregiver-training')}
+  />
+
+
+
+              
+                )
+                
                   
                 }
                 {(fosterApplications?.length === 0 && !hasResourceCase) && (
