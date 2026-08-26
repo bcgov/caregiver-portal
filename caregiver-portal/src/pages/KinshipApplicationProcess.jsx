@@ -44,7 +44,7 @@ const KinshipApplicationProcess = () => {
 
   const breadcrumbItems = [
     { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Become a kinship caregiver', path: '/dashboard' },
+    { label: 'Become a kinship care provider', path: '/dashboard' },
   ];
 
   const handleBackClick = (item) => {
@@ -274,7 +274,7 @@ return (
           <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Become a kinship caregiver</h1>
+          <h1 className="page-title">Become a kinship care provider</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 5</p>
@@ -308,7 +308,7 @@ return (
                     onClose={handleCancelDelete}
                     onConfirm={handleConfirmDelete}
                     title="Delete Application"
-                    message="Are you sure you want to delete your application to become a kinship caregiver? All the work you've done so far will be lost. This cannot be undone."
+                    message="Are you sure you want to delete your application to become a kinship care provider? All the work you've done so far will be lost. This cannot be undone."
                     confirmText="Delete my application"
                     cancelText="Cancel"
                     confirmVariant="danger"
