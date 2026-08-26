@@ -1,6 +1,7 @@
 import React from 'react';
-import Button from './Button';
+import Button from '../Button';
 import { ArrowRight } from 'lucide-react';
+import GenericTaskCard from './GenericTaskCard';
 import { useNavigate } from 'react-router-dom';
 
 const ScreeningTaskCard = ({applicationFormSet, householdMembership}) => {
@@ -22,25 +23,20 @@ const ScreeningTaskCard = ({applicationFormSet, householdMembership}) => {
     };
 
     return (
-      <div className="task-card" onClick={() => householdMembership?.screeningInfoProvided ? null : handleClick()}>
-
-      {householdMembership?.screeningInfoProvided && 
-        <div className="task-card-content">
-                
-            <div className="task-card-title">Your household screening form was successfully submitted</div>
-            <div className="caption-small">Submitted on {latestSubmittedAt}</div>
-
-        </div>
-      }
-      {!householdMembership?.screeningInfoProvided && 
-        <div className="task-card-content">
-                
-            <div className="task-card-title">Complete your foster caregiver household screening</div>
-
-            <Button variant="primary">Continue<ArrowRight></ArrowRight></Button>
-        </div>
-      }
-    </div>
+      <>
+        {householdMembership?.screeningInfoProvided ? (
+          <GenericTaskCard
+            title="Your household screening form was successfully submitted"
+            description={`Submitted on ${latestSubmittedAt}`}
+          />
+        ) : (
+          <GenericTaskCard
+            title="Complete your foster caregiver household screening"
+            buttonLabel="Continue"
+            onClick={handleClick}
+          />
+        )}
+      </>
     );
   };
 

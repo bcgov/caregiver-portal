@@ -64,7 +64,7 @@ const FormResubmissionList = () => {
     const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in my home', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in my home'];
 
     const breadcrumbItems = [
-      { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
+      { label: isKinship ? 'Become a kinship care provider' : 'Become a foster caregiver', path: basePath },
       { label: 'Submit additional documents' },
   ];
 
