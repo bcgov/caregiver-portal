@@ -31,7 +31,7 @@ const ScreeningTaskCard = ({applicationFormSet, householdMembership}) => {
           />
         ) : (
           <GenericTaskCard
-            title="Complete your foster caregiver household screening"
+            title="Complete your household screening"
             buttonLabel="Continue"
             onClick={handleClick}
           />
