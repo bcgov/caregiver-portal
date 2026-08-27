@@ -48,7 +48,7 @@ spec:
           --build-arg VITE_API_URL=$VITE_API_URL \
           --build-arg VITE_ACCESS_CODE_RESET=$VITE_ACCESS_CODE_RESET \
           --build-arg VITE_KINSHIP_START_ON=$VITE_KINSHIP_START_ON \
-          --build-arg VITE_TRAINING_ON=$VITE_TRAINING_ON \          
+          --build-arg VITE_TRAINING_ON=$VITE_TRAINING_ON \
           --build-arg VITE_RESUBMIT_ON=$VITE_RESUBMIT_ON \
           --build-arg VITE_ENV=$VITE_ENV \
           --build-arg VITE_BCSC_CLIENT_ID=$VITE_BCSC_CLIENT_ID \
