@@ -155,12 +155,20 @@ const Dashboard = () => {
             <div className="task-content-row">
               <div className="task-list">
               
-                {(applicationPackages?.length > 0 || householdMemberships?.length > 0) && (
+                {(applicationPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
                   </div>
                 )}
+
+                { hasResourceCase && training_on && (
+                    <GenericTaskCard
+                    title="In-service training"
+                    
+                    buttonLabel="Continue"
+                    onClick={() => navigate('/caregiver-training')}
+                  />)}
 
 
                 {applicationPackages?.map((app) => (
@@ -190,21 +198,7 @@ const Dashboard = () => {
                   
                 )
               }
-                { hasResourceCase && training_on && (
-    <GenericTaskCard
-    title="In-service training"
-    
-    buttonLabel="Continue"
-    onClick={() => navigate('/caregiver-training')}
-  />
 
-
-
-              
-                )
-                
-                  
-                }
                 {(fosterApplications?.length === 0 && !hasResourceCase) && (
                   <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}
