@@ -119,12 +119,12 @@ const MedicalForms = () => {
                 <p>As part of your assessment to become a Foster Caregiver, you must have a Medical Report completed by your Primary Health Care Provider. The report will be used to assess your 
                 medical capacity to provide and care for a foster child.</p>
 
-                <p><strong>Step 1</strong>: Download a copy of the <a href="/Medical-Report-on-Applicant.pdf" download className="bright">Medical Report on Applicant</a> form.</p>
+                <p><strong>Step 1</strong>: Download one copy of the required <a href="/Medical-Report-on-Applicant.pdf" download className="bright">Medical Report on Applicant</a> form for each applicant. If you and your spouse/partner are both applying to provide care, you must complete separate, individual forms.</p>
                 <p><strong>Step 2</strong>: Fill out the information in <em>Section 1 Applicant</em>. </p>
                 <p><strong>Step 3</strong>: Make an appointment with your Primary Health Care Provider to complete the rest of the form. 
                 Ensure that they sign and date the section on page 3. If you do not have a Primary Health Care Provider, 
                 book an appointment with an <a href="https://www.healthlinkbc.ca/primary-care/service-type/urgent-and-primary-care-centres" target="_blank" className="bright">Urgent and Primary Care Centre <ExternalLink className="welcome-link-icon"/></a>.</p>
-                <p><strong>Step 4</strong>: Have them forward the completed report along to MCFD as per the contact information on the form.</p> 
+                <p><strong>Step 4</strong>: Have them forward the completed report(s) along to MCFD as per the contact information on the form. The report will be used to assess any health considerations related to providing care for a foster child.</p> 
 
                 {medicalUploadsInPortal && (
                   <>

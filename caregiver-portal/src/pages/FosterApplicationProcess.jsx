@@ -209,7 +209,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Screening process is underway. You may proceed to complete your medical forms with the assistance of an authorized healthcare practitioner.',
+          description: 'Screening process is underway. Please select "continue" to download the required medical forms which will need to be completed by an authorized healthcare practitioner.',
           disabled: false,
           iconType: 'start',
         }
