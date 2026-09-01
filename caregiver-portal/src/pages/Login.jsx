@@ -8,6 +8,7 @@ import FosterApplicationStart from "../components/FosterApplicationStart";
 import WelcomeCard from "../components/WelcomeCard";
 import AboutCard from "../components/AboutCard";
 import AccessCard from "../components/AccessCard";
+import { Loader2 } from "lucide-react";
 
 
 export default function Home() {

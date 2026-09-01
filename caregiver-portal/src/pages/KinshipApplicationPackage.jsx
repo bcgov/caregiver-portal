@@ -25,7 +25,7 @@ const KinshipApplicationPackage = () => {
   const HOUSEHOLDFORM = 'Adults in my home';
 
     const breadcrumbItems = [
-        { label: 'Become a kinship caregiver', path: `/kinship-application/${applicationPackageId}` },
+        { label: 'Become a kinship care provider', path: `/kinship-application/${applicationPackageId}` },
         { label: 'Application to provide kinship family care' },
       ];
 

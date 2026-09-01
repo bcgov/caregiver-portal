@@ -215,7 +215,7 @@ const submitFormToICM = async (applicationFormId) => {
 
   const saveReferralContactData = async (applicationPackageId, contactData) => {
     setLoading(true);
-    setError(true);
+    setError(null);
 
     try {
       const response = await fetch(
