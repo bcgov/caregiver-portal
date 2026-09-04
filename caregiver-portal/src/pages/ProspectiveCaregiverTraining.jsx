@@ -24,7 +24,7 @@ const ProspectiveCaregiverTraining = () => {
       submitTrainingCertificates,
     } = useAttachments();
     const { getApplicationPackage } = useApplicationPackage();
-    const { formatShortDate } = useDates();
+    const { formatShortDate, formatDateTime } = useDates();
   
     const [isLoadingData, setIsLoadingData] = React.useState(true);
     const [applicationPackage, setApplicationPackage] = React.useState(null);
@@ -230,7 +230,7 @@ const ProspectiveCaregiverTraining = () => {
                             {att.fileName}
                           </span>
                           <span className="resubmission-form-date">
-                            Submitted {formatShortDate(att.sentToICMAt)}
+                            Submitted {formatDateTime(att.sentToICMAt)}
                           </span>
                         </div>
                       ))}
