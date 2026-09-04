@@ -20,16 +20,39 @@ const ActiveCaregiverTraining = () => {
     submitInServiceTraining,
     deleteAttachment,
   } = useAttachments();
-  const { formatShortDate } = useDates();
+  const { formatShortDate, formatDateTime } = useDates();
   const { userProfile }  = useUserProfile();
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedMember, setSelectedMember] = React.useState(null);
   const [allPendingFiles, setAllPendingFiles] = React.useState([]);
   const [submittedAttachments, setSubmittedAttachments] = React.useState([]);
   const [fileRefreshKey, setFileRefreshKey] = React.useState(0);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(null);
+
+  const memberOptions = React.useMemo(() => {
+    const opts = [{
+      role: 'primary',
+      label: `${userProfile?.first_name ?? ''} ${userProfile?.last_name ?? ''} (You)`,
+      firstName: userProfile?.first_name ?? '',
+      lastName: userProfile?.last_name ?? '',
+    }];
+    const nonKeyPlayer = userProfile?.non_key_player_caregiver;
+    if (nonKeyPlayer) {
+      opts.push({
+        role: 'nonKeyPlayer',
+        label: `${nonKeyPlayer.first_name} ${nonKeyPlayer.last_name} (${nonKeyPlayer.relationship})`,
+        firstName: nonKeyPlayer.first_name,
+        lastName: nonKeyPlayer.last_name,
+      });
+    }
+    return opts;
+  }, [userProfile]);
+
+  const hasNonKeyPlayer = memberOptions.length > 1;
+
 
   const breadcrumbItems = [
     { label: 'Dashboard', path: '/dashboard' },
@@ -81,13 +104,17 @@ const ActiveCaregiverTraining = () => {
       }
     }
     setIsModalOpen(false);
+    setSelectedMember(null);
     setAllPendingFiles([]);
     setSubmitError(null);
     setFileRefreshKey(k => k + 1);
   };
 
   const handleDocUpload = async (uploadData) => {
-    const fileName = `${userProfile?.first_name}_${userProfile?.last_name}_${IN_SERVICE_TRAINING_TYPE}`;
+    const person = (hasNonKeyPlayer && selectedMember)
+      ? selectedMember
+      : { firstName: userProfile?.first_name ?? '', lastName: userProfile?.last_name ?? '' };
+    const fileName = `${person.firstName}_${person.lastName}_${IN_SERVICE_TRAINING_TYPE}`;
     await uploadInServiceTraining({
       ...uploadData,
       fileName,
@@ -159,7 +186,7 @@ const ActiveCaregiverTraining = () => {
                           {att.fileName}
                         </span>
                         <span className="resubmission-form-date">
-                          Submitted {formatShortDate(att.sentToICMAt)}
+                          Submitted {formatDateTime(att.sentToICMAt)}
                         </span>
                       </div>
                     ))}
@@ -174,15 +201,43 @@ const ActiveCaregiverTraining = () => {
               title="Submit a training certificate"
               size="large"
             >
-              <div className="upload-docs-section">
-                <FileUpload
-                  attachmentType={IN_SERVICE_TRAINING_TYPE}
-                  onUpload={handleDocUpload}
-                  onDelete={handleDocDelete}
-                  uploadedFiles={allPendingFiles}
-                  isModal={true}
-                />
-              </div>
+              {hasNonKeyPlayer && (
+                <div className="upload-docs-controls-list">
+                  <div className="upload-docs-field">
+                    <label htmlFor="member-select" className="form-control-label">
+                      {allPendingFiles.length === 0 && ("Which person is this document for?")}
+                      {allPendingFiles.length === 1 && ("Add another document")}
+                    </label>
+                    <select
+                      id="member-select"
+                      value={selectedMember?.role ?? ''}
+                      onChange={(e) => {
+                        const opt = memberOptions.find(o => o.role === e.target.value);
+                        setSelectedMember(opt ?? null);
+                      }}
+                    >
+                      <option value="" disabled>Please select</option>
+                      {memberOptions.map(opt => (
+                        <option key={opt.role} value={opt.role}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {(!hasNonKeyPlayer || selectedMember) && (
+                <div className="upload-docs-section">
+                  <FileUpload
+                    attachmentType={IN_SERVICE_TRAINING_TYPE}
+                    onUpload={handleDocUpload}
+                    onDelete={handleDocDelete}
+                    uploadedFiles={allPendingFiles}
+                    isModal={true}
+                  />
+                </div>
+              )}
 
               {allPendingFiles.length > 0 && (
                 <div className="upload-docs-section">
