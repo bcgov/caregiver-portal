@@ -99,7 +99,7 @@ const FosterApplicationPackage = () => {
             setAppPackage(appPackage);
 
             // Redirect if wrong application type
-            if (appPackage.subtype === 'OOC') {
+            if (appPackage.subtype === 'OOC' || appPackage.subtype === 'Kinship') {
               navigate(`/kinship-application/application-package/${applicationPackageId}`);
               return;
             }

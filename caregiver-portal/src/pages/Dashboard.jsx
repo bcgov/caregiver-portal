@@ -52,13 +52,10 @@ const Dashboard = () => {
   const loadApplicationPackages = useCallback(async () => {
     try {
       const apps = await getApplicationPackages();
-      const incompleteApps = apps.filter(app => app.srStage !== 'Completed')
+      const incompleteApps = apps.filter(app => (app.srStage !== 'Completed' && app.subtype !== 'OOC'))
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
-      setKinshipApplications(incompleteApps.filter(app => app.subtype === 'OOC'));
-      //setHasResourceCase(userProfile?.resource_case_active_date);
-      //console.log('foster applications:', apps.filter(app => app.subtype === 'FCH'));
-      //console.log(userProfile);
+      setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
@@ -93,8 +90,8 @@ const Dashboard = () => {
   const handleCreateOOCApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
-        subtype: 'OOC',
-        subsubtype: 'EFP'
+        subtype: 'Kinship',
+        subsubtype: ''
       });
       handleNavigateToOOCApplication(newPackage.applicationPackageId);
     } catch (err) {

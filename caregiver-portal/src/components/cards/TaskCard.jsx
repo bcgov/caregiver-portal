@@ -11,7 +11,7 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
       if (applicationPackage.applicationPackageId) {
         if (subtype === 'FCH') {
         navigate(`/foster-application/${applicationPackage.applicationPackageId}`);
-        } else if (subtype === 'OOC') {
+        } else if (subtype === 'Kinship') {
           navigate(`/kinship-application/${applicationPackage.applicationPackageId}`);
         }
         }
