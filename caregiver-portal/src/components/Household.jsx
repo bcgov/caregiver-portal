@@ -98,6 +98,8 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
             return (`${type} is required`);
           case ('dob'):
             return ('Date of birth is required');
+          case ('email'):
+            return ('Please specify an email');
           default:
             return (`Please specify a ${type}`);
         }
@@ -106,6 +108,11 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     }
 
   };
+
+  const FieldError = ({ type, value }) => {
+    const msg = getErrorMessage(type, value);
+    return msg ? <span className="error-message">{msg}</span> : null;
+  }
 
     // Validate field length
     const validateFieldLength = (value, maxLength, fieldName, fieldKey) => {
@@ -569,7 +576,8 @@ useEffect(() => {
                                       p.relationship && 
                                       p.genderType && 
                                       !emailValidationErrors['partner-email'] && 
-                                      !fieldLengthErrors['partner-email'] && 
+                                      !fieldLengthErrors['partner-email'] &&
+                                      !fieldLengthErrors['partner-dob'] &&
                                       !duplicateErrors['partner'] &&
                                       calculateAge(p.dob) >= MIN_ADULT_AGE;
 
@@ -579,7 +587,7 @@ useEffect(() => {
       const memberId = member.householdMemberId || householdMembers.indexOf(member);
       const hasEmail = !!member.email;
       const hasEmailError = emailValidationErrors[`member-${memberId}-email`] || fieldLengthErrors[`member-${memberId}-email`];
-      const hasFieldLengthError = fieldLengthErrors[`member-${memberId}-firstName`] || fieldLengthErrors[`member-${memberId}-lastName`];
+      const hasFieldLengthError = fieldLengthErrors[`member-${memberId}-firstName`] || fieldLengthErrors[`member-${memberId}-lastName`] || fieldLengthErrors[`member-${memberId}-dob`];
       const hasDuplicateError = duplicateErrors[`member-${memberId}`];
       return isComplete && member.isDirty && isAdult && hasEmail && !hasEmailError && !hasFieldLengthError && !hasDuplicateError;
     }
@@ -713,7 +721,7 @@ useEffect(() => {
                     <option value="Partner">Partner</option>
                     <option value="Spouse">Spouse</option>
                   </select>
-                {getErrorMessage('relationship', partner.relationship) && <span className="error-message">{getErrorMessage('relationship', partner.relationship)}</span>}
+                  <FieldError type="relationship" value={partner.relationship} />
                 <label htmlFor="partner-firstName" className="form-control-label">
                   First Name<span className="required">*</span>
                 </label>
@@ -725,7 +733,7 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.firstName)}`}
                   maxLength={MAX_NAME_LENGTH}
                 />
-                 {getErrorMessage('First name', partner.relationship) && <span className="error-message">{getErrorMessage('First name', partner.relationship)}</span>}
+                <FieldError type="First name" value={partner.firstName} />
                 <label htmlFor="partner-lastName" className="form-control-label">
                   Last Name<span className="required">*</span>
                 </label>
@@ -737,7 +745,7 @@ useEffect(() => {
                   className={`form-control ${getFieldErrorClass(partner.lastName)}`}                  
                   maxLength={MAX_NAME_LENGTH}
                 />
-                {getErrorMessage('Last name', partner.relationship) && <span className="error-message">{getErrorMessage('Last name', partner.relationship)}</span>}
+                <FieldError type="Last name" value={partner.lastName} />
 
                 <label htmlFor="partner-dob" className="form-control-label">
                       Date of Birth<span className="required">*</span>
@@ -749,10 +757,12 @@ useEffect(() => {
                   required
                   onChange={(e) => handleUpdatePartner('dob', e.target.value)}
                   />
-                <label htmlFor="partner-dob" className="form-control-validation-label">
-                  {partnerAgeValidationError}
-                </label>
-                {getErrorMessage('dob', partner.dob) && <span className="error-message">{getErrorMessage('dob', partner.dob)}</span>}
+                  {fieldLengthErrors['partner-dob'] && (
+                  <label className="form-control-validation-label">
+                    {fieldLengthErrors['partner-dob']}
+                  </label>
+                )}
+                <FieldError type="dob" value={partner.dob} />
                 <div className="radio-button-group">
                     <div className="radio-button-header">Please indicate their gender:<span className="required">*</span></div>
                     <label>
@@ -795,7 +805,8 @@ useEffect(() => {
                       />
                       Prefer not to say
                     </label>
-                  </div>                           
+                  </div>
+                  <FieldError type="gender" value={partner.genderType} />
                 <label htmlFor="partner-email" className="form-control-label">
                   Email<span className="required">*</span>
                 </label>
@@ -812,6 +823,7 @@ useEffect(() => {
                       {emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']}
                     </label>
                   )}
+                  <FieldError type="email" value={partner.email} />
                 {duplicateErrors['partner'] && (
                 <div style={{
                   padding: '12px 16px',
@@ -921,7 +933,7 @@ useEffect(() => {
                     <option value="Boarder">Boarder</option>
                     <option value="Other">Other</option>
                   </select>
-                  {getErrorMessage('relationship', member.relationship) && <span className="error-message">{getErrorMessage('relationship', member.relationship)}</span>}
+                  <FieldError type="relationship" value={member.relationship} />
            
                   <label htmlFor={`member-${member.householdMemberId}-firstName`} className="form-control-label">
                     First Name<span className="required">*</span>
@@ -939,7 +951,7 @@ useEffect(() => {
                       {fieldLengthErrors[`member-${member.householdMemberId || index}-firstName`]}
                     </label>
                   )}
-                  
+                  <FieldError type="First name" value={member.firstName} />
                   <label htmlFor={`member-${member.householdMemberId}-lastName`} className="form-control-label">
                     Last Name<span className="required">*</span>
                   </label>
@@ -951,6 +963,7 @@ useEffect(() => {
                     className={`form-control ${getFieldErrorClass(member.lastName)}`}
                     maxLength={MAX_NAME_LENGTH}
                   />
+                  <FieldError type="Last name" value={member.lastName} />
                   {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`] && (
                     <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
                       {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`]}
@@ -967,6 +980,7 @@ useEffect(() => {
                     required
                     onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'dob', e.target.value)}
                   />
+                  <FieldError type="dob" value={member.dob} />
                   {fieldLengthErrors[`member-${member.householdMemberId || index}-dob`] && (
                   <label className="form-control-validation-label">
                     {fieldLengthErrors[`member-${member.householdMemberId || index}-dob`]}
@@ -1014,6 +1028,7 @@ useEffect(() => {
                             />
                             Prefer not to say
                           </label>
+                          <FieldError type="gender" value={member.genderType} />
                         </div>
 
                   
@@ -1022,13 +1037,14 @@ useEffect(() => {
                     Email<span className="required">*</span>
                   </label>
                   <input
-                    type="text"
+                    type="email"
                     id={`member-${member.householdMemberId}-email`}
                     value={member.email}
                     onChange={(e) => handleUpdateHouseholdMember(member.householdMemberId || index, 'email', e.target.value)}
                     className={`form-control ${getFieldErrorClass(member.email)}`}
                     maxLength={MAX_EMAIL_LENGTH}
                   />
+                  <FieldError type="email" value={member.email} />
                   {(emailValidationErrors[`member-${member.householdMemberId || index}-email`] ||
                     fieldLengthErrors[`member-${member.householdMemberId || index}-email`]) && (
                     <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
