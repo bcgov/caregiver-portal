@@ -32,7 +32,6 @@ const Household = ({ applicationPackageId, applicationFormId, householdHook }) =
     } = hook;
 
     // UI state only (not data state)
-    const [partnerAgeValidationError, setPartnerAgeValidationError] = useState('');
     const [emailValidationErrors, setEmailValidationErrors] = useState({});
     const [fieldLengthErrors, setFieldLengthErrors] = useState({});
     const [duplicateErrors, setDuplicateErrors] = useState({});
@@ -321,11 +320,14 @@ useEffect(() => {
     if (field === 'dob' && value) {
       const age = calculateAge(value);
       if (age < MIN_ADULT_AGE) {
-        setPartnerAgeValidationError('Caregivers must be 18 years of age or older.');
+        setFieldLengthErrors(prev => ({
+           ...prev,
+          'partner-dob': 'Caregivers must be 18 years of age or older.'
+          }));
         updatePartner(field, value);
         return;
       } else {
-        setPartnerAgeValidationError('');
+        setFieldLengthErrors(prev => ({ ...prev, 'partner-dob': '' }));
       }
 
       if (!validateAge(value, 'partner-dob')) {
