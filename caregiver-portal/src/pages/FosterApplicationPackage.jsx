@@ -17,6 +17,7 @@ const FosterApplicationPackage = () => {
   const [appPackage, setAppPackage] = React.useState();
   const isSubmittingRef = React.useRef(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
   const navigate = useNavigate();     
@@ -80,12 +81,14 @@ const FosterApplicationPackage = () => {
         if (isSubmittingRef.current) return;
         isSubmittingRef.current = true;
         setIsSubmitting(true);
+        setSubmitError(null);
         try {
           await lockApplicationPackage(applicationPackageId);
           setIsApplicationLocked(true);
           navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error(error);
+          setSubmitError(error.message || 'Failed to submit application. Please try again.');
         } finally {
           isSubmittingRef.current = false;
           setIsSubmitting(false);
@@ -178,6 +181,9 @@ const FosterApplicationPackage = () => {
           </>
         }
         <div className="page-details-row">
+        {submitError && (
+          <p className="caption error-text" role="alert">{submitError}</p>
+        )}
         {!isApplicationLocked ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
         ) : (
