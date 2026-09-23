@@ -8,10 +8,10 @@ import { useHousehold } from '../hooks/useHousehold';
 import { useAttachments } from '../hooks/useAttachments';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
-import { FilePlus, FileCheck, X } from 'lucide-react';
+import { FilePlus, FileCheck, X, ExternalLink } from 'lucide-react';
 import "../DesignTokens.css";
 
-const TRAINING_CERTIFICATE_TYPE = 'PRIDE Certificate';
+const TRAINING_CERTIFICATE_TYPE = 'PRESERVICE CERTIFICATE';
 
 const ProspectiveCaregiverTraining = () => {
     const { applicationPackageId } = useParams();
@@ -37,6 +37,8 @@ const ProspectiveCaregiverTraining = () => {
     const [submitError, setSubmitError] = React.useState(null);
   
     const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
+
+    const TRAINING_LINK = import.meta.env.VITE_TRAINING_LINK;
 
   
     const breadcrumbItems = [
@@ -249,7 +251,13 @@ const ProspectiveCaregiverTraining = () => {
             <>
 
             <div className="page-details-row">
-              <p>Pre-Service training is required for all new prospective caregivers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period. Your social worker has registered you for the training and will have forwarded you a link where you can complete it online.</p>
+              <p>Pre-Service training is required for all new prospective caregivers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
+              
+              {TRAINING_LINK.length > 0 &&
+                <div className="section-description">
+                  <p>Your social worker has registered you for training, you can complete it online at <a href={TRAINING_LINK} target="_blank" className="hyperlink">{TRAINING_LINK} <ExternalLink className="welcome-link-icon"/></a>.</p>
+                </div>
+              }
 
               <p>Once you have completed the training, upload the training certificate <strong>for yourself and for any other co-applicants</strong>. </p>
             </div>
