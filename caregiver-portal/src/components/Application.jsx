@@ -7,7 +7,9 @@ import { useApplicationPackage } from '../hooks/useApplicationPackage';
 //import Breadcrumb from '../components/Breadcrumb';
 import BreadcrumbBar from './BreadcrumbBar';
 
-
+// Must stay comfortably under the backend's FORM_ACCESS_TOKEN_EXPIRY_MINUTES (currently 30)
+// so the form access token embedded in the iframe URL is refreshed before it expires.
+const TOKEN_REFRESH_INTERVAL_MS = 25 * 60 * 1000;
 
 const Application = ({ 
   applicationPackageId, 
@@ -33,6 +35,7 @@ const Application = ({
     const iframeRef = useRef(null);
     const iframeUrlRef = useRef(null);
     const navigationTargetRef = useRef(null);
+    const applicationFormRef = useRef(null);
     const HOUSEHOLDFORM = 'Adults in my home';
 
     const navigate = useNavigate();
@@ -119,7 +122,11 @@ const Application = ({
 
   const { getFormAccessToken, error: tokenError } = useGetFormAccessToken(applicationFormId);
 
-
+  // Keep a ref to the latest applicationForm so the refresh timer below can read
+  // current status without taking `applicationForm` as a dependency — that object's
+  useEffect(() => {
+    applicationFormRef.current = applicationForm;
+  }, [applicationForm]);
 
   useEffect(() => {
     if (applicationForm && applicationFormId) {
@@ -149,6 +156,26 @@ const Application = ({
         });
     }
   }, [applicationForm, applicationFormId, getFormAccessToken]);
+
+  // Silently refresh the form access token before it expires. Since kiln reads the
+  // token once from the iframe's initial URL and reloads the saved draft from the
+  // server on each load, updating iframeUrl here causes a normal iframe navigation
+  // that resumes from the last autosaved state 
+  useEffect(() => {
+    if (!isIframeLoaded || !applicationFormId) return;
+
+    const refreshInterval = setInterval(() => {
+      getFormAccessToken()
+        .then((formAccessToken) => {
+          if (!formAccessToken) return; 
+          const formServiceUrl = import.meta.env.VITE_KILN_URL || 'https://localhost:8080';
+          const urlPath = applicationFormRef.current?.status === 'New' ? 'new' : 'edit';
+          setIframeUrl(`${formServiceUrl}/${urlPath}?id=${formAccessToken}`);
+        })
+    }, TOKEN_REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(refreshInterval);
+  }, [isIframeLoaded, applicationFormId, getFormAccessToken]); 
 
     // Handle token errors
     useEffect(() => {

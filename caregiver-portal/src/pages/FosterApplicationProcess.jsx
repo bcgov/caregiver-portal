@@ -37,6 +37,7 @@ const FosterApplicationProcess = () => {
   }
 
   const resubmit_on = import.meta.env.VITE_RESUBMIT_ON === 'true' || false;
+  const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
 
   const getCurrentStep = (status) => {
     return statusStepMap[status]
@@ -59,11 +60,10 @@ const FosterApplicationProcess = () => {
             getApplicationForms(applicationPackageId),
             getApplicationPackage(applicationPackageId)
           ]);
-          //setForms(formsArray);
           setApplicationPackage(packageData);
 
           // Redirect if wrong application type
-          if (packageData.subtype === 'OOC') {
+          if (packageData.subtype === 'OOC' || packageData.subtype === 'Kinship') {
             navigate(`/kinship-application/${applicationPackageId}`);
             return;
           }
@@ -95,6 +95,9 @@ const FosterApplicationProcess = () => {
         break;
       case "screening":
         navigate(`/foster-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
+        break;
+      case "training":
+        navigate(`/foster-application/application-package/${applicationPackageId}/training`);
         break;
       default: 
         navigate(`/foster-application/application-package/${applicationPackageId}`);
@@ -129,7 +132,12 @@ const FosterApplicationProcess = () => {
     navigate(`/foster-application/referral-package/${applicationPackageId}`);
   }
 
+  const showAppPackage = () => {
+    console.log(applicationPackage);
+  }
+
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
+  const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
 
   
   const getSteps = (applicationPackage) => {
@@ -201,7 +209,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Screening process is underway. You may proceed to complete your medical forms with the assistance of an authorized healthcare practitioner.',
+          description: 'Screening process is underway. Please select "continue" to download the required medical forms which will need to be completed by an authorized healthcare practitioner.',
           disabled: false,
           iconType: 'start',
         }
@@ -237,16 +245,24 @@ const FosterApplicationProcess = () => {
 
 
 
-      if (step.key === 'training' && (applicationPackage?.srStage === 'Assessment')) {
+      if (step.key === 'training' && training_on && (applicationPackage?.status === 'Submitted' || applicationPackage?.srStage === 'Assessment' || applicationPackage?.srStage === 'Screening') && !hasTrainingCertificates) {
 
         return {
           ...step,
           description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
-          disabled: true,
-          iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
+          disabled: false,
+          iconType: 'start',
 
         }
+      }
+
+      if (step.key === 'training' && hasTrainingCertificates && applicationPackage?.srStage !== 'Completed') {
+        return {
+          ...step,
+          description: 'Your training certificates have been submitted. A social worker will review them as part of your assessment.',
+          disabled: true,
+          iconType: 'complete',
+        };
       }
 
       if (step.key === 'training' && (applicationPackage?.srStage === 'Completed')) {

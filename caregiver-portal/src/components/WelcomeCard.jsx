@@ -26,7 +26,7 @@ const WelcomeCard = ({login, user, children}) => {
             <p className='welcome-card-content'>Welcome, {toTitleCase(user.name)}!</p>    
             )}
             { children && (
-            <p className='welcome-card-content'>{children}</p>                    
+            <div className='welcome-card-content'>{children}</div>                    
             )}
 
         </div>

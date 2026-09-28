@@ -245,20 +245,6 @@ export const useHousehold = ({applicationPackageId}) => {
                     : index === identifier;
                     if (matches) {
                         let updatedMember = { ...member, [field]: value };
-                        // Clear gender/email when crossing adult/non-adult boundary
-                        
-                        if (field === 'dob' && value && member.dob) {
-                            const newAge = calculateAge(value);
-                            const oldAge = calculateAge(member.dob);
-                            // Changed from non-adult to adult - clear gender
-                            if (oldAge < 19 && newAge >= 19) {
-                                updatedMember.genderType = '';
-                            }
-                            // Changed from adult to non-adult - clear email
-                            else if (oldAge >= 19 && newAge < 19) {
-                                updatedMember.email = '';
-                            }
-                        }
                         
                         // Don't set isDirty when we're updating the isDirty field itself
                         if (field === 'isDirty') {

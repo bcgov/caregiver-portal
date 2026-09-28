@@ -44,7 +44,7 @@ const KinshipApplicationProcess = () => {
 
   const breadcrumbItems = [
     { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Become a kinship caregiver', path: '/dashboard' },
+    { label: 'Become a kinship care provider', path: '/dashboard' },
   ];
 
   const handleBackClick = (item) => {
@@ -132,11 +132,11 @@ const KinshipApplicationProcess = () => {
 
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'application', label: 'Submit caregiver application', description: 'You may submit an application to become a kinship caregiver.', disabled: false},
-      {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application form, all adults in your home need to provide information and consent for background checks to commence.', disabled: true},
-      {key: 'screening', label: 'Screening', description: 'Once your application and consents are received, the screening process will begin. This includes: four references, a medical assessment completed by a physician, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
-      {key: 'training', label: 'Training', description: 'Pre-Service training is required prior to your home study. This is a 35-hour online training and is completed over a 12-week period.', disabled: true },
-      {key: 'homevisits', label: 'Home Study', description: 'A social worker will contact you to schedule a series of home visits. During these visits, the social worker will discuss your family dynamics, and your ability to meet the needs of children in care.', disabled: true},
+      {key: 'application', label: 'Submit caregiver application', description: 'Complete and submit your care provider application package.', disabled: false},
+      {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application package, all adults (18 and older) in your home need to provide information and consents for the screening process to begin.', disabled: true},
+      {key: 'screening', label: 'Screening', description: 'Once your application and consents forms are received, the screening process will begin. This includes: references, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
+      {key: 'training', label: 'Training', description: 'Depending on circumstance, Kinship training may be required.', disabled: true },
+      {key: 'homevisits', label: 'Home Assessment', description: 'Completion of a home assessment which will include in-home visits that discuss topics such as your connection to the child or youth and family, how you can meet the child or youth’s needs, and what supports you and the child or youth might need. Please note that the assessment may occur at the same time as the screening phase.', disabled: true},
     ];
 
     return baseSteps.map(step => {
@@ -144,7 +144,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Complete and submit your caregiver application package.',
+          description: 'Complete and submit your care provider application package.',
           disabled: false,
           iconType: 'start',
         }
@@ -153,7 +153,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Your caregiver application package was completed.',
+          description: 'Your care provider application package was completed.',
           disabled: true,
           iconType: 'complete',
         }
@@ -179,7 +179,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Screening process is underway. You may proceed to complete your medical forms with the assistance of an authorized healthcare practitioner.',
+          description: 'Screening process is underway. You will be prompted by staff if you are required to complete your medical forms.',
           disabled: false,
           iconType: 'start',
         }
@@ -206,7 +206,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'The kinship caregiver screening has been completed.',
+          description: 'The kinship care provider screening has been completed.',
           disabled: true,
           iconType: 'complete',
         }
@@ -216,7 +216,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Kinship caregiver applicants are required to complete training before receiving approval as a kinship caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register kinship caregiver applicants for this training.',
+          description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register kinship care provider applicants for this training.',
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
@@ -239,7 +239,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'A resource worker will complete several in-home interviews with prospective caregivers. Once the home study is complete, it will be reviewed and signed off by the applicants.',
+          description: 'A resource worker will complete several in-home interviews with prospective care providers. Once the home study is complete, it will be reviewed and signed off by the applicants.',
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
@@ -274,7 +274,7 @@ return (
           <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Become a kinship caregiver</h1>
+          <h1 className="page-title">Become a kinship care provider</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 5</p>
@@ -308,7 +308,7 @@ return (
                     onClose={handleCancelDelete}
                     onConfirm={handleConfirmDelete}
                     title="Delete Application"
-                    message="Are you sure you want to delete your application to become a kinship caregiver? All the work you've done so far will be lost. This cannot be undone."
+                    message="Are you sure you want to delete your application to become a kinship care provider? All the work you've done so far will be lost. This cannot be undone."
                     confirmText="Delete my application"
                     cancelText="Cancel"
                     confirmVariant="danger"

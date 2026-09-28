@@ -215,7 +215,7 @@ const submitFormToICM = async (applicationFormId) => {
 
   const saveReferralContactData = async (applicationPackageId, contactData) => {
     setLoading(true);
-    setError(true);
+    setError(null);
 
     try {
       const response = await fetch(
@@ -256,7 +256,8 @@ const submitFormToICM = async (applicationFormId) => {
       });
 
       if(!response.ok) {
-        throw new Error(`Failed to lock application package: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to lock application package: ${response.status}`);
       }
 
       const result = await response.json();

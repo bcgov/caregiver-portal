@@ -189,14 +189,111 @@ export const useAttachments = () => {
     }
   }, []);
 
+  const submitTrainingCertificates = useCallback(async (applicationPackageId) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/application-package/${applicationPackageId}/submit-training-certificates`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Failed to submit training certificates: ${response.status}`,
+        );
+      }
+
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+
+  const uploadInServiceTraining = useCallback(async (uploadData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/attachments/in-service-training`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(uploadData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to upload: ${response.status}`);
+      }
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const getInServiceTrainingAttachments = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/attachments/in-service-training`, {
+        credentials: 'include',
+      });
+      if (!response.ok) throw new Error('Failed to fetch attachments');
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const submitInServiceTraining = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/application-package/in-service-training/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to submit: ${response.status}`);
+      }
+      return await response.json();
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
     uploadAttachment,
     getAttachmentsByHouseholdId,
     getAttachmentsByApplicationPackageId,
     uploadMedicalAssessment,
     uploadDocuments,
+    submitTrainingCertificates,
     downloadAttachment,
     deleteAttachment,
+    uploadInServiceTraining,
+    getInServiceTrainingAttachments,
+    submitInServiceTraining,
     isLoading,
     error,
   };
