@@ -18,32 +18,33 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
 
     return (
 
-            <div className="page-details-frame">
+            <div className="page-details-frame foster-care-frame">
 
                 <div className="image-frame">
                 {showImage && (
                     <img src={Family} alt="Become a foster caregiver" className="hero-image" />
                 )}
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Foster caregiving</h2>
+                    <h2 className="page-heading">Foster Care</h2>
                 </div>
                 
-                <p className="page-content">Thank you for your interest in supporting children and youth who need a safe, stable, and nurturing home. Every child deserves care rooted in respect, belonging, and compassion. Your willingness to help makes a meaningful difference.</p>
-                <p className="page-content">Learn more about welcoming a child or youth into your home until they can be reunited with family or community.</p>
+                <p className="page-content">As a foster caregiver, you provide a safe and supportive home for a child or youth until they can be reunited with family or community.</p>
                 <div className="buttonGroup">
-                <Button onClick={() => {
-                    window.open(
-                        "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving",
-                        "_blank",
-                        "noopener,noreferrer"
-                    )
-                    }} variant="learnmore">Learn more <ExternalLink className="buttonIcon" /></Button>
+                    <Button onClick={() => {
+                        window.open(
+                            "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving",
+                            "_blank",
+                            "noopener,noreferrer"
+                        )
+                    }} variant="learnmore">Learn more about foster care<ExternalLink className="buttonIcon" /></Button>
                     {!disabled && (
                       <><Button onClick={handleStartClick} 
-                        variant={isStarting ? "disabled" : "primary"}>Apply to become a foster caregiver</Button>
+                        variant={isStarting ? "disabled" : "primary"}>Start application</Button>
                       </>
                     )}
-                    
+                    {disabled && (
+                      <p>To begin your application to become a foster caregiver, please <a className="inline-link">create an account / log in</a>.</p>
+                    )}
                 </div>
             </div>
     )

@@ -6,7 +6,7 @@ import "../DesignTokens.css";
 import Button from "../components/Button";
 import FosterApplicationStart from "../components/FosterApplicationStart";
 import WelcomeCard from "../components/WelcomeCard";
-import AboutCard from "../components/AboutCard";
+import OOCApplicationStart from "../components/OOCApplicationStart";
 import AccessCard from "../components/AccessCard";
 import { Loader2 } from "lucide-react";
 
@@ -53,9 +53,12 @@ export default function Home() {
         </div>
         <div className="page-details">
           <div className="page-details-row">
+            <p>Thank you for your interest in supporting children and youth who need a safe, stable, and nurturing home. Every child deserves care rooted in respect, belonging, and compassion. Your willingness to help makes a meaningful difference.</p>
+          </div>
+          <div className="page-details-row">
             <div className="page-details-content">
-          <FosterApplicationStart onClick={login} disabled={false} showImage={false}/>
-          <AboutCard></AboutCard>
+          <FosterApplicationStart onClick={login} disabled={true} showImage={false}/>
+          <OOCApplicationStart></OOCApplicationStart>
           <AccessCard login={login} active={false}/>
           </div>
         </div>

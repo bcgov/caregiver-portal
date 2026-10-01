@@ -1,3 +1,5 @@
+@import "@bcgov/design-tokens/css/variables.css";
+
 .btn {
   display: flex;
   height: 40px;
@@ -22,12 +24,10 @@
   .btn-primary {
     background-color: var(--surface-color-primary-button-default);
     color: var(--typography-color-primary-invert);
-    
   }
 
   .btn-primary:hover {
     background-color: var(--surface-color-primary-button-hover);
-    text-decoration: underline;
   }
 
   .btn-primary-bold {
@@ -38,7 +38,6 @@
   
   .btn-primary-bold:hover {
     background-color: var(--surface-color-primary-button-hover);
-    text-decoration: underline;
   }
 
   .btn-lowkey {
@@ -97,14 +96,18 @@
     font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 27.008px; /* 168.8% */
+    font-weight: normal;
+    //line-height: 27.008px; /* 168.8% */
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
     text-decoration-thickness: auto;
-    text-underline-offset: auto;
+    text-underline-offset: var(--layout-padding-hair);
     text-underline-position: from-font;
+  }
+
+  .btn-learnmore:hover {
+    color: blue;
   }
 
   .btn-white {

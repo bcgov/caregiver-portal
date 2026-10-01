@@ -14,7 +14,7 @@ const WelcomeCard = ({login, user, children}) => {
             </div>
             { login && (
             <>
-            <p className='welcome-card-content'>Apply to become a foster caregiver in B.C.</p>                
+            <p className='welcome-card-content'>Become a foster or kinship care provider in British Columbia.</p>                
             <div className="welcome-card-element">
 
             <Button variant="nav" onClick={login}>Create Account / Log In</Button>
