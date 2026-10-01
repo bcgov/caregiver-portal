@@ -132,7 +132,7 @@ const KinshipApplicationProcess = () => {
 
   const getSteps = (applicationPackage) => {
     const baseSteps = [
-      {key: 'application', label: 'Submit caregiver application', description: 'Complete and submit your application package, which includes questions about you and your household.', disabled: false},
+      {key: 'application', label: 'Submit an application', description: 'Complete and submit your application package, which includes questions about you and your household.', disabled: false},
       {key: 'consent', label: 'Submit household screening forms and consents', description: 'After you submit your application package, all adults in your home need to provide information and consents for the screening process to begin.', disabled: true},
       {key: 'screening', label: 'Screening', description: 'Once your application and consents forms are received, the screening process will begin. This includes: references, a criminal record check and/or review, and a prior contact check for previous child welfare involvement.', disabled: true},
       {key: 'training', label: 'Training', description: 'Depending on circumstance, Kinship training may be required.', disabled: true },
