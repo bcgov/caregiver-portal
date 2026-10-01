@@ -4,7 +4,7 @@ body {
     margin: 0;
     font-family: 'BC Sans', sans-serif;
     color: var(--typography-color-primary);
-  }
+}
 
 .bold {
   font-weight: bold;
@@ -12,6 +12,17 @@ body {
 
 .italic {
   font-style: italic;
+}
+
+.inline-link {
+  color: var(--typography-color-link);
+  cursor: pointer;
+  font-size: inherit;
+  text-underline-offset: var(--layout-padding-hair);
+}
+
+.inline-link:hover {
+  color: blue;
 }
 
 /** Header Styles **/
@@ -103,17 +114,17 @@ body {
 
   .hyperlink {
     color: var(--typography-color-link, #255A90);
-font-family: "BC Sans";
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 27px;
-text-decoration-line: underline;
-text-decoration-style: solid;
-text-decoration-skip-ink: auto;
-text-decoration-thickness: auto;
-text-underline-offset: auto;
-text-underline-position: from-font;
+    font-family: "BC Sans";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
   }
 
   .dropdown-menu {
@@ -402,7 +413,7 @@ gap: 10px;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
-    gap: var(--layout-margin-xlarge);
+    gap: var(--layout-margin-xxlarge);
     @media (min-width: 1120px) { /* Now that we're using three columns on homepage, display them only at sufficiently wide viewport so button text won't overflow */
       flex-direction: row;
     }
@@ -422,6 +433,18 @@ gap: 10px;
     align-items: flex-start;
     align-self: stretch;
     gap: 24px;
+  }
+
+  .foster-care-frame {
+    background-color: var(--theme-gold-10);
+    padding: var(--layout-padding-large);
+    height: fit-content;
+  }
+
+  .kinship-care-frame {
+    background-color: var(--theme-blue-10);
+    padding: var(--layout-padding-large);
+    height: fit-content;
   }
 
   .welcome-card-container {
@@ -451,7 +474,7 @@ gap: 10px;
 
 
   .welcome-link {
-    color: var(--typography-color-secondaryInvert, #ECEAE8);
+    color: var(--typography-color-secondary-invert);
     font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
@@ -460,6 +483,10 @@ gap: 10px;
     text-decoration: none;
     gap: 4px;
     border-bottom: 1px solid currentColor;
+  }
+
+  .welcome-link:hover {
+    color: var(--typography-color-primary-invert);
   }
 
   .welcome-link-icon {
@@ -1006,11 +1033,11 @@ iframe {
 }
 
 .access-code-container {
+  background-color: var(--surface-color-background-light-gray);
+  border-left: var(--layout-border-width-large) solid var(--theme-primary-blue);
+  border-radius: var(--layout-border-radius-medium) var(--layout-border-radius-none) var(--layout-border-radius-none) var(--layout-border-radius-medium);
   padding: var(--layout-padding-large);
-  border-radius: 6px;
-  background: var(--theme-blue-10, #F1F8FE);
   width: -webkit-fill-available;
-  max-width: 300px;
 }
 
 .task-card-content {
