@@ -43,7 +43,7 @@ const ProspectiveCaregiverTraining = () => {
   
     const breadcrumbItems = [
       { label: 'Dashboard', path: '/dashboard' },
-      { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
+      { label: 'Back', path: `/foster-application/${applicationPackageId}` },
       { label: 'Training certificates' },
     ];
   
@@ -198,7 +198,7 @@ const ProspectiveCaregiverTraining = () => {
             <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
           </div>
           <div className="page-details-row-small">
-            <h1 className="page-title">Caregiver training</h1>
+            <h1 className="page-title">Training</h1>
           </div>
   
           <div className="resubmission-subtitle">
@@ -251,7 +251,7 @@ const ProspectiveCaregiverTraining = () => {
             <>
 
             <div className="page-details-row">
-              <p>Pre-Service training is required for all new prospective caregivers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
+              <p>Pre-Service training is required for all new prospective caregivers/care providers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
               
               {TRAINING_LINK.length > 0 &&
                 <div className="section-description">
