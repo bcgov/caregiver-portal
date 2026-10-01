@@ -325,7 +325,7 @@ return (
                       confirmVariant="primary-bold"
                       isLoading={false}
                     >
-                      <p className="confirmation-modal-text">Kinship caregiving is about opening your home and caring for children and youth in B.C who are under the age of 19 and who temporarily cannot live with their own families.</p>
+                      <p className="confirmation-modal-text">Kinship care is about opening your home and caring for children and youth in B.C who are under the age of 19 and who temporarily cannot live with their own families.</p>
                       <p>To provide kinship family care in B.C.:</p>
                       <ul>
                         <li>You understand that Indigenous children and youth are entitled to learn about and practice their Indigenous traditions, customs, and languages, and to belong to their Indigenous communities</li>

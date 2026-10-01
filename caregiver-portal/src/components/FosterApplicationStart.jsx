@@ -43,7 +43,7 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
                       </>
                     )}
                     {disabled && (
-                      <p>To begin your application to become a foster caregiver, please <a className="inline-link">create an account / log in</a>.</p>
+                      <p>To begin your application to become a foster caregiver, please <a className="inline-link" onClick={onClick}>create an account / log in</a>.</p>
                     )}
                 </div>
             </div>
