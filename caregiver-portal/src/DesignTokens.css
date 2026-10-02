@@ -306,6 +306,7 @@ li {
   display: grid;
   grid-template-columns: auto;
   grid-gap: var(--layout-margin-large);
+  width: -webkit-fill-available;
   max-width: 1120px;
   margin: auto;
   @media (min-width: 768px) {
