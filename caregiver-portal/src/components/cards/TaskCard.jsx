@@ -5,7 +5,7 @@ import GenericTaskCard from './GenericTaskCard';
 const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
     const navigate = useNavigate();
 
-    const label = subtype === 'FCH' ? "Foster" : "Kinship";
+    const label = subtype === 'FCH' ? "Foster Caregiver" : "Kinship Care Provider";
 
     const handleClick = () => {
       if (applicationPackage.applicationPackageId) {
@@ -31,13 +31,13 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
 
       if (status === 'Withdrawn') {
         return {
-          title: `Become a ${label} caregiver`,
+          title: `Become a ${label}`,
           click: false, 
         };
       }
 
       return {
-        title: `Become a ${label} caregiver`,
+        title: `Become a ${label}`,
         click: true,
       };
 
@@ -49,13 +49,13 @@ const TaskCard = ({subtype = 'FCH', applicationPackage}) => {
       <>
         {srStage !== 'Completed' && (
           <GenericTaskCard
-            title={status !== 'Withdrawn' ? `Become a ${label} caregiver` : undefined}
+            title={status !== 'Withdrawn' ? `Become a ${label}` : undefined}
             onClick={() => statusInfo.click ? handleClick() : null}
             buttonLabel={statusInfo.click ? 'Continue' : undefined}
           >
             {status === 'Withdrawn' && (
               <div className="task-card-text--cancelled">
-                <p>Your {label} caregiver application has been cancelled<br/><br/><small>This message will disappear on your next login.</small></p>
+                <p>Your {label} application has been cancelled<br/><br/><small>This message will disappear on your next login.</small></p>
               </div>
             )}
           </GenericTaskCard>
