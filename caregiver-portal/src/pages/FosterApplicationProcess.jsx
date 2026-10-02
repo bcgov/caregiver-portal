@@ -316,7 +316,7 @@ return (
           <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Become a foster caregiver {applicationPackage?.srStage}</h1>
+          <h1 className="page-title">Become a foster caregiver</h1>
         </div>
         <div className='page-details-row-small'>
           <p className="caption">You're on Step {getCurrentStep(applicationPackage?.status)} of 6</p>
