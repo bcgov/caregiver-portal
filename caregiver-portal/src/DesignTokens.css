@@ -302,15 +302,17 @@ li {
 }
 
 .task-content-row {
-/* used */
-display: flex;
-width: 100%;
-max-width: 1120px;
-justify-content: space-between;
-align-items: flex-start;
-gap: 32px;
+  /* used */
+  display: grid;
+  grid-template-columns: auto;
+  grid-gap: var(--layout-margin-large);
+  max-width: 1120px;
+  margin: auto;
+  @media (min-width: 768px) {
+    grid-template-columns: minmax(min-content, 50%) minmax(min-content, 50%);
+    grid-gap: var(--layout-margin-xxlarge);
+  }
 }
-
 
 .task-heading {
   display: flex;
@@ -409,13 +411,13 @@ gap: 10px;
   }
 
   .page-details-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--layout-margin-xxlarge);
-    @media (min-width: 1120px) { /* Now that we're using three columns on homepage, display them only at sufficiently wide viewport so button text won't overflow */
-      flex-direction: row;
+    display: grid;
+    grid-template-columns: auto;
+    grid-gap: var(--layout-margin-large);
+    grid-gap: var(--layout-margin-xxlarge);
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(min-content, 33%) minmax(min-content, 33%) minmax(min-content, 33%);
+      grid-gap: var(--layout-margin-xxlarge);
     }
   }
 
@@ -978,13 +980,8 @@ iframe {
 
 
 .task-card {
-  display: flex;
   padding: 24px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
-  width: 100%;
-
+  width: -webkit-fill-available;
   border-radius: 0 0 4px 4px;
   border-top: 4px solid var(--theme-primaryGold, #FCBA19);
   background: #FFF;
@@ -1037,7 +1034,7 @@ iframe {
   border-left: var(--layout-border-width-large) solid var(--theme-primary-blue);
   border-radius: var(--layout-border-radius-medium) var(--layout-border-radius-none) var(--layout-border-radius-none) var(--layout-border-radius-medium);
   padding: var(--layout-padding-large);
-  width: -webkit-fill-available;
+  height: fit-content;
 }
 
 .task-card-content {
@@ -1679,14 +1676,11 @@ a {
   .task-list {
     /* used */
     display: flex;
-    width: 422px;
-    max-width: 560px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: var(--layout-margin-xlarge);
     flex-shrink: 0;
     border-radius: 6px;
-    
   }
 
   .task-list-heading {
@@ -2491,16 +2485,4 @@ a {
       .draft-applications {
         gap: 32px;
       }
-    }
-  
-  
-
-    
-
-    @media (max-width: 960px) {
-      .task-content-row {
-        flex-direction: column;
-        gap: 24px;
-      }
-  
     }
