@@ -15,6 +15,7 @@ const DOC_TYPES_BY_ROLE = {
     //'Medical Assessment',
     'International Criminal Record Check',
     'Other Document',
+    'PRESERVICE CERTIFICATE'
   ],
   spouse: [
     'About Me (Spouse)',
@@ -23,6 +24,7 @@ const DOC_TYPES_BY_ROLE = {
     //'Medical Assessment',
     'International Criminal Record Check',
     'Other Document',
+    'PRESERVICE CERTIFICATE'
   ],
   adult: [
     'Consent for Disclosure of Criminal Record Information',
@@ -31,6 +33,10 @@ const DOC_TYPES_BY_ROLE = {
     'Other Document',
   ],
 };
+
+const DOC_TYPE_LABELS = {
+  'PRESERVICE CERTIFICATE': 'Preservice Training Certificate',
+}
 
 const FormResubmissionList = () => {
     const { applicationPackageId } = useParams();
@@ -64,7 +70,7 @@ const FormResubmissionList = () => {
     const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in my home', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in my home'];
 
     const breadcrumbItems = [
-      { label: isKinship ? 'Become a kinship caregiver' : 'Become a foster caregiver', path: basePath },
+      { label: isKinship ? 'Become a kinship care provider' : 'Become a foster caregiver', path: basePath },
       { label: 'Submit additional documents' },
   ];
 
@@ -399,7 +405,7 @@ const FormResubmissionList = () => {
                       >
                         <option value="" disabled>Please select</option>
                         {DOC_TYPES_BY_ROLE[selectedMember.role].map(type => (
-                          <option key={type} value={type}>{type}</option>
+                          <option key={type} value={type}>{DOC_TYPE_LABELS[type] ?? type}</option>
                         ))}
                       </select>
                     </div>

@@ -17,6 +17,7 @@ const FosterApplicationPackage = () => {
   const [appPackage, setAppPackage] = React.useState();
   const isSubmittingRef = React.useRef(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const [isApplicationLocked, setIsApplicationLocked] = React.useState(false);
   const navigate = useNavigate();     
@@ -25,7 +26,7 @@ const FosterApplicationPackage = () => {
   const HOUSEHOLDFORM = 'Adults in my home';
 
     const breadcrumbItems = [
-        { label: 'Become a foster caregiver', path: `/foster-application/${applicationPackageId}` },
+        { label: 'Become a foster care provider', path: `/foster-application/${applicationPackageId}` },
         { label: 'Application to provide foster family care' },
       ];
 
@@ -80,12 +81,14 @@ const FosterApplicationPackage = () => {
         if (isSubmittingRef.current) return;
         isSubmittingRef.current = true;
         setIsSubmitting(true);
+        setSubmitError(null);
         try {
           await lockApplicationPackage(applicationPackageId);
           setIsApplicationLocked(true);
           navigate(`/foster-application/${applicationPackageId}`);
         } catch (error) {
           console.error(error);
+          setSubmitError(error.message || 'Failed to submit application. Please try again.');
         } finally {
           isSubmittingRef.current = false;
           setIsSubmitting(false);
@@ -99,7 +102,7 @@ const FosterApplicationPackage = () => {
             setAppPackage(appPackage);
 
             // Redirect if wrong application type
-            if (appPackage.subtype === 'OOC') {
+            if (appPackage.subtype === 'OOC' || appPackage.subtype === 'Kinship') {
               navigate(`/kinship-application/application-package/${applicationPackageId}`);
               return;
             }
@@ -149,7 +152,7 @@ const FosterApplicationPackage = () => {
           <h1 className="page-title">Application to provide foster family care</h1>
         </div>
         <div className='page-details-row-small'>
-          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a caregiver/care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
+          <p className="caption">Your information is being collected by the Ministry of Children and Family Development (MCFD) for the purpose of facilitating your application to become a care provider and be involved in the provision of care to children for MCFD. This information is collected under sections 26(c) and (e) of the Freedom of Information and Protection of Privacy Act. If you have questions about this collection of information, please contact <a className="hyperlink" href="mailto:MCF.CentralizedRetentionandRecruitment@gov.bc.ca">MCF.CentralizedRetentionandRecruitment@gov.bc.ca</a>.</p>
         </div>
         <div className='page-details-row-small'>
           <div className="application-package">
@@ -178,6 +181,9 @@ const FosterApplicationPackage = () => {
           </>
         }
         <div className="page-details-row">
+        {submitError && (
+          <p className="caption error-text" role="alert">{submitError}</p>
+        )}
         {!isApplicationLocked ? (
         <Button variant={isApplicationComplete() && isDeclarationChecked ? 'primary' : 'disabled'} onClick={handleSubmit} disabled={!isApplicationComplete() || !isDeclarationChecked || isSubmitting}>{isSubmitting ? 'Submitting...' : 'Submit Application'}</Button>
         ) : (

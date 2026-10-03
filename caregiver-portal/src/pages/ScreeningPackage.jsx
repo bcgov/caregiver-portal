@@ -21,7 +21,7 @@ const ScreeningPackage = () => {
 
     const breadcrumbItems = [
         { label: 'Dashboard', path: back },
-        { label: 'Application to provide foster family care', path: back },
+        { label: 'Complete your household screening', path: back },
       ];
 
       const handleBackClick = (item) => {
@@ -72,7 +72,7 @@ const ScreeningPackage = () => {
             try {
               const formsArray = await getApplicationFormsByHouseholdMember(householdMemberId);
               setForms(formsArray);
-              setIsSpouse(formsArray[0].type.toUpperCase().includes("SPOUSE"));
+              setIsSpouse((formsArray[0].type.toUpperCase().includes("SPOUSE") || formsArray[0].type.toUpperCase().includes("KINSHIP")));
             } catch (error) {
               console.error('Failed to load forms:', error);
             }
@@ -88,13 +88,13 @@ const ScreeningPackage = () => {
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Application to provide foster family care</h1>
+          <h1 className="page-title">Complete your household screening</h1>
         </div>
         <div className='page-details-row'>
           <div className="section-description">
             { isSpouse ? 
-              (<>You have been named as the spouse/co-applicant on an application to provide foster care. In order to process that application, you must fill out the information below:</>) :
-              (<>You have been named as a household member to an applicant of an application to provide foster care. In order to process that application, you must fill out the information below:</>)
+              (<>You have been named as the spouse/co-applicant on an application to provide care. In order to process that application, you must fill out the information below:</>) :
+              (<>You have been named as a household member on an application to provide care. In order to process that application, you must fill out the information below:</>)
             }
             
               

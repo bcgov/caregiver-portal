@@ -7,9 +7,10 @@ import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
 import OOCApplicationStart from '../components/OOCApplicationStart';
-import TaskCard from '../components/TaskCard';
+import TaskCard from '../components/cards/TaskCard';
+import GenericTaskCard from '../components/cards/GenericTaskCard';
 import TaskItem from '../components/TaskItem';
-import ScreeningTaskCard from '../components/ScreeningTaskCard';
+import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
 import AccessCard from '../components/AccessCard';
 import WelcomeCard from '../components/WelcomeCard';
 import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
@@ -20,6 +21,7 @@ const Dashboard = () => {
   const [householdMemberships, setHouseholdMemberships] = React.useState([]);
 
   const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
+  const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
 
   const {
     createApplicationPackage,
@@ -50,13 +52,10 @@ const Dashboard = () => {
   const loadApplicationPackages = useCallback(async () => {
     try {
       const apps = await getApplicationPackages();
-      const incompleteApps = apps.filter(app => app.srStage !== 'Completed')
+      const incompleteApps = apps.filter(app => (app.srStage !== 'Completed' && app.subtype !== 'OOC'))
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
-      setKinshipApplications(incompleteApps.filter(app => app.subtype === 'OOC'));
-      //setHasResourceCase(userProfile?.resource_case_active_date);
-      //console.log('foster applications:', apps.filter(app => app.subtype === 'FCH'));
-      //console.log(userProfile);
+      setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
@@ -91,8 +90,8 @@ const Dashboard = () => {
   const handleCreateOOCApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
-        subtype: 'OOC',
-        subsubtype: 'EFP'
+        subtype: 'Kinship',
+        subsubtype: ''
       });
       handleNavigateToOOCApplication(newPackage.applicationPackageId);
     } catch (err) {
@@ -125,7 +124,7 @@ const Dashboard = () => {
 
     <div className="page">
       
-        {isLoading || formsLoading && 
+        {(isLoading || formsLoading) && 
           <div className="submission-overlay">
             <div className="submission-modal">
               <Loader2 className="submission-spinner" />
@@ -153,12 +152,20 @@ const Dashboard = () => {
             <div className="task-content-row">
               <div className="task-list">
               
-                {(applicationPackages?.length > 0 || householdMemberships?.length > 0) && (
+                {(applicationPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
                   </div>
                 )}
+
+                { hasResourceCase && training_on && (
+                    <GenericTaskCard
+                    title="In-service training"
+                    
+                    buttonLabel="Continue"
+                    onClick={() => navigate('/caregiver-training')}
+                  />)}
 
 
                 {applicationPackages?.map((app) => (
@@ -187,8 +194,8 @@ const Dashboard = () => {
                   </div>
                   
                 )
-                  
-                }
+              }
+
                 {(fosterApplications?.length === 0 && !hasResourceCase) && (
                   <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
                 )}

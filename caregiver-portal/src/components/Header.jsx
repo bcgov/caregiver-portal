@@ -31,9 +31,7 @@ const Header = () => {
             {auth.user ? (
               <HamburgerMenu />
             ) : (
-              <Button onClick={auth.login} variant="nav">
-                <span className="hide-on-tiny-screens">Create Account / </span>Log In
-              </Button>
+              <></>
             )}
             </div>
           </div>

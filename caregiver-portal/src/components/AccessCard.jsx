@@ -1,4 +1,4 @@
-import React from 'react';
+    import React from 'react';
 import Button from './Button';
 import { useAccessCode } from '../hooks/useAccessCode';
 import { useNavigate } from 'react-router-dom';
@@ -62,12 +62,12 @@ const AccessCard = ({login, active = true}) => {
                                 </h2>
                             </div>    
                         {!active && (
-                            <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, please log in.</p>
+                            <p className="access-code-text">If you received an email or text with an access code, please <a className="inline-link" href="#" onClick={login}>create an account / log in</a>.</p>
                         )}
                         
                         {active && (
                             <>
-                                <p className="access-code-text">If you received an email or text asking you to perform a task in the Portal, enter the access code below:</p>
+                                <p className="access-code-text">If you received an email or text with an access code, enter it below.</p>
                                 <p className="task-card-content">
                                 Access code
                                 </p>
@@ -97,14 +97,6 @@ const AccessCard = ({login, active = true}) => {
                                     </>
                                 )}
 
-                                {!active && (
-                                    <Button 
-                                    variant="primary" 
-                                    onClick={login}
-                                    >
-                                    {isLoading ? 'Verifying...' : 'Create Account / Log In'}
-                                    </Button>                    
-                                )}
                         
                                 {/* Access Code Verification Overlay */}
                                 {isLoading && !showSuccess && (

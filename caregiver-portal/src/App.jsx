@@ -29,12 +29,14 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import MedicalForms from './pages/MedicalForms';
+import ProspectiveCaregiverTraining from './pages/ProspectiveCaregiverTraining';
 import ReferralPackage from './pages/ReferralPackage';
 import ReferralApplicationForm from './pages/ReferralApplicationForm';
 import ScreeningForm from './pages/ScreeningForm';
 import ScreeningPackage from './pages/ScreeningPackage';
 import FormResubmission from './pages/FormResubmission';
 import FormResubmissionList from './pages/FormResubmissionList';
+import ActiveCaregiverTraining from './pages/ActiveCaregiverTraining';
 
 // Component to conditionally render Footer
 const ConditionalFooter = () => {
@@ -99,6 +101,9 @@ const App = () => {
         <Route path="/foster-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
         <Route path="/kinship-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
         
+        <Route path="/foster-application/application-package/:applicationPackageId/training/" element={<ProtectedRoute><ProspectiveCaregiverTraining /></ProtectedRoute>}/>
+        <Route path="/caregiver-training" element={<ProtectedRoute><ActiveCaregiverTraining /></ProtectedRoute>}/>
+
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         {/* Screening Package */}
         <Route path="/screening-package/:householdMemberId" element={<ProtectedRoute><ScreeningPackage /></ProtectedRoute>}/>
