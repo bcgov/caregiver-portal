@@ -3,8 +3,10 @@ import Button from './Button';
 import Family from '../assets/foster-hero2.png';
 import { ExternalLink } from "lucide-react";
 
-const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) => {
+const FosterApplicationStart = ({onClick, disabled = false, showImage = true, startLink = true}) => {
     const [isStarting, setIsStarting] = React.useState(false);
+
+    console.log(startLink)
 
     const handleStartClick = async () => {
         setIsStarting(true);
@@ -42,7 +44,7 @@ const FosterApplicationStart = ({onClick, disabled = false, showImage = true}) =
                         variant={isStarting ? "disabled" : "primary"}>Start application</Button>
                       </>
                     )}
-                    {disabled && (
+                    {(disabled && startLink ) && (
                       <p>To begin your application to become a foster caregiver, please <a className="inline-link" onClick={onClick}>create an account / log in</a>.</p>
                     )}
                 </div>
