@@ -55,20 +55,20 @@ const Dashboard = () => {
 
   const loadApplicationPackages = useCallback(async () => {
     try {
+      const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
-      const incompleteApps = apps.filter(app => (app.srStage !== 'Completed' )) 
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'Completed' && norm(app.srResolution) !== 'not approved') 
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
       setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
       setIsApprovedKinship(apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
 
-
-      const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
-      const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
-      console.log('apps:', apps);
-      console.log('incompleteApps:', incompleteApps);
-      console.log('approvedFch:', approvedFch, 'approvedKinship:', approvedKinship);
+      //const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
+      //const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
+      //console.log('apps:', apps);
+      //console.log('incompleteApps:', incompleteApps);
+      //console.log('approvedFch:', approvedFch, 'approvedKinship:', approvedKinship);
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
