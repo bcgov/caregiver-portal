@@ -52,7 +52,7 @@ const HouseholdSummaryItem = ({member, onView, onRemove}) => {
                     type="button"
                     className={`householdActionButton householdActionRemove${canRemove ? '' : ' householdActionHidden'}`}
                     onClick={(e) => { e.stopPropagation(); onRemove(); }}
-                    disable={!canRemove}
+                    disabled={!canRemove}
                     aria-label={`Remove ${member.firstName} ${member.lastName} from household`}
                 >
                     <CircleX size={20} />
