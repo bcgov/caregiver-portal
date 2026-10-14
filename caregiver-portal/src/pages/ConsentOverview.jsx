@@ -339,8 +339,8 @@ const ConsentOverview = () => {
                           <span className="caption">{resendsRemainingToday} of 3 resends remaining today</span>
                         )}
                       </div>
-                      { resendSuccess && <p style={{ color: 'green' }}>Access code resent successfully.</p> }
-                      { resendError && <p style={{ color: 'red' }}>{resendError}</p> }
+                      { resendSuccess && <p className="text-success">Access code resent successfully.</p> }
+                      { resendError && <p className="error-message">{resendError}</p> }
                     </>
                   )}
                   </>
@@ -428,7 +428,7 @@ const ConsentOverview = () => {
           onChange={(e) => setEditFormData(prev => ({ ...prev, lastName: e.target.value }))}
           className={`form-control${editErrors.lastName ? ' form-control-error' : ''}`}
         />
-        {editErrors.lastName && <span style={{ color: 'red' }}>{editErrors.lastName}</span>}
+        {editErrors.lastName && <span className="error-message">{editErrors.lastName}</span>}
       </div>
       <div>
         <label htmlFor="edit-dob" className="form-control-label">Date of birth</label>
@@ -440,7 +440,7 @@ const ConsentOverview = () => {
           onChange={(e) => setEditFormData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
         />
       {editErrors.dateOfBirth && (
-        <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+        <label className="form-control-validation-label">
           {editErrors.dateOfBirth}
         </label>
       )}
@@ -456,13 +456,13 @@ const ConsentOverview = () => {
           className={`form-control${editErrors.email ? ' form-control-error' : ''}`}
         />
         {editErrors.email && (
-        <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+        <label className="form-control-validation-label">
           {editErrors.email}
         </label>
       )}
       </div>
       {editErrors.submit && (
-        <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+        <label className="form-control-validation-label">
           {editErrors.submit}
         </label>
       )}

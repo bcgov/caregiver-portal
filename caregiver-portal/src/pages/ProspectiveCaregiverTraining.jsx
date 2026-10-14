@@ -212,7 +212,7 @@ const ProspectiveCaregiverTraining = () => {
           ) : hasTrainingCertificates ? (
             <>
               <div className="page-details-row-small">
-                <div className="info-box" style={{ borderColor: 'green' }}>
+                <div className="info-box info-box-success">
                   Your training certificates have been submitted. A social worker will review them as part of your assessment.
                 </div>
               </div>

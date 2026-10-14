@@ -81,7 +81,7 @@ const AccessCard = ({login, active = true}) => {
                                 />
 
                                 {message && !showSuccess && (
-                                    <p style={{ color: message.includes('verified') ? 'green' : 'red', margin: '10px 0'}}>
+                                    <p className={`form-feedback ${message.includes('verified') ? 'text-success' : 'error-message'}`}>
                                         {message}
                                     </p>
                                 )}
@@ -137,19 +137,8 @@ const AccessCard = ({login, active = true}) => {
                           </div>
 
                           {/* Success Message */}
-                          <p className="submission-title" style={{ 
-                              color: '#2E8540',
-                              fontSize: '1.75rem',
-                              marginTop: '1.5rem'
-                          }}>
-                              Access code verified
-                          </p>
-                          <p className="submission-text" style={{ 
-                              color: '#606060',
-                              fontSize: '1.1rem'
-                          }}>
-                              {showSuccess}
-                          </p>
+                          <p className="submission-title access-success-title">Access code verified</p>
+                          <p className="submission-text access-success-text">{showSuccess}</p>
 
                           {/* Progress Bar */}
                           <div className="success-progress-bar">
