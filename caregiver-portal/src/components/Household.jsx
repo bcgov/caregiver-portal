@@ -1052,7 +1052,7 @@ useEffect(() => {
                 </div>
 
                 {duplicateErrors[`member-${member.householdMemberId || index}`] && (
-                    <div className="error-banner error-banner--below">
+                    <div className="error-banner error-banner--above">
                       <AlertCircle size={16} />
                       {duplicateErrors[`member-${member.householdMemberId || index}`]}
                     </div>

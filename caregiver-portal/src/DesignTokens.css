@@ -134,7 +134,7 @@ body {
     background: white;
     border: 1px solid var(--surface-color-border-default);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px var(--surface-color-border-default);
     min-width: 200px;
     z-index: 1000;
     margin-top: 4px; /* Small gap between button and menu */    
@@ -704,6 +704,13 @@ gap: 10px;
   column-gap: 12px;
 }
 
+/* step indicator circles */
+.step-circle--waiting  { fill: var(--surface-color-primary-default); }
+.step-circle--alert,
+.step-circle--next     { fill: var(--theme-primary-gold); }
+.step-circle--complete { fill: var(--icons-color-success); }
+.step-ring-later       { fill: var(--theme-gray-50); }
+
 .application-step-icon {
   position: absolute;
   top: 50%;
@@ -712,7 +719,11 @@ gap: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--typography-color-primary-invert);
 }
+
+/* 1px optical nudge (off-scale on purpose) */
+.application-step-icon--nudge { padding-left: 1px; }
 
 .application-step-left {
   position: relative;
@@ -990,7 +1001,7 @@ iframe {
   right: 0;
   background: white;
   z-index: 200;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 10px var(--surface-color-overlay-default);
   border-top: 1px solid var(--surface-color-border-default);
   flex-shrink: 0;
   display: flex;
@@ -1004,6 +1015,14 @@ iframe {
   display: flex;
   align-items: center;
 }
+
+.breadcrumb-label  { display: inline-flex; align-items: center; gap: var(--layout-margin-small); }
+.breadcrumb-status { display: inline-flex; align-items: center; cursor: help; }
+
+.breadcrumb-status--error   { color: var(--icons-color-danger); }
+.breadcrumb-status--pending { color: var(--icons-color-warning); }
+.breadcrumb-status--done    { color: var(--icons-color-success); }
+.breadcrumb-status--unknown { color: var(--icons-color-secondary); }
 
 .household-container {
   position: fixed;
@@ -1041,7 +1060,7 @@ iframe {
   border-radius: 0 0 4px 4px;
   border-top: 4px solid var(--theme-primary-gold);
   background: var(--surface-color-background-white);
-  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 12px 0 var(--surface-color-overlay-default);
 }
 
 .task-card:hover {
@@ -1407,7 +1426,7 @@ a {
     max-width: 90vw;
     max-height: 90vh;
     overflow: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px var(--surface-color-border-default);
   }
 
   .modal-small {
@@ -1510,7 +1529,7 @@ a {
     border-left: 1px solid transparent;
     border-bottom: 1px solid transparent;
     background: var(--surface-color-background-white);
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 4px 0 var(--surface-color-border-default);
   }
 
   .form-group-header{
@@ -2089,7 +2108,7 @@ a {
 }
 
 .uploaded-file-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--surface-color-border-default);
 }
 
 .uploaded-file-item .file-icon {
@@ -2211,12 +2230,16 @@ a {
     animation: fadeIn 0.3s ease-in-out;
   }
 
+  .submission-overlay--success {
+    background-color: color-mix(in srgb, var(--icons-color-success) 5%, transparent);
+  }
+
   .submission-modal {
     background: white;
     border-radius: 16px;
     padding: 3rem 2.5rem;
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px var(--surface-color-border-default);
     max-width: 400px;
     animation: slideUp 0.3s ease-in-out;
   }

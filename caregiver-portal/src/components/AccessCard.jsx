@@ -100,7 +100,7 @@ const AccessCard = ({login, active = true}) => {
                         
                                 {/* Access Code Verification Overlay */}
                                 {isLoading && !showSuccess && (
-                                    <div className="submission-overlay">
+                                    <div className="submission-overlay  ">
                                     <div className="submission-modal">
                                         <Loader2 className="submission-spinner" />
                                         <p className="submission-title">Verifying Access Code</p>
@@ -111,9 +111,7 @@ const AccessCard = ({login, active = true}) => {
         
 
               {showSuccess && (
-                  <div className="submission-overlay" style={{ 
-                      backgroundColor: 'rgba(46, 133, 64, 0.05)' 
-                  }}>
+                  <div className="submission-overlay submission-overlay--success">
                       <div className="submission-modal success-modal">
                           {/* Success Icon with Animation */}
                           <div className="success-icon-wrapper">
