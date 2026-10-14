@@ -2,9 +2,11 @@
 
 body {
     margin: 0;
-    font-family: 'BC Sans', sans-serif;
+    font-family: var(--typography-font-families-bc-sans), Helvetica, Arial, sans-serif;
     color: var(--typography-color-primary);
 }
+
+button, input, select, textarea { font: inherit; }
 
 .bold {
   font-weight: bold;
@@ -67,7 +69,6 @@ body {
    
 .app-title {
   color: var(--typography-color-primary);
-  font-family: "BC Sans";
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -114,7 +115,6 @@ body {
 
   .hyperlink {
     color: var(--typography-color-link);
-    font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -237,7 +237,6 @@ p {
   color: var(--typography-color-primary);
 
   /* regular/body */
-  font-family: "BC Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -248,7 +247,6 @@ li {
   color: var(--typography-color-primary);
 
   /* regular/body */
-  font-family: "BC Sans";
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -329,7 +327,6 @@ gap: 10px;
     color: var(--typography-color-primary);
 
     /* bold/H1 */
-    font-family: "BC Sans";
     font-size: 32px;
     font-style: normal;
     font-weight: 700;
@@ -461,7 +458,6 @@ gap: 10px;
 
   .welcome-card-header {
     color: var(--icons-color-primary-invert);
-    font-family: "BC Sans";
     font-size: 36px;
     font-style: normal;
     font-weight: 700;
@@ -478,7 +474,6 @@ gap: 10px;
 
   .welcome-link {
     color: var(--typography-color-secondary-invert);
-    font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -1121,7 +1116,6 @@ iframe {
   color: var(--typography-color-secondary);
 
 /* Web/Body/Label */
-font-family: "BC Sans";
 font-size: 16px;
 font-style: normal;
 font-weight: 700;
@@ -1185,7 +1179,6 @@ margin-bottom: 6px;
 
 .task-card-title {
   color: var(--typography-color-primary);
-  font-family: "BC Sans";
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
@@ -1286,7 +1279,7 @@ margin-bottom: 6px;
   font-style: normal;
   font-weight: 400;
   line-height: 21px; /* 150% */  
-  font-family: "BC Sans";
+
 }
 
 .footer-links-container {
@@ -1322,7 +1315,6 @@ margin-bottom: 6px;
   font-style: normal;
   font-weight: 700;
   line-height: 18px; /* 150% */  
-  font-family: "BC Sans";
 }
 
 .footer-links-row {
@@ -1332,7 +1324,6 @@ margin-bottom: 6px;
   gap: 8px;
   display: flex;
   justify-content: space-between;
-  font-family: "BC Sans";
 }
 
 .footer-container{
@@ -1357,7 +1348,6 @@ margin-bottom: 6px;
   color: var(--typography-color-secondary);
 
   /* regular/smallBody */
-  font-family: "BC Sans";
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -1383,7 +1373,6 @@ a {
   text-decoration-thickness: auto;
   text-underline-offset: auto;
   text-underline-position: from-font;
-  font-family: "BC Sans";
 }
 
 .bright {
@@ -1401,8 +1390,6 @@ a {
   text-decoration-thickness: auto;
   text-underline-offset: auto;
   text-underline-position: from-font;
-  font-family: "BC Sans";
-  color: var(--typography-color-link);
 }
 
   /* Modal styles */
@@ -1479,7 +1466,6 @@ a {
 
   .confirmation-modal-text {
     color: var(--typography-color-primary);
-    font-family: "BC Sans";
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -1565,10 +1551,6 @@ a {
     border: 1px solid var(--surface-color-border-medium);
   }
 
-  .form-control-error {
-    border-color: var(--support-border-color-danger); /* BC Gov error red */
-  }
-
   .form-control-readonly {
     display: flex;
     height: 22px;
@@ -1576,7 +1558,6 @@ a {
     align-items: center;
     gap: 16px;
     align-self: stretch;
-    font-family: "BC Sans";
     font-size: 16px;
 
     border: 1px solid var(--surface-color-background-white);
@@ -1592,7 +1573,6 @@ a {
     align-items: center;
     gap: 16px;
     align-self: stretch;
-    font-family: "BC Sans";
     font-size: 16px;
 
     border: 1px solid var(--surface-color-background-white);
@@ -1784,7 +1764,6 @@ a {
   .task-list-heading {
     color: var(--typography-color-primary);
     text-align: center;
-    font-family: "BC Sans";
     font-size: 24px;
     font-style: normal;
     font-weight: 700;
@@ -2084,7 +2063,6 @@ a {
 
 .uploaded-files-title {
   color: var(--typography-color-primary);
-  font-family: "BC Sans";
   font-size: 18px;
   font-weight: 700;
   margin: 0 0 16px 0;
@@ -2228,6 +2206,7 @@ a {
     justify-content: center;
     z-index: 9999;
     animation: fadeIn 0.3s ease-in-out;
+    animation: overlayFadeIn 0.3s ease-out;
   }
 
   .submission-overlay--success {
@@ -2426,11 +2405,6 @@ a {
     100% {
         width: 100%;
     }
-}
-
-/* Overlay background pulse */
-.submission-overlay {
-    animation: overlayFadeIn 0.3s ease-out;
 }
 
 @keyframes overlayFadeIn {
