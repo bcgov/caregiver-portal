@@ -1,5 +1,7 @@
 @import "@bcgov/design-tokens/css/variables.css";
 
+button {font-family: var(--typography-font-families-bc-sans), Helvetica, Arial, sans-serif;}
+
 .btn {
   display: flex;
   height: 40px;
@@ -10,7 +12,6 @@
   border-radius: var(--layout-border-radius-medium);
   background: var(--surface-color-primary-button-default);
   border: none;
-  font-family: 'BC Sans', sans-serif;
   font-weight: 400;
   font-size: 16px;
   font-style: normal;
