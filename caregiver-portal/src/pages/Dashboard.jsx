@@ -37,8 +37,8 @@ const Dashboard = () => {
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
-  const [isApprovedFch, setIsApprovedFch] = React.useState([]);
-  const [isApprovedKinship, setIsApprovedKinship] = React.useState([]);
+  const [isApprovedFch, setIsApprovedFch] = React.useState(false);
+  const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
   // 
@@ -57,7 +57,7 @@ const Dashboard = () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
-      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'Completed' && norm(app.srResolution) !== 'not approved') 
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved') 
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
