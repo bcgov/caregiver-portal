@@ -9,7 +9,7 @@ body {
 button, input, select, textarea { font: inherit; }
 
 .bold {
-  font-weight: bold;
+  font-weight: var(--typography-font-weights-bold);
 }
 
 .italic {
@@ -62,16 +62,16 @@ button, input, select, textarea { font: inherit; }
 }
 
 .formError {
-  font-size: 12px;
+  font-size: var(--typography-font-size-label);
   color: var(--theme-gray-60);
   margin-left: 6px;
 }
    
 .app-title {
   color: var(--typography-color-primary);
-  font-size: 20px;
+  font-size: var(--typography-font-size-h5);
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--typography-font-weights-bold);
   line-height: normal;
 }
 
@@ -115,9 +115,9 @@ button, input, select, textarea { font: inherit; }
 
   .hyperlink {
     color: var(--typography-color-link);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 27px;
     text-decoration-line: underline;
     text-decoration-style: solid;
@@ -181,7 +181,7 @@ button, input, select, textarea { font: inherit; }
   
   .menu-header {
     color: black;
-    font-weight:600;
+    font-weight: var(--typography-font-weights-bold);
     padding: 12px 16px;
   }
   
@@ -196,7 +196,7 @@ button, input, select, textarea { font: inherit; }
     border: none;
     text-align: left;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--typography-font-size-small-body);
     color: var(--theme-gray-100);
     transition: background-color 0.2s ease;
   }
@@ -220,9 +220,9 @@ button, input, select, textarea { font: inherit; }
 
 .page-content {
   color: var(--typography-color-primary);
-  font-size: 16px;
+  font-size: var(--typography-font-size-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   margin:0px;
 }
 
@@ -230,9 +230,9 @@ p {
   color: var(--typography-color-primary);
 
   /* regular/body */
-  font-size: 16px;
+  font-size: var(--typography-font-size-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 150%; /* 24px */
 }
 
@@ -240,9 +240,9 @@ li {
   color: var(--typography-color-primary);
 
   /* regular/body */
-  font-size: 16px;
+  font-size: var(--typography-font-size-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 150%; /* 24px */
 
   margin: 16px 0;
@@ -320,9 +320,9 @@ gap: 10px;
     color: var(--typography-color-primary);
 
     /* bold/H1 */
-    font-size: 32px;
+    font-size: var(--typography-font-size-h2);
     font-style: normal;
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
     line-height: 125%; /* 40px */
     margin: 0px;
     margin-top: 40px;
@@ -451,9 +451,9 @@ gap: 10px;
 
   .welcome-card-header {
     color: var(--icons-color-primary-invert);
-    font-size: 36px;
+    font-size: var(--typography-font-size-h1);
     font-style: normal;
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
     line-height: 100%; /* 36px */
     margin:0px;
     padding:0px;
@@ -461,15 +461,15 @@ gap: 10px;
 
   .welcome-card-content {
     color: var(--typography-color-secondary-invert);
-    font-size: 18px;
+    font-size: var(--typography-font-size-large-body);
   }
 
 
   .welcome-link {
     color: var(--typography-color-secondary-invert);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 30px; /* 187.5% */
     text-decoration: none;
     gap: 4px;
@@ -494,8 +494,8 @@ gap: 10px;
     border-radius: 4px;
     color: var(--icons-color-success);
     width: 245px;
-    font-weight: bold;
-    font-size: medium;
+    font-weight: var(--typography-font-weights-bold);
+    font-size: var(--typography-font-size-body);
     align-items: center;
     display: flex;
 
@@ -584,9 +584,9 @@ gap: 10px;
     display: block;
     align-self: stretch;
     color: var(--typography-color-primary);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 150%;
     margin-top: 13px; /* 22.5px */
   }
@@ -594,9 +594,9 @@ gap: 10px;
   .caption {
     align-self: stretch;
     color: var(--typography-color-secondary);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 150%;
     margin-top: 8px; /* 22.5px */
     margin-bottom: 24px;
@@ -606,7 +606,7 @@ gap: 10px;
   .caption-small {
     align-self: stretch;
     color: var(--typography-color-secondary);
-    font-size: 14px;
+    font-size: var(--typography-font-size-small-body);
   }
 
   .image-frame {
@@ -630,9 +630,9 @@ gap: 10px;
     color: var(--typography-color-primary);
 
     /* semi-bold/H2 */
-    font-size: 24px;
+    font-size: var(--typography-font-size-h4);
     font-style: normal;
-    font-weight: 600;
+    font-weight: var(--typography-font-weights-bold);
     line-height: var(--typography-line-heights-dense);
     padding: 0px;
     margin: 0px 0px 16px 0px;
@@ -760,9 +760,8 @@ height: 36px;
 .application-step-label {
   align-self: stretch;
   color: var(--typography-color-secondary);
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 300;
+  font-size: var(--typography-font-size-body);
+  font-weight: var(--typography-font-weights-regular);
   line-height: 27px; /* 168.75% */
   padding: 0px;
   margin: 0px;
@@ -771,9 +770,9 @@ height: 36px;
 .application-step-title {
   align-self: stretch;
   color: var(--typography-color-primary);
-  font-size: 20px;
+  font-size: var(--typography-font-size-h5);
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--typography-font-weights-bold);
   line-height: 27px; /* 135% */
   padding: 0px;
   margin: 0px;
@@ -783,9 +782,9 @@ height: 36px;
   color: var(--typography-color-secondary);
 
   /* regular/body */
-  font-size: 16px;
+  font-size: var(--typography-font-size-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 150%; /* 24px */
   padding: 0px;
   margin-top: 16px 0px;
@@ -883,8 +882,8 @@ height: 36px;
 }
 
 .application-package-label {
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: var(--typography-font-weights-bold);
+  font-size: var(--typography-font-size-large-body);
   line-height: 28px;
   white-space: nowrap;
   overflow: hidden;
@@ -911,8 +910,6 @@ height: 36px;
   height: 16px;
   flex-shrink: 0; 
   color: var(--icons-color-success);
-  font-weight: 800;
-
 }
 
 iframe {
@@ -1075,8 +1072,8 @@ iframe {
 
 .access-code-title-header {
   color: var(--typography-color-primary);
-  font-size: 20px;
-  font-weight: 700;
+  font-size: var(--typography-font-size-h5);
+  font-weight: var(--typography-font-weights-bold);
   line-height: var(--typography-line-heights-dense);
   margin: 0 0 1em;
 }
@@ -1103,9 +1100,9 @@ iframe {
   color: var(--typography-color-secondary);
 
 /* Web/Body/Label */
-font-size: 16px;
+font-size: var(--typography-font-size-body);
 font-style: normal;
-font-weight: 700;
+font-weight: var(--typography-font-weights-bold);
 line-height: 150%; /* 24px */
 letter-spacing: 0.32px;
 margin-top: 6px;
@@ -1158,24 +1155,24 @@ margin-bottom: 6px;
 
 .task-card-last-updated {
   color: var(--typography-color-primary);
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 23px; /* 164.286% */
 }
 
 .task-card-title {
   color: var(--typography-color-primary);
-  font-size: 20px;
+  font-size: var(--typography-font-size-h5);
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--typography-font-weights-bold);
   line-height: normal;
   margin-bottom: 24px;
   
 }
 
 .task-card-text {
-  font-size: 24px;
+  font-size: var(--typography-font-size-h4);
   align-items: center;
   display: flex;
   gap: 12px;
@@ -1183,8 +1180,8 @@ margin-bottom: 6px;
 }
 
 .task-card-text--cancelled {
-  font-size: 18px;
-  font-weight: normal;
+  font-size: var(--typography-font-size-large-body);
+  font-weight: var(--typography-font-weights-regular);
   align-items: center;
   display: flex;
   gap: 12px;
@@ -1215,7 +1212,7 @@ margin-bottom: 6px;
   background: none;
   border: none;
   color: var(--typography-color-link);
-  font-size: 1rem;
+  font-size: var(--typography-font-size-body);
   text-decoration: underline;
   padding: var(--layout-padding-small);
   border-radius: var(--layout-border-radius-small);
@@ -1233,7 +1230,7 @@ margin-bottom: 6px;
 
 .breadcrumb-current {
   color: var(--typography-color-secondary);
-  font-size: 1rem;
+  font-size: var(--typography-font-size-body);
   padding: var(--layout-padding-small);
   white-space: nowrap;
 }
@@ -1261,9 +1258,9 @@ margin-bottom: 6px;
   color: var(--typography-color-primary-invert);
 
   /* regular/smallBody */
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 21px; /* 150% */  
 
 }
@@ -1297,9 +1294,9 @@ margin-bottom: 6px;
   color: var(--typography-color-primary);
 
   /* bold/label */
-  font-size: 12px;
+  font-size: var(--typography-font-size-label);
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--typography-font-weights-bold);
   line-height: 18px; /* 150% */  
 }
 
@@ -1334,9 +1331,9 @@ margin-bottom: 6px;
   color: var(--typography-color-secondary);
 
   /* regular/smallBody */
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 21px; /* 150% */
   padding: var(--layout-padding-medium) 0;
   @media (min-width: 820px) {
@@ -1349,9 +1346,9 @@ a {
 
   /* regular/smallBody */
 
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 21px; /* 150% */
   text-decoration-line: underline;
   text-decoration-style: solid;
@@ -1366,9 +1363,9 @@ a {
 
   /* regular/smallBody */
 
-  font-size: 16px;
+  font-size: var(--typography-font-size-body);
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--typography-font-weights-regular);
   line-height: 21px; /* 150% */
   text-decoration-line: underline;
   text-decoration-style: solid;
@@ -1429,8 +1426,8 @@ a {
 
   .modal-title {
     margin: 0;
-    font-size: 24px;
-    font-weight: 700;
+    font-size: var(--typography-font-size-h4);
+    font-weight: var(--typography-font-weights-bold);
     width: 100%;
     line-height: normal;
   }
@@ -1446,15 +1443,15 @@ a {
   .confirmation-message {
     margin-bottom: 1.5rem;
     color: var(--typography-color-primary);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     line-height: 1.5;
   }
 
   .confirmation-modal-text {
     color: var(--typography-color-primary);
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 23px; /* 143.75% */    
   }
 
@@ -1473,9 +1470,9 @@ a {
   .required {
     color: var(--typography-color-danger);
     text-align: center;
-    font-size: 18px;
+    font-size: var(--typography-font-size-large-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 100%; /* 18px */
   }
 
@@ -1505,13 +1502,13 @@ a {
   }
 
   .form-group-header{
-    font-size: 24px;
+    font-size: var(--typography-font-size-h4);
     line-height: 150%;
   }
 
   .form-control-label {
     /* Web/Body/Label */
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
     line-height: 150%; /* 24px */
     letter-spacing: 0.32px;
   }
@@ -1544,7 +1541,7 @@ a {
     align-items: center;
     gap: 16px;
     align-self: stretch;
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
 
     border: 1px solid var(--surface-color-background-white);
     background: var(--surface-color-background-light-gray);
@@ -1559,7 +1556,7 @@ a {
     align-items: center;
     gap: 16px;
     align-self: stretch;
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
 
     border: 1px solid var(--surface-color-background-white);
     background: var(--surface-color-background-light-gray);
@@ -1593,9 +1590,9 @@ a {
 
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 1rem;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 20px; /* 125% */
     letter-spacing: 0.32px;
 
@@ -1660,9 +1657,9 @@ a {
     color: var(--typography-color-secondary);
 
     /* Web/Body/Label */
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
     line-height: 150%; /* 24px */
     letter-spacing: 0.32px;    
   }
@@ -1685,11 +1682,11 @@ a {
   }
 
   input, select {  /* Attempt to standardize text on inputs of all types */
-    font-size: 1rem;
+    font-size: var(--typography-font-size-body);
   }
 
   input[type="date"] {
-    font-size: 1rem;
+    font-size: var(--typography-font-size-body);
   }
 
   input[type="radio"] {
@@ -1747,9 +1744,9 @@ a {
   .task-list-heading {
     color: var(--typography-color-primary);
     text-align: center;
-    font-size: 24px;
+    font-size: var(--typography-font-size-h4);
     font-style: normal;
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
     line-height: 100%; /* 24px */
   }
 
@@ -1805,9 +1802,9 @@ a {
     flex: 1 0 0;
     color: var(--typography-color-primary);
 
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 150%; /* 24px */
   }
 
@@ -1824,8 +1821,8 @@ a {
     gap: 8px;
   }
   .nameLabel {
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: var(--typography-font-weights-bold);
+    font-size: var(--typography-font-size-h5);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1833,7 +1830,7 @@ a {
   }
   
   .pill {
-    font-size: 12px;
+    font-size: var(--typography-font-size-label);
     color: var(--typography-color-primary);
     background: var(--theme-gray-20);
     padding: 3px 8px;
@@ -1933,21 +1930,21 @@ a {
 
 .file-upload-text {
   color: var(--typography-color-primary);
-  font-size: 16px;
-  font-weight: 400;
+  font-size: var(--typography-font-size-body);
+  font-weight: var(--typography-font-weights-regular);
   margin: 0 0 8px 0;
   text-align: center;
 }
 
 .file-upload-text strong {
   color: var(--typography-color-link);
-  font-weight: 700;
+  font-weight: var(--typography-font-weights-bold);
   text-decoration: underline;
 }
 
 .file-upload-hint {
   color: var(--typography-color-secondary);
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
   margin: 0;
   text-align: center;
 }
@@ -1981,14 +1978,14 @@ a {
 
 .file-upload-preview-name {
   color: var(--typography-color-primary);
-  font-size: 16px;
-  font-weight: 400;
+  font-size: var(--typography-font-size-body);
+  font-weight: var(--typography-font-weights-regular);
   word-break: break-word;
 }
 
 .file-upload-preview-size {
   color: var(--typography-color-secondary);
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
 }
 
 .file-upload-remove {
@@ -2024,7 +2021,7 @@ a {
   border: 1px solid var(--typography-color-danger);
   border-radius: var(--layout-border-radius-medium);
   color: var(--typography-color-danger);
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
 }
 
 .file-upload-error svg {
@@ -2046,8 +2043,8 @@ a {
 
 .uploaded-files-title {
   color: var(--typography-color-primary);
-  font-size: 18px;
-  font-weight: 700;
+  font-size: var(--typography-font-size-large-body);
+  font-weight: var(--typography-font-weights-bold);
   margin: 0 0 16px 0;
 }
 
@@ -2087,14 +2084,14 @@ a {
 
 .uploaded-file-name {
   color: var(--typography-color-primary);
-  font-size: 16px;
-  font-weight: 400;
+  font-size: var(--typography-font-size-body);
+  font-weight: var(--typography-font-weights-regular);
   word-break: break-word;
 }
 
 .uploaded-file-size {
   color: var(--typography-color-secondary);
-  font-size: 14px;
+  font-size: var(--typography-font-size-small-body);
 }
 
 .uploaded-file-remove {
@@ -2128,7 +2125,7 @@ a {
   }
 
   .uploaded-files-title {
-    font-size: 16px;
+    font-size: var(--typography-font-size-body)
   }
 }
 
@@ -2216,14 +2213,14 @@ a {
   }
 
   .submission-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: var(--typography-font-size-h5);
+    font-weight: var(--typography-font-weights-bold);
     color: var(--typography-color-primary);
     margin-bottom: 8px;
   }
 
   .submission-text {
-    font-size: 0.95rem;
+    font-size: var(--typography-font-size-body);
     color: var(--typography-color-secondary);
     line-height: 1.5;
   }
@@ -2416,7 +2413,7 @@ a {
     }
 
     .app-title {
-      font-size: 18px;
+      font-size: var(--typography-font-size-large-body);
     }
 
 
@@ -2471,8 +2468,8 @@ a {
   }
 
   .resubmission-form-type {
-    font-size: 18px;
-    font-weight: 800;
+    font-size: var(--typography-font-size-large-body);
+    font-weight: var(--typography-font-weights-bold);
     line-height: 150%;
     gap: 8px;
     flex-direction: row;
@@ -2481,8 +2478,8 @@ a {
   }
 
   .resubmission-form-download {
-    font-size: 18px;
-    font-weight: 400;
+    font-size: var(--typography-font-size-large-body);
+    font-weight: var(--typography-font-weights-regular);
     line-height: 150%;
     gap: 8px;
     flex-direction: row;
@@ -2492,14 +2489,14 @@ a {
   }
 
   .resubmission-form-date {
-    font-size: 16px;
-    font-weight: 200;
+    font-size: var(--typography-font-size-body);
+    font-weight: var(--typography-font-weights-regular);
     padding-left: 30px;
   }
 
   .resub {
-    font-size: 18px;
-    font-weight: 400;
+    font-size: var(--typography-font-size-large-body);
+    font-weight: var(--typography-font-weights-regular);
     line-height: 150%;
     color: var(--icons-color-info);
     text-decoration: none;
@@ -2507,7 +2504,7 @@ a {
   }
 
   .resubmission-form-date--today {
-    font-weight: 600;
+    font-weight: var(--typography-font-weights-bold);
   }
 
   .inline-icon {
@@ -2515,7 +2512,7 @@ a {
   }
 
   .resubmission-form-button {
-    font-size: 18px;
+    font-size: var(--typography-font-size-large-body);
     font-style:italic;
     padding-left: 30px;
     

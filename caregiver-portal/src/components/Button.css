@@ -8,8 +8,8 @@
   border-radius: var(--layout-border-radius-medium);
   background: var(--surface-color-primary-button-default);
   border: none;
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: var(--typography-font-weights-regular);
+  font-size: var(--typography-font-size-body);
   font-style: normal;
   line-height: 27px;
   }
@@ -30,7 +30,7 @@
   .btn-primary-bold {
     background-color: var(--surface-color-primary-button-default);
     color: var(--typography-color-primary-invert);
-    font-weight: 700;
+    font-weight: var(--typography-font-weights-bold);
   }
   
   .btn-primary-bold:hover {
@@ -53,9 +53,9 @@
 
       /* regular/body */
       
-      font-size: 16px;
+      font-size: var(--typography-font-size-body);
       font-style: normal;
-      font-weight: 400;
+      font-weight: var(--typography-font-weights-regular);
       line-height: 27.008px; /* 168.8% */
       
   }
@@ -68,9 +68,9 @@
     padding: 0px;
     
     /* regular/body */
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: 400;
+    font-weight: var(--typography-font-weights-regular);
     line-height: 27.008px; /* 168.8% */
     text-decoration: underline;
     text-decoration-style: solid;
@@ -89,9 +89,9 @@
     padding: 0px;
     
     /* regular/body */
-    font-size: 16px;
+    font-size: var(--typography-font-size-body);
     font-style: normal;
-    font-weight: normal;
+    font-weight: var(--typography-font-weights-regular);
     
     text-decoration: underline;
     text-decoration-style: solid;
@@ -131,14 +131,14 @@
 
   .btn-disabled {
     background-color:transparent;
-    font-weight: normal;
+    font-weight: var(--typography-font-weights-regular);
     color: var(--theme-gray-60);
     border: 1px solid var(--surface-color-border-default);
   }
 
   .btn-inprogress {
     background-color: var(--theme-primary-gold);
-    font-weight:700;
+    font-weight: var(--typography-font-weights-bold);
     color: var(--surface-color-primary-default);
     border: 1px solid var(--surface-color-primary-default);
   }
@@ -189,7 +189,7 @@
 
   .btn-section-header {
     background-color:transparent;
-    font-weight: normal;
+    font-weight: var(--typography-font-weights-regular);
     color: var(--typography-color-primary);
     width: 200px;
     text-align: right;
