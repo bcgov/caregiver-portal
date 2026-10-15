@@ -31,38 +31,52 @@ const Dashboard = () => {
   } = useApplicationPackage();
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
-  const [hasResourceCase, setHasResourceCase] = React.useState([]);
+  const [hasResourceCase, setHasResourceCase] = React.useState(false);
   const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
+  const [isApprovedFch, setIsApprovedFch] = React.useState(false);
+  //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
-  //
+  // 
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
+  /*
   const handleNavigateToOOCApplication = useCallback((applicationPackageId) => {
     navigate(`/kinship-application/${applicationPackageId}`);
   }, [navigate]);
+  */
 
   const loadApplicationPackages = useCallback(async () => {
     try {
-      const apps = await getApplicationPackages();
-      const incompleteApps = apps.filter(app => (app.srStage !== 'Completed' && app.subtype !== 'OOC'))
+      const norm = v => (v ?? '').trim().toLowerCase();
+      const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved') 
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
+      setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && norm(app.srStage) === 'completed' && norm(app.srResolution) === 'approved'));
+      //setIsApprovedKinship(apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
+
+      //const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
+      //const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
+      //console.log('apps:', apps);
+      //console.log('incompleteApps:', incompleteApps);
+      //console.log('approvedFch:', approvedFch, 'approvedKinship:', approvedKinship);
     } catch (err) {
       console.error('Failed to load applications:', err);
     }
   }, []);
 
   useEffect(() => {
-    setHasResourceCase(userProfile?.resource_case_active_date);
+    setHasResourceCase(!!userProfile?.resource_case_active_date);
+    //console.log('hasResourceCase:',hasResourceCase);
   }, [userProfile]);
 
   const {
@@ -87,6 +101,7 @@ const Dashboard = () => {
     }
   };
 
+  /*
   const handleCreateOOCApplication = async () => {
     try {
       const newPackage = await createApplicationPackage({
@@ -98,6 +113,7 @@ const Dashboard = () => {
       console.error('Failed to create application:', err);
     }
   };
+  */
 
 
   useEffect(() => {
@@ -139,7 +155,7 @@ const Dashboard = () => {
           <div className="task-frame-image">
             <div className="task-content">
               <WelcomeCard user={auth.user}>
-              {hasResourceCase && (
+              {isApprovedFch && (
                 <div className="welcome-badge-container">
                   <ShieldCheck size={20} className="welcome-badge" />{' '}
                   Approved Foster Caregiver
@@ -169,10 +185,8 @@ const Dashboard = () => {
 
 
                 {applicationPackages?.map((app) => (
-                  <>
-                    
+                  <>                 
                       <TaskCard subtype={app.subtype} applicationPackage={app} />
-                    
                   </>
                 ))}
                 {householdMemberships?.map((membership) => {
@@ -186,21 +200,18 @@ const Dashboard = () => {
                   );
                 })}
 
-                {hasResourceCase && (
+                {(isApprovedFch) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Completed tasks</h2>
-                    <TaskItem></TaskItem>
+                    <h2 className="page-heading">Completed tasks</h2>                   
+                      <TaskItem type={'FCH'}></TaskItem>                    
                   </div>
                   
                 )
               }
 
-                {(fosterApplications?.length === 0 && !hasResourceCase) && (
-                  <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
-                )}
-                {(KINSHIP_START_ON && kinshipApplications?.length === 0) && (
-                  <OOCApplicationStart onClick={handleCreateOOCApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} showImage={false}/>
+                {(fosterApplications?.length === 0 && !isApprovedFch) && (
+                  <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} startLink={calculateAge(userProfile?.date_of_birth) > 17} showImage={false}/>
                 )}
 
 
