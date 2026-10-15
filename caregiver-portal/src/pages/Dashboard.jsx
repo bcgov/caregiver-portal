@@ -37,8 +37,8 @@ const Dashboard = () => {
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
-  const [isApprovedFch, setIsApprovedFch] = React.useState([]);
-  const [isApprovedKinship, setIsApprovedKinship] = React.useState([]);
+  const [isApprovedFch, setIsApprovedFch] = React.useState(false);
+  const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
   // 
