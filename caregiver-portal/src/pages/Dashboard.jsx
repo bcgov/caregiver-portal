@@ -31,14 +31,14 @@ const Dashboard = () => {
   } = useApplicationPackage();
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
-  const [hasResourceCase, setHasResourceCase] = React.useState([]);
+  const [hasResourceCase, setHasResourceCase] = React.useState(false);
   const { calculateAge } = useDates();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
-  const [isApprovedFch, setIsApprovedFch] = React.useState([]);
-  const [isApprovedKinship, setIsApprovedKinship] = React.useState([]);
+  const [isApprovedFch, setIsApprovedFch] = React.useState(false);
+  //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
   // 
@@ -57,12 +57,12 @@ const Dashboard = () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
-      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'Completed' && norm(app.srResolution) !== 'not approved') 
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved') 
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
-      setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
-      setIsApprovedKinship(apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
+      setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && norm(app.srStage) === 'completed' && norm(app.srResolution) === 'approved'));
+      //setIsApprovedKinship(apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved'));
 
       //const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
       //const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
@@ -75,8 +75,8 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    setHasResourceCase(userProfile?.resource_case_active_date);
-    console.log('hasResourceCase:',hasResourceCase);
+    setHasResourceCase(!!userProfile?.resource_case_active_date);
+    //console.log('hasResourceCase:',hasResourceCase);
   }, [userProfile]);
 
   const {
@@ -200,18 +200,11 @@ const Dashboard = () => {
                   );
                 })}
 
-                {(isApprovedFch || isApprovedKinship) && (
+                {(isApprovedFch) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Completed tasks</h2>
-                    {isApprovedFch && (
-                      <TaskItem type={'FCH'}></TaskItem>
-                    )}
-                    {isApprovedKinship && (
-                      <TaskItem type={'Kinship'}></TaskItem>
-                    )
-                    }
-                    
+                    <h2 className="page-heading">Completed tasks</h2>                   
+                      <TaskItem type={'FCH'}></TaskItem>                    
                   </div>
                   
                 )
