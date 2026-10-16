@@ -53,7 +53,7 @@
     color: var(--typography-color-link);
     text-align: center;
     
-    padding: 0px;
+    padding: 0;
     
     font: var(--typography-regular-body);
     text-decoration: underline;
@@ -70,7 +70,7 @@
     color: var(--typography-color-link);
     text-align: center;
     
-    padding: 0px;
+    padding: 0;
     
     /* regular/body */
     font-size: var(--typography-font-size-body);
@@ -177,7 +177,7 @@
     color: var(--typography-color-primary);
     width: 200px;
     text-align: right;
-    padding: 0px;
+    padding: 0;
   }
 
   .btn-section-header:hover {
