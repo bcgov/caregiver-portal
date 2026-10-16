@@ -86,7 +86,7 @@
   }
 
   .btn-learnmore:hover {
-    color: blue;
+    color: var(--surface-color-primary-hover);
   }
 
   .btn-white {
@@ -129,7 +129,7 @@
   
   .btn-tertiary {
     background-color: transparent;
-    color: white;
+    color: var(--typography-color-primary-invert);
     border: var(--layout-border-width-medium) solid var(--surface-color-background-white);
   }
 
