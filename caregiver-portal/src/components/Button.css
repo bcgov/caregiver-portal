@@ -8,10 +8,7 @@
   border-radius: var(--layout-border-radius-medium);
   background: var(--surface-color-primary-button-default);
   border: none;
-  font-weight: var(--typography-font-weights-regular);
-  font-size: var(--typography-font-size-body);
-  font-style: normal;
-  line-height: 27px;
+  font: var(--typography-regular-body);
   }
 
 .btn:hover {
@@ -40,24 +37,15 @@
   .btn-lowkey {
     display: flex;
     height: 40px;
-    padding: var(--layout-margin-small) var(--layout-margin-medium);
+    padding: var(--layout-padding-small) var(--layout-padding-medium);
     justify-content: center;
     align-items: center;
     gap: var(--layout-margin-small);
-
     border-radius: var(--layout-border-radius-medium);
     background: var(--surface-color-primary-button-disabled);
-
     color: var(--typography-color-disabled);
     text-align: center;
-
-      /* regular/body */
-      
-      font-size: var(--typography-font-size-body);
-      font-style: normal;
-      font-weight: var(--typography-font-weights-regular);
-      line-height: 27.008px; /* 168.8% */
-      
+    font: var(--typography-regular-body);
   }
   
   .btn-secondary {
@@ -67,11 +55,7 @@
     
     padding: 0px;
     
-    /* regular/body */
-    font-size: var(--typography-font-size-body);
-    font-style: normal;
-    font-weight: var(--typography-font-weights-regular);
-    line-height: 27.008px; /* 168.8% */
+    font: var(--typography-regular-body);
     text-decoration: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: auto;
@@ -108,13 +92,13 @@
   .btn-white {
     display: flex;
     height: 40px;
-    padding: var(--layout-margin-small) var(--layout-margin-medium);
+    padding: var(--layout-padding-small) var(--layout-padding-medium);
     justify-content: center;
     align-items: center;
     gap: var(--layout-margin-small);
 
     border-radius: var(--layout-border-radius-medium);
-    border: 1px solid var(--surface-color-border-dark);
+    border: var(--layout-border-width-small) solid var(--surface-color-border-dark);
     background: var(--surface-color-secondary-button-default);
 
   }
@@ -133,26 +117,26 @@
     background-color:transparent;
     font-weight: var(--typography-font-weights-regular);
     color: var(--theme-gray-60);
-    border: 1px solid var(--surface-color-border-default);
+    border: var(--layout-border-width-small) solid var(--surface-color-border-default);
   }
 
   .btn-inprogress {
     background-color: var(--theme-primary-gold);
     font-weight: var(--typography-font-weights-bold);
     color: var(--surface-color-primary-default);
-    border: 1px solid var(--surface-color-primary-default);
+    border: var(--layout-border-width-small) solid var(--surface-color-primary-default);
   }
   
   .btn-tertiary {
     background-color: transparent;
     color: white;
-    border: 2px solid white;
+    border: var(--layout-border-width-medium) solid var(--surface-color-background-white);
   }
 
   .btn-next {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--layout-margin-xsmall);
     background: var(--surface-color-primary-button-default);
     border: none;
     color: var(--typography-color-primary-invert);
@@ -172,13 +156,13 @@
   .btn-nav {
     display: flex;
     height: 40px;
-    padding: var(--layout-margin-small) var(--layout-margin-medium);
+    padding: var(--layout-padding-small) var(--layout-padding-medium);
     justify-content: center;
     align-items: center;
     gap: var(--layout-margin-small);
 
     border-radius: var(--layout-border-radius-medium);
-    border: 1px solid var(--surface-color-border-dark);
+    border: var(--layout-border-width-small) solid var(--surface-color-border-dark);
     background: var(--surface-color-secondary-button-default);
   }
 
