@@ -1,8 +1,9 @@
 /* Portal stylesheet entry point.
    Order matters: later files override earlier ones where selectors have equal specificity.
-   Button styles live with the component in components/Button.css. */
+   Buttons come first so area files can override them where needed. */
 @import "@bcgov/design-tokens/css/variables.css";
 
+@import "./buttons.css";
 @import "./base.css";
 @import "./layout.css";
 @import "./forms.css";

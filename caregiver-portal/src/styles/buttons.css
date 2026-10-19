@@ -1,3 +1,5 @@
+/* Buttons: every button renders as btn btn-<variant>; variants override only what differs from .btn */
+
 /* Base button. Every variant is rendered as "btn btn-<variant>" (see Button.jsx),
    so variants only override what differs from this. */
 .btn {
