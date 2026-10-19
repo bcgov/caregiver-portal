@@ -10,7 +10,7 @@ import SessionExpiryModal from './components/SessionExpiryModal';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import EnvironmentBanner from './components/EnvironmentBanner';
-import "./DesignTokens.css";
+import "./styles/index.css";
 // Pages
 
 import LoginPage from './pages/Login';

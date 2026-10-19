@@ -9,7 +9,7 @@ import { useAttachments } from '../hooks/useAttachments';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X, ExternalLink } from 'lucide-react';
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 const TRAINING_CERTIFICATE_TYPE = 'PRESERVICE CERTIFICATE';
 

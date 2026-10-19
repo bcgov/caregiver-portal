@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import ConfirmationModal from '../components/ConfirmationModal';
 import Application from '../components/Application';
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 const FormResubmission = () => {
   const { applicationPackageId, applicationFormId } = useParams();
