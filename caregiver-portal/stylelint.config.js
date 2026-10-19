@@ -14,10 +14,10 @@ export default {
     'color-named': 'never',
     'function-disallowed-list': ['rgb', 'rgba', 'hsl', 'hsla'],
 
-    // Only real BCDS tokens. --banner-height is set at runtime by EnvironmentBanner.jsx.
+    // Only real BCDS tokens. --cgr-banner-height is set at runtime by EnvironmentBanner.jsx.
     'csstools/value-no-unknown-custom-properties': [
       true,
-      { importFrom: [tokens, { customProperties: { '--banner-height': '0px' } }] },
+      { importFrom: [tokens, { customProperties: { '--cgr-banner-height': '0px' } }] },
     ],
 
     // Typography must use tokens
