@@ -3,9 +3,27 @@
 How the Caregiver Portal uses the B.C. Design System tokens
 ([`@bcgov/design-tokens`](https://www.npmjs.com/package/@bcgov/design-tokens), currently v3.2.0).
 
-All portal styles live in `caregiver-portal/src/DesignTokens.css` and
-`caregiver-portal/src/components/Button.css`. The first line of `DesignTokens.css` imports
-`@bcgov/design-tokens/css/variables.css`, so every token is available as a CSS custom property.
+Portal styles live in `caregiver-portal/src/styles/`, split by area. `styles/index.css` is the
+entry point. It imports
+`@bcgov/design-tokens/css/variables.css`, so every token is available as a CSS custom property,
+then the files below, in this order:
+
+| File | Contents |
+|---|---|
+| `base.css` | body, typography, links, utility classes |
+| `buttons.css` | every button variant (`btn`, `btn-primary`, …) |
+| `layout.css` | header, navigation, page frames, breadcrumbs, footer |
+| `forms.css` | inputs, radios, validation, declaration |
+| `modals.css` | confirmation modal, submission overlay, success animation |
+| `file-upload.css` | dropzone, previews, uploaded files, resubmission |
+| `household.css` | household summary, member form, household page |
+| `application.css` | application package steps, task cards, dashboard, welcome card |
+| `animations.css` | `@keyframes` and `prefers-reduced-motion` overrides |
+
+**Order matters.** Later files override earlier ones when two rules have equal specificity and
+set the same property. Add a rule to the area it belongs to and keep responsive `@media` blocks
+after the base rules they override. Create a new area file only if you also add it to
+`index.css`. Import `styles/index.css` once per page, as the existing pages do.
 
 ## Background
 
@@ -60,7 +78,7 @@ All portal styles live in `caregiver-portal/src/DesignTokens.css` and
    large.
 8. **Icons.** Size with `--icons-size-*` (medium, 20px, is the default) and colour with
    `--icons-color-*`.
-9. **Buttons.** `Button.css` uses `surface-color-{primary|secondary|tertiary}-button-{default|hover|disabled}`
+9. **Buttons.** `styles/buttons.css` uses `surface-color-{primary|secondary|tertiary}-button-{default|hover|disabled}`
    and `primary-danger-button-*`. Every button renders as `btn btn-<variant>`, so variants only
    override what differs from `.btn`.
 10. **No fallbacks.** The tokens are imported globally, so write `var(--x)`, not
@@ -124,7 +142,7 @@ When something has no token, suppress the rule on that line with a reason:
 /* stylelint-disable-next-line color-no-hex -- decorative gradient end, no BCDS token */
 ```
 
-Current exceptions in `DesignTokens.css`:
+Current exceptions in `styles/`:
 
 | Where | Why |
 |---|---|
