@@ -1,10 +1,16 @@
 import React from "react";
-import { CircleAlert, CircleCheck, ChevronRight, Check } from "lucide-react";
+import { CircleAlert, CircleCheck, Check, CircleQuestionMark, CircleX } from "lucide-react";
 
-const HouseholdSummaryItem = ({member, onClick}) => {
+const HouseholdSummaryItem = ({member, onView, onRemove}) => {
+
+    const needsConsent = member.requireScreening && !member.screeningInfoProvided;
+    const canRemove = !member.screeningInfoProvided;
 
     return (
-        <div className="householdSummaryItem" onClick={member.requireScreening && !member.screeningInfoProvided ? onClick : null}>
+        <div 
+            className={`householdSummaryItem${needsConsent ? ' householdSummaryItemClickable' : ''}`}  
+            onClick={needsConsent ? onView : undefined}
+        >
             <div className="householdSummaryItemLeft">
                 <div className="topLabel">
                     <span className="nameLabel">{member.firstName} {member.lastName} </span>
@@ -29,16 +35,29 @@ const HouseholdSummaryItem = ({member, onClick}) => {
                     )}
                 </div>
             </div>
-                <span className="chevronRight">
-                { member.requireScreening && !member.screeningInfoProvided? 
-                    <ChevronRight size={40}
-                        className="chevronRight" 
-                        />
-                    : <Check size={40}
-                        className="chevronRight" 
-                        />  
-                }
-                </span>
+            <div className="householdSummaryActions">
+                {needsConsent ? (
+                    <button 
+                        type="button" 
+                        className="householdActionButton householdActionView"
+                        onClick={(e) => { e.stopPropagation(); onView(); }}
+                        aria-label={`View consent summary for ${member.firstName} ${member.lastName}`}>
+                            <CircleQuestionMark size={20} />
+                        </button>
+                ) : (
+                    <Check size={20} className="householdActionDone" />
+                )}
+                
+                <button
+                    type="button"
+                    className={`householdActionButton householdActionRemove${canRemove ? '' : ' householdActionHidden'}`}
+                    onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                    disabled={!canRemove}
+                    aria-label={`Remove ${member.firstName} ${member.lastName} from household`}
+                >
+                    <CircleX size={20} />
+                </button>
+            </div>
         </div>
     );
 };

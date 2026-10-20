@@ -30,4 +30,17 @@ export default [
       ],
     },
   },
+  {
+    files: ['src/**/*.{js,jsx}'],
+    ignores: ['src/components/EnvironmentBanner.jsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/^#[0-9a-fA-F]{3,8}$/]',
+          message: 'Use a design token (var(--…)) instead of a hex colour. See docs/design-tokens.md.',
+        },
+      ],
+    },
+  },  
 ]

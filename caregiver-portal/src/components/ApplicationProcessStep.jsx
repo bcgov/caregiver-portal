@@ -12,48 +12,40 @@ const ApplicationProcessStep = ({step, index, last, onContinue, buttonLabel = 'C
                 case 'waiting':
                     return (
                         <div className="application-step-indicator">
-                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="18" cy="18" r="18" fill="#013366"/> {/* Blue color for waiting */}
-        
-                            </svg>
-                            <div className="application-step-icon" style={{paddingLeft: '1px'}}>
-                            <Clock size={20} color="white" />
-                            </div>
+                            <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="18" cy="18" r="18" className="step-circle--waiting" />
+                            </svg>                                          
+                            <div className="application-step-icon application-step-icon--nudge"><Clock size={20} /></div>
                         </div>
                     );
                     case 'alert':
                         return (
                             <div className="application-step-indicator">
-                                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
-            
-                                </svg>
-                                <div className="application-step-icon" style={{paddingLeft: '1px'}}>
-                                <CircleAlert size={20} color="white" />
-                                </div>
+                                <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" className="step-circle--alert" />
+                                </svg>                       
+                                <div className="application-step-icon application-step-icon--nudge"><CircleAlert size={20} /></div>
                             </div>
                         );                    
                 case 'complete':
                     return (
                         <div className="application-step-indicator">
-                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="18" cy="18" r="18" fill="#42814A"/>
-
+                            <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" className="step-circle--complete"/>
                             </svg>
-                            <div className="application-step-icon">
-                            <Check size={20} color="white" />
+                            <div className="application-step-icon">                            
+                             <Check size={20}  />
                             </div>
                         </div>
                     );
                 default:
                     return (
                         <div className="application-step-indicator">
-                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="18" cy="18" r="18" fill="#FCBA19"/>
-
+                            <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="18" className="step-circle--next" />
                             </svg>
                             <div className="application-step-icon">
-                            <ArrowRight size={20} color="white" />
+                            <ArrowRight size={20} />
                             </div>
                         </div>
                     );
@@ -62,11 +54,10 @@ const ApplicationProcessStep = ({step, index, last, onContinue, buttonLabel = 'C
         } else {
             return (
                 <div className="application-step-later">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 0C5.364 0 0 5.364 0 12C0 18.636 5.364 24 12 24C18.636 24 24 18.636 24 12C24 5.364 18.636 
-0 12 0ZM12 21.6C6.696 21.6 2.4 17.304 2.4 12C2.4 6.696 6.696 2.4 12 2.4C17.304 2.4 21.6 6.696 21.6 12C21.6 17.304 17.304 21.6 
-12 21.6Z" 
-                        fill="#D1CFCD"
+                        0 12 0ZM12 21.6C6.696 21.6 2.4 17.304 2.4 12C2.4 6.696 6.696 2.4 12 2.4C17.304 2.4 21.6 6.696 21.6 12C21.6 17.304 17.304 21.6 
+                        12 21.6Z" className="step-ring-later"
                         />
                     </svg>
                 </div>

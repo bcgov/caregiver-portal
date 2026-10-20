@@ -9,7 +9,7 @@ import { useAttachments } from '../hooks/useAttachments';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X, ExternalLink } from 'lucide-react';
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 const TRAINING_CERTIFICATE_TYPE = 'PRESERVICE CERTIFICATE';
 
@@ -212,7 +212,7 @@ const ProspectiveCaregiverTraining = () => {
           ) : hasTrainingCertificates ? (
             <>
               <div className="page-details-row-small">
-                <div className="info-box" style={{ borderColor: 'green' }}>
+                <div className="info-box info-box-success">
                   Your training certificates have been submitted. A social worker will review them as part of your assessment.
                 </div>
               </div>

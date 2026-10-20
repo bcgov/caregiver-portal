@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import "../DesignTokens.css";
+import "../styles/index.css";
 import ApplicationPackageStep from '../components/ApplicationPackageStep';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
