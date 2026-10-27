@@ -99,7 +99,7 @@ const FosterApplicationProcess = () => {
       case "training":
         navigate(`/foster-application/application-package/${applicationPackageId}/training`);
         break;
-      default: 
+      default:
         navigate(`/foster-application/application-package/${applicationPackageId}`);
         break;
     }
@@ -114,7 +114,7 @@ const FosterApplicationProcess = () => {
   };
 
   const handleConfirmDelete = async () => {
-    try { 
+    try {
       await cancelApplicationPackage(applicationPackageId);
       setShowDeleteModal(false);
     } catch (err) {
@@ -139,7 +139,7 @@ const FosterApplicationProcess = () => {
   const hasMedicalAssessment = applicationPackage?.hasMedicalAssessment && applicationPackage?.hasMedicalAssessment === true;
   const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
 
-  
+
   const getSteps = (applicationPackage) => {
     const baseSteps = [
       {key: 'referral', label: 'Attend an information session', description: 'The first step is to register for an information session.', disabled: false, iconType: 'start', buttonLabel: 'Submit request to attend info session'},
@@ -178,7 +178,7 @@ const FosterApplicationProcess = () => {
           disabled: false,
           iconType: 'start',
         }
-      } 
+      }
       if (step.key === 'application' && (applicationPackage?.status === 'Consent' || applicationPackage?.status === 'Submitted' || applicationPackage?.status === 'Ready')) {
 
         return {
@@ -249,7 +249,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
+          description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 20 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
           disabled: false,
           iconType: 'start',
 
@@ -309,11 +309,11 @@ const FosterApplicationProcess = () => {
 
 return (
 
-  
+
     <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
-          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
           <h1 className="page-title">Become a foster caregiver</h1>
@@ -341,7 +341,7 @@ return (
                 <Button variant="white"
                   onClick={() => navigate(resubmitLink)}
                   disabled={isDeleting}
-                  ><FilePlus size="16" />Add/Update Application Forms</Button>                  
+                  ><FilePlus size="16" />Add/Update Application Forms</Button>
                 )}
 
                   <ConfirmationModal
@@ -360,7 +360,7 @@ return (
                       isOpen={showReferralModal}
                       onClose={handleCancelReferral}
                       onConfirm={handleConfirmReferral}
-                      title="Before you apply"                      
+                      title="Before you apply"
                       confirmText="I understand"
                       cancelText="Cancel"
                       confirmVariant="primary-bold"
