@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { CircleX } from "lucide-react";
 import Breadcrumb from "../components/Breadcrumb";
 import Button from "../components/Button";
+import RemoveHouseholdMemberModal from "../components/modals/RemoveHouseholdMemberModal";
 import { useHouseholdContacts } from "../hooks/useHouseholdContacts";
 import "../styles/index.css";
 
 const ManageHousehold = () => {
     const navigate = useNavigate();
-    const { contacts, hasResourceCase, loading, error } =
+    const { contacts, hasResourceCase, caseOpenDate, removeContact, loading, error } =
         useHouseholdContacts();
+        const [memberToRemove, setMemberToRemove] = useState(null);
 
     const breadcrumbItems = [
         { label: "Dashboard", path: "/dashboard" },
@@ -17,6 +20,11 @@ const ManageHousehold = () => {
 
     if (loading) return null;
     if (!error && !hasResourceCase) return <Navigate to="/dashboard" replace />;
+
+    const handleRemove = async (caseContactId, departureDate) => {
+        await removeContact(caseContactId, departureDate);
+        setMemberToRemove(null);
+    };
 
     return (
         <div className="page">
@@ -45,34 +53,56 @@ const ManageHousehold = () => {
                     {!error && contacts.length === 0 && (
                         <p>You have no other adults in your household.</p>
                     )}
-                    {contacts.map((c) => (
-                        <div
-                            key={c.case_contact_id}
-                            className="householdSummaryItem"
-                        >
-                            <div className="householdSummaryItemLeft">
-                                <div className="topLabel">
-                                    <span className="nameLabel">
-                                        {c.first_name} {c.last_name}{" "}
-                                    </span>
-                                    <span className="pill">
-                                        {c.relationship}
-                                    </span>
+                    {contacts.map((c) => {
+                        const name = `${c.first_name} ${c.last_name}`;
+                        return (
+                            <div key={c.case_contact_id} className="householdSummaryItem">
+                                <div className="householdSummaryItemLeft">
+                                    <div className="topLabel">
+                                        <span className="nameLabel">{name} </span>
+                                        <span className="pill">{c.relationship}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    ))}
+                                <div className="householdSummaryActions">
+                                        {c.removal_requested ? (
+                                            <span className="householdRemovalStatus">
+                                                Removal requested
+                                            </span>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="householdActionButton householdActionRemove"
+                                                onClick={() => setMemberToRemove(c)}
+                                                aria-label={`Remove ${name} from household`}
+                                            >
+                                                <CircleX size={20} />
+                                            </button>
+                                        )}
+                                    </div>
+                                    </div>
+                            );
+                        })}
+                    </div>
                 </div>
-                </div>
-                <div className="page-details-row-small">
-                    <Button
-                        variant="secondary"
-                        onClick={() => navigate("/dashboard")}
-                    >
+                <div className="page-details-row-small page-button-row">
+                    {!error && (
+                        <Button onClick={() => navigate("/manage-household/add")}>
+                            Add new household member
+                        </Button>
+                    )}
+                    <Button variant="secondary" onClick={() => navigate("/dashboard")}>
                         Cancel
                     </Button>
                 </div>
             </div>
+            {memberToRemove && (
+                <RemoveHouseholdMemberModal
+                    member={memberToRemove}
+                    caseOpenDate={caseOpenDate}
+                    onCancel={() => setMemberToRemove(null)}
+                    onRemove={handleRemove}
+                />
+            )}
         </div>
     );
 };

@@ -85,6 +85,11 @@
   padding: 0 var(--layout-padding-large);
 }
 
+.householdRemovalStatus {
+    font-size: var(--typography-font-size-label);
+    color: var(--typography-color-secondary);
+  }
+
   .household-member-form{
     border: solid 1px var(--surface-color-border-default);
     border-radius: var(--layout-border-radius-large);

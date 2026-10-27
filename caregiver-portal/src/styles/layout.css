@@ -285,15 +285,22 @@ gap: var(--layout-margin-small);
     max-width: 1120px;
     flex-direction: row;
     align-items: center;
-    margin: auto;    
+    margin: auto;
   }
+
+    /* a row of page-level buttons, aligned with the content above it */
+    .page-button-row {
+        width: 100%;
+        gap: var(--layout-margin-large);
+        padding-top: var(--layout-padding-large);
+      }
 
   .page-details-row-col {
     display: flex;
     max-width: 1120px;
     flex-direction: column;
     padding-bottom: var(--layout-padding-large);
-    margin: auto;    
+    margin: auto;
   }
 
   .page-details-row-small-right {
@@ -302,7 +309,7 @@ gap: var(--layout-margin-small);
     padding: 0 var(--layout-padding-large);
     flex-direction: row;
     align-items: center;
-    justify-content: flex-end; 
+    justify-content: flex-end;
   }
 
   .page-details-row-footer {
@@ -612,9 +619,9 @@ gap: var(--layout-margin-small);
   width: 100%;
   max-width: 1120px;
   flex-direction: column;
-  
+
   gap: var(--layout-margin-xlarge);
-  
+
   align-self: stretch;
   border-top: solid var(--surface-color-border-dark) 1px;
 
