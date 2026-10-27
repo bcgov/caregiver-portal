@@ -35,6 +35,7 @@ const ManageHousehold = () => {
                     <h2 className="page-heading">Adults in my household</h2>
                 </div>
                 <div className="page-details-row-small">
+                <div className="householdList">
                     {error && (
                         <p role="alert">
                             We couldn't load your household. Please try again
@@ -61,6 +62,7 @@ const ManageHousehold = () => {
                             </div>
                         </div>
                     ))}
+                </div>
                 </div>
                 <div className="page-details-row-small">
                     <Button

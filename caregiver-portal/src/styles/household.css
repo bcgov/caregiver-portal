@@ -71,6 +71,14 @@
   padding: 0 var(--layout-padding-xlarge);
 }
 
+.householdList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1120px;
+    margin: auto;
+}
+
 .household-content-inner {
   width: 100%;
   max-width: 1120px;
@@ -132,14 +140,14 @@
     background: var(--icons-color-warning);
     color: var(--typography-color-primary-invert);
     border-radius: 50%;
-  
+
   }
 
   .completed {
     display: inline-grid;
     place-items: center;
-    background: var(--icons-color-success); 
+    background: var(--icons-color-success);
     color: var(--typography-color-primary-invert);
     border-radius: 50%;
-  
+
   }
