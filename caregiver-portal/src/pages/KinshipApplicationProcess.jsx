@@ -5,7 +5,7 @@ import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
 import { Trash, FilePlus } from 'lucide-react';
 import Button from '../components/Button';
-import ConfirmationModal from '../components/ConfirmationModal';
+import ConfirmationModal from '../components/modals/ConfirmationModal';
 import { useCancelApplicationPackage } from '../hooks/useCancelApplication';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 
@@ -95,7 +95,7 @@ const KinshipApplicationProcess = () => {
       case "screening":
         navigate(`/kinship-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
-      default: 
+      default:
         navigate(`/kinship-application/application-package/${applicationPackageId}`);
         break;
     }
@@ -110,7 +110,7 @@ const KinshipApplicationProcess = () => {
   };
 
   const handleConfirmDelete = async () => {
-    try { 
+    try {
       await cancelApplicationPackage(applicationPackageId);
       setShowDeleteModal(false);
     } catch (err) {
@@ -267,11 +267,11 @@ const KinshipApplicationProcess = () => {
 
 return (
 
-  
+
     <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
-          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
           <h1 className="page-title">Become a kinship care provider</h1>
@@ -319,7 +319,7 @@ return (
                       isOpen={showReferralModal}
                       onClose={handleCancelReferral}
                       onConfirm={handleConfirmReferral}
-                      title="Before you apply"                      
+                      title="Before you apply"
                       confirmText="I understand"
                       cancelText="Cancel"
                       confirmVariant="primary-bold"

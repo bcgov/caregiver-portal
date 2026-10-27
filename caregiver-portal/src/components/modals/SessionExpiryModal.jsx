@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 const REDIRECT_DELAY_S = 5;
 
@@ -7,26 +7,26 @@ const SessionExpiryModal = () => {
     const { sessionExpiring, logout } = useAuth();
     const [countdown, setCountdown] = useState(REDIRECT_DELAY_S);
 
-    useEffect(() => { 
+    useEffect(() => {
       if (!sessionExpiring) return;
 
       setCountdown(REDIRECT_DELAY_S);
-  
+
       const tick = setInterval(() => {
         setCountdown(c => c - 1);
       }, 1000);
-  
+
       const redirect = setTimeout(() => {
         clearInterval(tick);
         logout();
       }, REDIRECT_DELAY_S * 1000);
 
-      return () => {  
+      return () => {
         clearInterval(tick);
         clearTimeout(redirect);
       };
     }, [sessionExpiring, logout]);
-  
+
     if (!sessionExpiring) return null;
 
     return (
@@ -45,5 +45,5 @@ const SessionExpiryModal = () => {
       </div>
     );
   };
-  
+
   export default SessionExpiryModal;

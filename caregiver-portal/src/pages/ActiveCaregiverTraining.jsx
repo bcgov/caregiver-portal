@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 import FileUpload from '../components/FileUpload';
-import Modal from '../components/Modal';
+import Modal from '../components/modals/Modal';
 import { useAttachments } from '../hooks/useAttachments';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X } from 'lucide-react';

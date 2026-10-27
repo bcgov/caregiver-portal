@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
-import ConfirmationModal from '../components/ConfirmationModal';
+import ConfirmationModal from '../components/modals/ConfirmationModal';
 import Application from '../components/Application';
 import "../styles/index.css";
 
@@ -40,7 +40,7 @@ const FormResubmission = () => {
       await submitFormToICM(applicationFormId);
       console.log('submitFormToICM succeeded');
       navigate(listPath);
-    } catch (err) {   
+    } catch (err) {
       console.error('submitFormToICM failed:', err);
     }
   };
@@ -48,9 +48,9 @@ const FormResubmission = () => {
   return (
     <div className="page">
       <div className="page-details">
-        <Application 
-            applicationPackageId={applicationPackageId} 
-            applicationFormId={applicationFormId} 
+        <Application
+            applicationPackageId={applicationPackageId}
+            applicationFormId={applicationFormId}
             onBack={handleBack}
             onSubmitComplete={handleSubmitComplete}
             nextLabel="Submit form"

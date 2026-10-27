@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import HouseholdSummaryItem from "./HouseholdSummaryItem";
-import ConfirmationModal from "./ConfirmationModal";
+import ConfirmationModal from "./modals/ConfirmationModal";
 import { useNavigate } from "react-router-dom";
 import { useHousehold } from "../hooks/useHousehold";
 
@@ -9,7 +9,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
     const { partner, householdMembers, loadHousehold, isLoading, removeHouseholdMember, removePartner, setHasHousehold, setHasPartner } = useHousehold({applicationPackageId});
     const navigate = useNavigate();
 
-    const [removeTarget, setRemoveTarget] = useState(null); 
+    const [removeTarget, setRemoveTarget] = useState(null);
     const [isRemoving, setIsRemoving] = useState(false);
     const [removedMessage, setRemovedMessage] = useState('');
     const hasPartner = !!(partner && partner.lastName);
@@ -23,7 +23,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
     useEffect(() => {
         if(!removedMessage) return;
         const t = setTimeout(() => setRemovedMessage(''), 5000);
-        return () => clearTimeout(t);      
+        return () => clearTimeout(t);
     }, [removedMessage]);
 
     const openHouseholdMember = (householdMemberId) => {
@@ -35,7 +35,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
         const { member, isPartner } = removeTarget;
         setIsRemoving(true);
         try {
-            
+
             const ok = isPartner
                 ? await removePartner()
                 : await removeHouseholdMember(member.householdMemberId);
@@ -55,7 +55,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
             setRemoveTarget(null);
         }
     };
-    
+
 
     return (
         <div className="page-details-content-col">
@@ -67,24 +67,24 @@ const HouseholdSummary = ({applicationPackageId}) => {
         </div>
         )}
             {partner && partner.lastName && (
-                <HouseholdSummaryItem 
+                <HouseholdSummaryItem
                     key="partner"
                     member={partner}
                     applicationPackageId={applicationPackageId}
                     onView={() => openHouseholdMember(partner.householdMemberId)}
                     onRemove={() => setRemoveTarget({ member: partner, isPartner: true})}
-                />          
+                />
             )}
 
             {householdMembers.map((member, index) => (
-                <HouseholdSummaryItem 
+                <HouseholdSummaryItem
                     key={member.householdMemberId ?? index + 1}
                     member={member}
                     applicationPackageId={applicationPackageId}
                     onView={() => openHouseholdMember(member.householdMemberId)}
                     onRemove={() => setRemoveTarget({member, isPartner: false})}
                 />
-            
+
             ))}
 
             {isHouseholdEmpty && (
@@ -104,7 +104,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
                 <div key={removedMessage} className="household-removed-message" role="status">
                     {removedMessage}
                 </div>
-            )}   
+            )}
 
             <ConfirmationModal
             isOpen={!!removeTarget}

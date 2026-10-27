@@ -11,8 +11,8 @@ import TaskCard from '../components/cards/TaskCard';
 import GenericTaskCard from '../components/cards/GenericTaskCard';
 import TaskItem from '../components/TaskItem';
 import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
-import AccessCard from '../components/AccessCard';
-import WelcomeCard from '../components/WelcomeCard';
+import AccessCard from '../components/cards/AccessCard';
+import WelcomeCard from '../components/cards/WelcomeCard';
 import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
 
 const Dashboard = () => {

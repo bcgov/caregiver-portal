@@ -1,4 +1,4 @@
-// App.jsx 
+// App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import "@bcgov/bc-sans/css/BC_Sans.css"
@@ -6,7 +6,7 @@ import "@bcgov/bc-sans/css/BC_Sans.css"
 // Components
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthCallback } from './components/AuthCallback';
-import SessionExpiryModal from './components/SessionExpiryModal';
+import SessionExpiryModal from './components/modals/SessionExpiryModal';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import EnvironmentBanner from './components/EnvironmentBanner';
@@ -29,6 +29,7 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import ManageHousehold from './pages/ManageHousehold';
+import AddHouseholdMember from './pages/AddHouseholdMember';
 import MedicalForms from './pages/MedicalForms';
 import ProspectiveCaregiverTraining from './pages/ProspectiveCaregiverTraining';
 import ReferralPackage from './pages/ReferralPackage';
@@ -106,6 +107,7 @@ const App = () => {
         <Route path="/caregiver-training" element={<ProtectedRoute><ActiveCaregiverTraining /></ProtectedRoute>}/>
         {/* Manage Household */}
         <Route path="/manage-household" element={<ProtectedRoute><ManageHousehold /></ProtectedRoute>}/>
+        <Route path="/manage-household/add" element={<ProtectedRoute><AddHouseholdMember /></ProtectedRoute>}/>
 
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         {/* Screening Package */}
@@ -117,7 +119,7 @@ const App = () => {
     <ConditionalFooter />
     </div>
     </Router>
-    
+
     );
   };
 
