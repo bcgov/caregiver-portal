@@ -37,6 +37,7 @@ const Dashboard = () => {
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
+  const [additionalAdultPackages, setAdditionalAdultPackages] = React.useState([]);
   const [isApprovedFch, setIsApprovedFch] = React.useState(false);
   //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
@@ -47,18 +48,16 @@ const Dashboard = () => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
-  /*
-  const handleNavigateToOOCApplication = useCallback((applicationPackageId) => {
-    navigate(`/kinship-application/${applicationPackageId}`);
-  }, [navigate]);
-  */
 
   const loadApplicationPackages = useCallback(async () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
       const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved')
-      setApplicationPackages(incompleteApps);
+      setApplicationPackages(incompleteApps.filter(app => app.subtype !== 'Additional Adult'));
+      setAdditionalAdultPackages(
+        incompleteApps.filter(app => app.subtype === 'Additional Adult' && app.status !== 'Withdrawn'),
+      );
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
       setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && norm(app.srStage) === 'completed' && norm(app.srResolution) === 'approved'));
@@ -66,7 +65,7 @@ const Dashboard = () => {
 
       //const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
       //const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
-      //console.log('apps:', apps);
+      console.log('apps:', apps);
       //console.log('incompleteApps:', incompleteApps);
       //console.log('approvedFch:', approvedFch, 'approvedKinship:', approvedKinship);
     } catch (err) {
@@ -173,7 +172,7 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                {(applicationPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
+                {(applicationPackages?.length > 0 || additionalAdultPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
@@ -193,6 +192,17 @@ const Dashboard = () => {
                   <>
                       <TaskCard subtype={app.subtype} applicationPackage={app} />
                   </>
+                ))}
+
+                {additionalAdultPackages.map((pkg) => (
+                  <GenericTaskCard
+                    key={pkg.applicationPackageId}
+                    title="New Household Member Screening"
+                    buttonLabel="Continue"
+                    onClick={() =>
+                      navigate(`/additional-adult/application-package/${pkg.applicationPackageId}/consent-summary/`)
+                    }
+                  />
                 ))}
                 {householdMemberships?.map((membership) => {
                   const formGroup = screeningForms?.find(group =>
