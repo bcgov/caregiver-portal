@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import HouseholdSummaryItem from "./HouseholdSummaryItem";
 import ConfirmationModal from "./modals/ConfirmationModal";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCancelApplicationPackage } from "../hooks/useCancelApplication";
 import { useHousehold } from "../hooks/useHousehold";
 
 const HouseholdSummary = ({applicationPackageId}) => {
 
     const { partner, householdMembers, loadHousehold, isLoading, removeHouseholdMember, removePartner, setHasHousehold, setHasPartner } = useHousehold({applicationPackageId});
     const navigate = useNavigate();
+    const isAdditionalAdult = useLocation().pathname.startsWith('/additional-adult/');
+    const { cancelApplicationPackage } = useCancelApplicationPackage();
 
     const [removeTarget, setRemoveTarget] = useState(null);
     const [isRemoving, setIsRemoving] = useState(false);
@@ -27,12 +30,26 @@ const HouseholdSummary = ({applicationPackageId}) => {
     }, [removedMessage]);
 
     const openHouseholdMember = (householdMemberId) => {
-        navigate(`/foster-application/application-package/${applicationPackageId}/consent-summary/${householdMemberId}`);
+        const base = isAdditionalAdult ? '/additional-adult' : '/foster-application';
+        navigate(`${base}/application-package/${applicationPackageId}/consent-summary/${householdMemberId}`);
     }
 
     const handleConfirmRemove = async () => {
         if (!removeTarget) return;
         const { member, isPartner } = removeTarget;
+        if (isAdditionalAdult) {
+            // removing the new member cancels the whole Additional Adult package
+            setIsRemoving(true);
+            try {
+                await cancelApplicationPackage(applicationPackageId);
+                navigate('/dashboard');
+            } catch {
+                setRemovedMessage(`We couldn't remove ${member.firstName} ${member.lastName}. Please try again.`);
+                setIsRemoving(false);
+                setRemoveTarget(null);
+            }
+            return;
+        }
         setIsRemoving(true);
         try {
 
@@ -112,7 +129,9 @@ const HouseholdSummary = ({applicationPackageId}) => {
             onConfirm={handleConfirmRemove}
             title="Remove household member"
             message={removeTarget
-                ? `Are you sure you want to remove ${removeTarget.member.firstName} ${removeTarget.member.lastName} from your household? This action cannot be undone.`
+                ? (isAdditionalAdult
+                    ? `Remove ${removeTarget.member.firstName} ${removeTarget.member.lastName}? Their screening will be cancelled and the access code we emailed them will no longer work.`
+                    : `Are you sure you want to remove ${removeTarget.member.firstName} ${removeTarget.member.lastName} from your household? This action cannot be undone.`)
                 : ''}
             confirmText="Remove"
             isLoading={isRemoving}
