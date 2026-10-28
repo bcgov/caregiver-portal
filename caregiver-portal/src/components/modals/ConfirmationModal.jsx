@@ -13,7 +13,8 @@ const ConfirmationModal = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   confirmVariant = "danger",
-  isLoading = false
+  isLoading = false,
+  loadingText = 'Working...'
 }) => {
   const handleConfirm = () => {
     onConfirm();
@@ -54,7 +55,7 @@ const ConfirmationModal = ({
             onClick={handleConfirm}
             disabled={isLoading}
           >
-            {isLoading ? 'Deleting...' : confirmText}
+            {isLoading ? loadingText : confirmText}
           </Button>
           <Button
             variant="secondary"
