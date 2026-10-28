@@ -96,6 +96,22 @@
     margin-bottom: var(--layout-margin-large);
   }
 
+  /* Add New Household Member: a single centred column */
+.add-member-pane {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .confirm-summary {
+    list-style: none;
+    margin: var(--layout-margin-small) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-margin-tiny);
+  }
+
   .member-header {
     display: flex;
     justify-content: space-between;
