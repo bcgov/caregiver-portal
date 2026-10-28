@@ -99,6 +99,9 @@ const App = () => {
         <Route path="/kinship-application/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
         <Route path="/foster-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
         <Route path="/kinship-application/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
+        <Route path="/additional-adult/application-package/:applicationPackageId/consent-summary/" element={<ProtectedRoute><ConsentSummary /></ProtectedRoute>}/>
+        <Route path="/additional-adult/application-package/:applicationPackageId/consent-summary/:householdMemberId" element={<ProtectedRoute><ConsentOverview /></ProtectedRoute>}/>
+
         {/* Medical Forms */}
         <Route path="/foster-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>
         <Route path="/kinship-application/application-package/:applicationPackageId/medical-forms/:householdMemberId" element={<ProtectedRoute><MedicalForms /></ProtectedRoute>}/>

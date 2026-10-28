@@ -33,7 +33,6 @@ const EMPTY = {
     moveInDate: "",
 };
 
-// Placeholder until the Add New Household Member form is built.
 const AddHouseholdMember = () => {
     const navigate = useNavigate();
     const { caseOpenDate } = useHouseholdContacts();
@@ -119,16 +118,159 @@ const AddHouseholdMember = () => {
                         Services Card.
                     </p>
                 </div>
-                <div className="page-details-row-small page-button-row">
-                    <Button
-                        variant="secondary"
-                        onClick={() => navigate("/manage-household")}
+
+                <div className="field-group">
+                    <label htmlFor="relationship" className="form-control-label">
+                        Relationship to you<span className="required">*</span>
+                    </label>
+                    <select
+                        id="relationship"
+                        value={values.relationshipToPrimary}
+                        onChange={set("relationshipToPrimary")}
+                        onBlur={touch("relationshipToPrimary")}
+                        aria-invalid={!!showError("relationshipToPrimary")}
+                        aria-describedby="relationshipToPrimary-error"
                     >
+                        <option value="">Select relationship</option>
+                        {RELATIONSHIPS.map((r) => (
+                            <option key={r} value={r}>{r}</option>
+                        ))}
+                    </select>
+                    {fieldError("relationshipToPrimary")}
+
+                    <label htmlFor="firstName" className="form-control-label">
+                        First Name<span className="required">*</span>
+                    </label>
+                    <input
+                        id="firstName"
+                        type="text"
+                        className="form-control"
+                        value={values.firstName}
+                        onChange={set("firstName")}
+                        onBlur={touch("firstName")}
+                        maxLength={MAX_NAME_LENGTH}
+                        aria-invalid={!!showError("firstName")}
+                        aria-describedby="firstName-error"
+                    />
+                    {fieldError("firstName")}
+
+                    <label htmlFor="lastName" className="form-control-label">
+                        Last Name<span className="required">*</span>
+                    </label>
+                    <input
+                        id="lastName"
+                        type="text"
+                        className="form-control"
+                        value={values.lastName}
+                        onChange={set("lastName")}
+                        onBlur={touch("lastName")}
+                        maxLength={MAX_NAME_LENGTH}
+                        aria-invalid={!!showError("lastName")}
+                        aria-describedby="lastName-error"
+                    />
+                    {fieldError("lastName")}
+                    <label htmlFor="dateOfBirth" className="form-control-label">
+                        Date of Birth<span className="required">*</span>
+                    </label>
+                    <DateField
+                        id="dateOfBirth"
+                        variant="adult18"
+                        value={values.dateOfBirth}
+                        onChange={set("dateOfBirth")}
+                        onBlur={touch("dateOfBirth")}
+                        aria-describedby="dateOfBirth-error"
+                    />
+                    {fieldError("dateOfBirth")}
+
+                    <div className="radio-button-group">
+                        <div className="radio-button-header">
+                            Please indicate their gender:<span className="required">*</span>
+                        </div>
+                        {GENDERS.map((g) => (
+                            <label key={g.value}>
+                                <input
+                                    type="radio"
+                                    name="genderType"
+                                    value={g.value}
+                                    checked={values.genderType === g.value}
+                                    onChange={(e) => {
+                                        set("genderType")(e);
+                                        touch("genderType")();
+                                    }}
+                                />
+                                {g.label}
+                            </label>
+                        ))}
+                    </div>
+                    {fieldError("genderType")}
+
+                    <label htmlFor="email" className="form-control-label">
+                        Email<span className="required">*</span>
+                    </label>
+                    <input
+                        id="email"
+                        type="email"
+                        className="form-control"
+                        value={values.email}
+                        onChange={set("email")}
+                        onBlur={touch("email")}
+                        maxLength={MAX_EMAIL_LENGTH}
+                        aria-invalid={!!showError("email")}
+                        aria-describedby="email-error"
+                    />
+                    {fieldError("email")}
+
+                    <label htmlFor="moveInDate" className="form-control-label">
+                        Move-in date<span className="required">*</span>
+                    </label>
+                    <input
+                        id="moveInDate"
+                        type="date"
+                        className="form-control-date"
+                        value={values.moveInDate}
+                        min={caseOpenDate ? toIsoLocal(new Date(caseOpenDate)) : undefined}
+                        max={twoYearsFromToday()}
+                        onChange={set("moveInDate")}
+                        onBlur={touch("moveInDate")}
+                        aria-invalid={!!showError("moveInDate")}
+                        aria-describedby="moveInDate-error"
+                    />
+                    {fieldError("moveInDate")}
+                </div>
+
+                {serverError && <p className="error-message" role="alert">{serverError}</p>}
+                <div className="page-details-row-small page-button-row">
+                    <Button variant="primary" disabled={!isValid} onClick={() => setConfirming(true)}>
+                        Submit new household member
+                    </Button>
+                    <Button variant="secondary" onClick={() => navigate("/manage-household")}>
                         Cancel
                     </Button>
                 </div>
             </div>
+
+            <ConfirmationModal
+                isOpen={confirming}
+                onClose={() => !submitting && setConfirming(false)}
+                onConfirm={handleConfirm}
+                title="Confirm new household member"
+                confirmText="Confirm"
+                confirmVariant="primary"
+                isLoading={submitting}
+                loadingText="Submitting..."
+            >
+            <p>Please check these details. We will email an access code to {values.email.trim()}.</p>
+            <dl>
+                <dt>Relationship</dt><dd>{values.relationshipToPrimary}</dd>
+                <dt>Name</dt><dd>{values.firstName.trim()} {values.lastName.trim()}</dd>
+                <dt>Date of birth</dt><dd>{values.dateOfBirth}</dd>
+                <dt>Gender</dt><dd>{values.genderType}</dd>
+                <dt>Email</dt><dd>{values.email.trim()}</dd>
+                <dt>Move-in date</dt><dd>{values.moveInDate}</dd>
+            </dl>
+            </ConfirmationModal>
         </div>
+
     );
 };
 
