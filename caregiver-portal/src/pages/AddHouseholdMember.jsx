@@ -21,6 +21,7 @@ const GENDERS = [
     { value: "Man/Boy", label: "Man/Boy" },
     { value: "Woman/Girl", label: "Woman/Girl" },
     { value: "Non-Binary", label: "Non-Binary" },
+    { value: "Unknown", label: "Prefer not to say" },
 ];
 
 const EMPTY = {
@@ -67,9 +68,9 @@ const AddHouseholdMember = () => {
     const isValid = Object.values(errors).every((e) => !e);
     const showError = (field) => touched[field] && errors[field];
     const fieldError = (field) => (
-        <p id={`${field}-error`} className="error-message" role="alert">
+        <span id={`${field}-error`} className="error-message" role="alert">
             {showError(field)}
-        </p>
+        </span>
     );
 
     const handleConfirm = async () => {
@@ -107,6 +108,7 @@ const AddHouseholdMember = () => {
                         onBackClick={(item) => navigate(item.path)}
                     />
                 </div>
+                <div className="add-member-pane">
                 <div className="page-details-row-small">
                     <h1 className="page-title">Add new household member</h1>
                 </div>
@@ -247,6 +249,7 @@ const AddHouseholdMember = () => {
                         Cancel
                     </Button>
                 </div>
+                </div>
             </div>
 
             <ConfirmationModal
@@ -260,14 +263,14 @@ const AddHouseholdMember = () => {
                 loadingText="Submitting..."
             >
             <p>Please check these details. We will email an access code to {values.email.trim()}.</p>
-            <dl>
-                <dt>Relationship</dt><dd>{values.relationshipToPrimary}</dd>
-                <dt>Name</dt><dd>{values.firstName.trim()} {values.lastName.trim()}</dd>
-                <dt>Date of birth</dt><dd>{values.dateOfBirth}</dd>
-                <dt>Gender</dt><dd>{values.genderType}</dd>
-                <dt>Email</dt><dd>{values.email.trim()}</dd>
-                <dt>Move-in date</dt><dd>{values.moveInDate}</dd>
-            </dl>
+            <ul className="confirm-summary">
+                <li><strong>Relationship:</strong> {values.relationshipToPrimary}</li>
+                <li><strong>Name:</strong> {values.firstName.trim()} {values.lastName.trim()}</li>
+                <li><strong>Date of birth:</strong> {values.dateOfBirth}</li>
+                <li><strong>Gender:</strong> {GENDERS.find((g) => g.value === values.genderType)?.label}</li>
+                <li><strong>Email:</strong> {values.email.trim()}</li>
+                <li><strong>Move-in date:</strong> {values.moveInDate}</li>
+            </ul>
             </ConfirmationModal>
         </div>
 
