@@ -2,7 +2,7 @@ import React from 'react';
 import { Check, CircleDashed, CircleAlert, Flag, ExternalLink, BookText  } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
-import "../DesignTokens.css";
+import "../styles/index.css";
 import Breadcrumb from '../components/Breadcrumb';
 import FileUpload from '../components/FileUpload';
 import { useAttachments } from '../hooks/useAttachments';

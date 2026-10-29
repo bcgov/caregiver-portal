@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
-import "../DesignTokens.css";
+import "../styles/index.css";
 import Application from '../components/Application';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { Loader2 } from 'lucide-react';

@@ -7,12 +7,12 @@ const EnvironmentBanner = () => {
     useEffect(() => {
       if (bannerRef.current) {
         const height = bannerRef.current.offsetHeight;
-        document.documentElement.style.setProperty('--banner-height', `${height}px`);
+        document.documentElement.style.setProperty('--cgr-banner-height', `${height}px`);
       }
 
       // Cleanup: remove the variable when banner unmounts
       return () => {
-        document.documentElement.style.setProperty('--banner-height', '0px');
+        document.documentElement.style.setProperty('--cgr-banner-height', '0px');
       };
     }, []);
 
