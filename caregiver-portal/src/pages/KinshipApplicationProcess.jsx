@@ -216,7 +216,7 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 20 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register kinship care provider applicants for this training.',
+          description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 6 hours to complete.',
           disabled: true,
           iconType: 'waiting',
           learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
