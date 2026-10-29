@@ -219,7 +219,7 @@ const KinshipApplicationProcess = () => {
           description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 6 hours to complete.',
           disabled: true,
           iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/out-of-care-kinship-care-options-for-children-and-youth-in-bc'
 
         }
       }
@@ -242,7 +242,7 @@ const KinshipApplicationProcess = () => {
           description: 'A resource worker will complete several in-home interviews with prospective care providers. Once the home study is complete, it will be reviewed and signed off by the applicants.',
           disabled: true,
           iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/out-of-care-kinship-care-options-for-children-and-youth-in-bc'
 
         }
       }
