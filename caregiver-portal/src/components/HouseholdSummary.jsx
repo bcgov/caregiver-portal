@@ -9,7 +9,8 @@ const HouseholdSummary = ({applicationPackageId}) => {
 
     const { partner, householdMembers, loadHousehold, isLoading, removeHouseholdMember, removePartner, setHasHousehold, setHasPartner } = useHousehold({applicationPackageId});
     const navigate = useNavigate();
-    const isAdditionalAdult = useLocation().pathname.startsWith('/additional-adult/');
+    const { pathname } = useLocation();
+    const isAdditionalAdult = pathname.startsWith('/additional-adult/');
     const { cancelApplicationPackage } = useCancelApplicationPackage();
 
     const [removeTarget, setRemoveTarget] = useState(null);
@@ -17,6 +18,12 @@ const HouseholdSummary = ({applicationPackageId}) => {
     const [removedMessage, setRemovedMessage] = useState('');
     const hasPartner = !!(partner && partner.lastName);
     const isHouseholdEmpty = !isLoading && !hasPartner && householdMembers.length === 0;
+    const base = isAdditionalAdult
+    ? '/additional-adult'
+    : pathname.startsWith('/kinship-application/')
+        ? '/kinship-application'
+        : '/foster-application';
+    const consentSummary = `${base}/application-package/${applicationPackageId}/consent-summary`;
 
     useEffect(() => {
           loadHousehold();
@@ -30,8 +37,7 @@ const HouseholdSummary = ({applicationPackageId}) => {
     }, [removedMessage]);
 
     const openHouseholdMember = (householdMemberId) => {
-        const base = isAdditionalAdult ? '/additional-adult' : '/foster-application';
-        navigate(`${base}/application-package/${applicationPackageId}/consent-summary/${householdMemberId}`);
+        navigate(`${consentSummary}/${householdMemberId}`);
     }
 
     const handleConfirmRemove = async () => {

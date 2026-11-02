@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check, CircleDashed, CircleAlert, Flag, ExternalLink, BookText  } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDates } from '../hooks/useDates';
 import { useState } from 'react';
 import "../styles/index.css";
@@ -32,7 +32,13 @@ const ConsentOverview = () => {
   const { formatSubmissionDate } = useDates();
   const { loadHouseholdMember, getAccessCode, updateHouseholdMemberInfo, resendMemberAccessCode } = useHousehold({ applicationPackageId });
   const { markScreeningDocumentsAttached } = useApplications();
-  const  back = `/foster-application/application-package/${applicationPackageId}/consent-summary`
+  const { pathname } = useLocation();
+  const base = pathname.startsWith('/additional-adult/')
+    ? '/additional-adult'
+    : pathname.startsWith('/kinship-application/')
+      ? '/kinship-application'
+      : '/foster-application';
+  const back = `${base}/application-package/${applicationPackageId}/consent-summary`;
 
   // edit/resend states
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
