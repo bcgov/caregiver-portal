@@ -5,13 +5,15 @@ import Breadcrumb from "../components/Breadcrumb";
 import Button from "../components/Button";
 import RemoveHouseholdMemberModal from "../components/modals/RemoveHouseholdMemberModal";
 import { useHouseholdContacts } from "../hooks/useHouseholdContacts";
+import { useAdditionalAdultMembers } from "../hooks/useAdditionalAdultMembers";
 import "../styles/index.css";
 
 const ManageHousehold = () => {
     const navigate = useNavigate();
     const { contacts, hasResourceCase, caseOpenDate, removeContact, loading, error } =
         useHouseholdContacts();
-        const [memberToRemove, setMemberToRemove] = useState(null);
+    const { pending } = useAdditionalAdultMembers();
+    const [memberToRemove, setMemberToRemove] = useState(null);
 
     const breadcrumbItems = [
         { label: "Dashboard", path: "/dashboard" },
@@ -50,7 +52,7 @@ const ManageHousehold = () => {
                             later.
                         </p>
                     )}
-                    {!error && contacts.length === 0 && (
+                    {!error && contacts.length === 0 && pending.length === 0 && (
                         <p>You have no other adults in your household.</p>
                     )}
                     {contacts.map((c) => {
@@ -82,6 +84,23 @@ const ManageHousehold = () => {
                                     </div>
                             );
                         })}
+                   {pending.map((p) => {
+                        const name = `${p.firstName} ${p.lastName}`;
+                        return (
+                            <div key={p.householdMemberId} className="householdSummaryItem">
+                                <div className="householdSummaryItemLeft">
+                                    <div className="topLabel">
+                                        <span className="nameLabel">{name} </span>
+                                        <span className="pill">{p.relationshipToPrimary}</span>
+                                    </div>
+                                </div>
+                                <div className="householdSummaryActions">
+                                    <span className="householdRemovalStatus">Screening in progress</span>
+                                </div>
+                            </div>
+                        );
+                    })}
+
                     </div>
                 </div>
                 <div className="page-details-row-small page-button-row">

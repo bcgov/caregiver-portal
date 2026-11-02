@@ -13,7 +13,8 @@ import TaskItem from '../components/TaskItem';
 import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
 import AccessCard from '../components/cards/AccessCard';
 import WelcomeCard from '../components/cards/WelcomeCard';
-import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
+import { useAdditionalAdultMembers } from '../hooks/useAdditionalAdultMembers';
+import { Loader2, HandMetal, ShieldCheck, CircleCheck } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -32,7 +33,8 @@ const Dashboard = () => {
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
   const [hasResourceCase, setHasResourceCase] = React.useState(false);
-  const { calculateAge } = useDates();
+  const { calculateAge, formatShortDate } = useDates();
+  const { submitted: submittedMembers } = useAdditionalAdultMembers();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
@@ -87,6 +89,12 @@ const Dashboard = () => {
   const loadApplicationForms = useCallback(() => {
     getApplicationForms();
   }, [getApplicationForms]);
+
+  // a submitted package is a completed activity, not an outstanding task
+  const submittedPackageIds = new Set(submittedMembers.map((m) => m.applicationPackageId));
+  const outstandingAdditionalAdults = additionalAdultPackages.filter(
+    (pkg) => !submittedPackageIds.has(pkg.applicationPackageId),
+  );
 
   const handleCreateFCHApplication = async () => {
     try {
@@ -172,7 +180,7 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                {(applicationPackages?.length > 0 || additionalAdultPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
+                {(applicationPackages?.length > 0 || outstandingAdditionalAdults.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
@@ -194,7 +202,7 @@ const Dashboard = () => {
                   </>
                 ))}
 
-                {additionalAdultPackages.map((pkg) => (
+                {outstandingAdditionalAdults.map((pkg) => (
                   <GenericTaskCard
                     key={pkg.applicationPackageId}
                     title="New Household Member Screening"
@@ -215,15 +223,20 @@ const Dashboard = () => {
                   );
                 })}
 
-                {(isApprovedFch) && (
+                {(isApprovedFch || submittedMembers.length > 0) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Completed tasks</h2>
-                      <TaskItem type={'FCH'}></TaskItem>
+                    {isApprovedFch && <TaskItem type={'FCH'}></TaskItem>}
+                    {submittedMembers.map((m) => (
+                      <div key={m.householdMemberId} className="task-item">
+                        <CircleCheck size={20} className="approved-badge" />{'  '}
+                        Added new household member
+                        {m.moveInDate ? ` on ${formatShortDate(`${m.moveInDate}T00:00:00`)}` : ''}
+                      </div>
+                    ))}
                   </div>
-
-                )
-              }
+                )}
 
                 {(fosterApplications?.length === 0 && !isApprovedFch) && (
                   <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} startLink={calculateAge(userProfile?.date_of_birth) > 17} showImage={false}/>
