@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import "../DesignTokens.css";
+import "../styles/index.css";
 import ApplicationProcessStep from '../components/ApplicationProcessStep';
 import Breadcrumb from '../components/Breadcrumb';
 import { Trash, FilePlus } from 'lucide-react';
@@ -95,7 +95,7 @@ const KinshipApplicationProcess = () => {
       case "screening":
         navigate(`/kinship-application/application-package/${applicationPackageId}/medical-forms/${householdMemberId}`);
         break;
-      default: 
+      default:
         navigate(`/kinship-application/application-package/${applicationPackageId}`);
         break;
     }
@@ -110,7 +110,7 @@ const KinshipApplicationProcess = () => {
   };
 
   const handleConfirmDelete = async () => {
-    try { 
+    try {
       await cancelApplicationPackage(applicationPackageId);
       setShowDeleteModal(false);
     } catch (err) {
@@ -216,10 +216,10 @@ const KinshipApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 35 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register kinship care provider applicants for this training.',
+          description: 'Kinship applicants may be required to complete training before receiving approval as a kinship care provider. This online training takes approximately 6 hours to complete.',
           disabled: true,
           iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=4%2E%20Complete%20Pre%2DService%20Training'
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/out-of-care-kinship-care-options-for-children-and-youth-in-bc'
 
         }
       }
@@ -242,7 +242,7 @@ const KinshipApplicationProcess = () => {
           description: 'A resource worker will complete several in-home interviews with prospective care providers. Once the home study is complete, it will be reviewed and signed off by the applicants.',
           disabled: true,
           iconType: 'waiting',
-          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/fostercaregiving#:~:text=5%2E%20Home%20Visit%28s%29%20to%20Start%20Home%20Study'
+          learnMoreLink: 'https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/out-of-care-kinship-care-options-for-children-and-youth-in-bc'
 
         }
       }
@@ -267,11 +267,11 @@ const KinshipApplicationProcess = () => {
 
 return (
 
-  
+
     <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
-          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />  
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
           <h1 className="page-title">Become a kinship care provider</h1>
@@ -319,7 +319,7 @@ return (
                       isOpen={showReferralModal}
                       onClose={handleCancelReferral}
                       onConfirm={handleConfirmReferral}
-                      title="Before you apply"                      
+                      title="Before you apply"
                       confirmText="I understand"
                       cancelText="Cancel"
                       confirmVariant="primary-bold"

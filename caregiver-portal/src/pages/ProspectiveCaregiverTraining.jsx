@@ -9,7 +9,7 @@ import { useAttachments } from '../hooks/useAttachments';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X, ExternalLink } from 'lucide-react';
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 const TRAINING_CERTIFICATE_TYPE = 'PRESERVICE CERTIFICATE';
 
@@ -25,7 +25,7 @@ const ProspectiveCaregiverTraining = () => {
     } = useAttachments();
     const { getApplicationPackage } = useApplicationPackage();
     const { formatShortDate, formatDateTime } = useDates();
-  
+
     const [isLoadingData, setIsLoadingData] = React.useState(true);
     const [applicationPackage, setApplicationPackage] = React.useState(null);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -35,20 +35,20 @@ const ProspectiveCaregiverTraining = () => {
     const [fileRefreshKey, setFileRefreshKey] = React.useState(0);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [submitError, setSubmitError] = React.useState(null);
-  
+
     const hasTrainingCertificates = applicationPackage?.hasTrainingCertificates === true;
 
     const TRAINING_LINK = import.meta.env.VITE_TRAINING_LINK;
 
-  
+
     const breadcrumbItems = [
       { label: 'Dashboard', path: '/dashboard' },
       { label: 'Back', path: `/foster-application/${applicationPackageId}` },
       { label: 'Training certificates' },
     ];
-  
+
     const handleBackClick = (item) => navigate(item.path);
-  
+
     const memberOptions = React.useMemo(() => {
       const opts = [{
         householdMemberId: primaryApplicant?.householdMemberId ?? null,
@@ -75,12 +75,12 @@ const ProspectiveCaregiverTraining = () => {
       ),
       [memberOptions, allPendingFiles],
     );
-  
+
     const getMemberLabel = (householdMemberId) => {
       const match = memberOptions.find(o => (o.householdMemberId ?? null) === (householdMemberId ?? null));
       return match?.label ?? 'Unknown';
     };
-  
+
     React.useEffect(() => {
       const load = async () => {
         try {
@@ -97,7 +97,7 @@ const ProspectiveCaregiverTraining = () => {
       };
       load();
     }, []);
-  
+
     React.useEffect(() => {
       if (isLoadingData) return;
       const fetchAttachments = async () => {
@@ -111,7 +111,7 @@ const ProspectiveCaregiverTraining = () => {
       };
       fetchAttachments();
     }, [isLoadingData, fileRefreshKey]);
-  
+
     React.useEffect(() => {
       if (!isModalOpen) return;
       const fetchAll = async () => {
@@ -127,14 +127,14 @@ const ProspectiveCaregiverTraining = () => {
       };
       fetchAll();
     }, [isModalOpen, fileRefreshKey]);
-  
+
     const sectionFiles = React.useMemo(() => {
       if (!selectedMember) return [];
       return allPendingFiles.filter(
         a => (a.householdMemberId ?? null) === (selectedMember.householdMemberId ?? null),
       );
     }, [allPendingFiles, selectedMember]);
-  
+
     const handleModalClose = async (skipDelete = false) => {
       if (!skipDelete) {
         for (const f of allPendingFiles) {
@@ -150,7 +150,7 @@ const ProspectiveCaregiverTraining = () => {
       setAllPendingFiles([]);
       setSubmitError(null);
     };
-  
+
     const handleDocUpload = async (uploadData) => {
       const memberName = `${selectedMember?.firstName ?? ''}_${selectedMember?.lastName ?? ''}`;
       const docTypeSafe = TRAINING_CERTIFICATE_TYPE.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '');
@@ -164,17 +164,17 @@ const ProspectiveCaregiverTraining = () => {
       });
       setFileRefreshKey(k => k + 1);
     };
-  
+
     const handleDocDelete = async (attachmentId) => {
       await deleteAttachment(attachmentId);
       setFileRefreshKey(k => k + 1);
     };
-  
+
     const handleRemovePending = async (attachmentId) => {
       await deleteAttachment(attachmentId);
       setFileRefreshKey(k => k + 1);
     };
-  
+
     const handleSubmitToICM = async () => {
       setIsSubmitting(true);
       setSubmitError(null);
@@ -190,7 +190,7 @@ const ProspectiveCaregiverTraining = () => {
         setIsSubmitting(false);
       }
     };
-  
+
     return (
       <div className="page">
         <div className="page-details">
@@ -200,23 +200,23 @@ const ProspectiveCaregiverTraining = () => {
           <div className="page-details-row-small">
             <h1 className="page-title">Training</h1>
           </div>
-  
+
           <div className="resubmission-subtitle">
             <hr className="gold-underline-large" />
             <h2 className="page-heading">Pre-service training</h2>
           </div>
-      
-  
+
+
           {isLoadingData ? (
             <p>Loading...</p>
           ) : hasTrainingCertificates ? (
             <>
               <div className="page-details-row-small">
-                <div className="info-box" style={{ borderColor: 'green' }}>
+                <div className="info-box info-box-success">
                   Your training certificates have been submitted. A social worker will review them as part of your assessment.
                 </div>
               </div>
-  
+
               {submittedAttachments.length > 0 && (
                 <>
                   <div className="resubmission-subtitle">
@@ -240,7 +240,7 @@ const ProspectiveCaregiverTraining = () => {
                   </div>
                 </>
               )}
-  
+
               <div className="page-details-row-footer">
                 <Button variant="secondary" onClick={() => navigate(`/foster-application/${applicationPackageId}`)}>
                   Back to application
@@ -251,8 +251,8 @@ const ProspectiveCaregiverTraining = () => {
             <>
 
             <div className="page-details-row">
-              <p>Pre-Service training is required for all new prospective caregivers/care providers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
-              
+              <p>Pre-Service training is required for all new prospective caregivers/care providers. Pre-Service is 20 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
+
               {TRAINING_LINK.length > 0 &&
                 <div className="section-description">
                   <p>Your social worker has registered you for training, you can complete it online at <a href={TRAINING_LINK} target="_blank" className="hyperlink">{TRAINING_LINK} <ExternalLink className="welcome-link-icon"/></a>.</p>
@@ -261,14 +261,14 @@ const ProspectiveCaregiverTraining = () => {
 
               <p>Once you have completed the training, upload the training certificate <strong>for yourself and for any other co-applicants</strong>. </p>
             </div>
-          
+
               <div className="page-details-row-small">
                 <Button variant="primary" onClick={() => setIsModalOpen(true)}>
                   <FilePlus size="16" />
                   Submit your training certificate(s)
                 </Button>
               </div>
-  
+
               {submittedAttachments.length > 0 && (
                 <>
                   <div className="resubmission-subtitle">
@@ -292,7 +292,7 @@ const ProspectiveCaregiverTraining = () => {
                   </div>
                 </>
               )}
-  
+
               <Modal
                 isOpen={isModalOpen}
                 onClose={handleModalClose}
@@ -325,7 +325,7 @@ const ProspectiveCaregiverTraining = () => {
                     </select>
                   </div>
                 </div>
-  
+
                 {selectedMember && (
                   <div className="upload-docs-section">
                     <FileUpload
@@ -339,7 +339,7 @@ const ProspectiveCaregiverTraining = () => {
                     />
                   </div>
                 )}
-  
+
                 {allPendingFiles.length > 0 && (
                   <div className="upload-docs-section">
                     <h3 className="uploaded-files-title">Ready to submit</h3>
@@ -364,7 +364,7 @@ const ProspectiveCaregiverTraining = () => {
                     </div>
                   </div>
                 )}
-  
+
                 {submitError && (
                   <div className="file-upload-error">
                     <span>{submitError}</span>
@@ -376,7 +376,7 @@ const ProspectiveCaregiverTraining = () => {
                     <span>Upload a training certificate for each applicant before submitting.</span>
                   </div>
                 )}
-  
+
                 <div className="upload-button-row">
                   <Button
                     variant="secondary"
@@ -393,12 +393,12 @@ const ProspectiveCaregiverTraining = () => {
                   </Button>
                 </div>
               </Modal>
-  
+
             </>
           )}
         </div>
       </div>
     );
   };
-  
+
   export default ProspectiveCaregiverTraining;

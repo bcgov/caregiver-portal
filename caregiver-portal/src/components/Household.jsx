@@ -821,21 +821,14 @@ useEffect(() => {
                   maxLength={MAX_EMAIL_LENGTH}
                 />
                   {(emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']) && (
-                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    <label className="form-control-validation-label">
                       {emailValidationErrors['partner-email'] || fieldLengthErrors['partner-email']}
                     </label>
                   )}
                   <FieldError type="email" value={partner.email} />
                 {duplicateErrors['partner'] && (
-                <div style={{
-                  padding: '12px 16px',
-                  background: '#FEE',
-                  border: '1px solid #D8292F',
-                  borderRadius: '4px',
-                  marginBottom: '20px',
-                  color: '#D8292F'
-                }}>
-                  <AlertCircle size={16} style={{ display: 'inline', marginRight: '8px' }} />
+                <div className="error-banner error-banner--below">
+                  <AlertCircle size={16} />
                   {duplicateErrors['partner']}
                 </div>
               )}
@@ -949,7 +942,7 @@ useEffect(() => {
                     maxLength={MAX_NAME_LENGTH}
                   />
                   {fieldLengthErrors[`member-${member.householdMemberId || index}-firstName`] && (
-                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    <label className="form-control-validation-label">
                       {fieldLengthErrors[`member-${member.householdMemberId || index}-firstName`]}
                     </label>
                   )}
@@ -967,7 +960,7 @@ useEffect(() => {
                   />
                   <FieldError type="Last name" value={member.lastName} />
                   {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`] && (
-                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    <label className="form-control-validation-label">
                       {fieldLengthErrors[`member-${member.householdMemberId || index}-lastName`]}
                     </label>
                   )}
@@ -1049,7 +1042,7 @@ useEffect(() => {
                   <FieldError type="email" value={member.email} />
                   {(emailValidationErrors[`member-${member.householdMemberId || index}-email`] ||
                     fieldLengthErrors[`member-${member.householdMemberId || index}-email`]) && (
-                    <label className="form-control-validation-label" style={{ color: '#D8292F' }}>
+                    <label className="form-control-validation-label">
                       {emailValidationErrors[`member-${member.householdMemberId || index}-email`] ||
                       fieldLengthErrors[`member-${member.householdMemberId || index}-email`]}
                     </label>
@@ -1059,15 +1052,8 @@ useEffect(() => {
                 </div>
 
                 {duplicateErrors[`member-${member.householdMemberId || index}`] && (
-                    <div style={{
-                      padding: '12px 16px',
-                      background: '#FEE',
-                      border: '1px solid #D8292F',
-                      borderRadius: '4px',
-                      marginTop: '12px',
-                      color: '#D8292F'
-                    }}>
-                      <AlertCircle size={16} style={{ display: 'inline', marginRight: '8px' }} />
+                    <div className="error-banner error-banner--above">
+                      <AlertCircle size={16} />
                       {duplicateErrors[`member-${member.householdMemberId || index}`]}
                     </div>
                   )}

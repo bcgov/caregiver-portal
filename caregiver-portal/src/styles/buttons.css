@@ -1,0 +1,142 @@
+/* Base button. Every variant is rendered as "btn btn-<variant>" (see Button.jsx),
+   so variants only override what differs from this. */
+.btn {
+  display: flex;
+  height: 40px;
+  padding: var(--layout-padding-small) var(--layout-padding-medium);
+  justify-content: center;
+  align-items: center;
+  gap: var(--layout-margin-small);
+  border-radius: var(--layout-border-radius-medium);
+  background: var(--surface-color-primary-button-default);
+  border: none;
+  font: var(--typography-regular-body);
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+/* Primary */
+.btn-primary,
+.btn-primary-bold {
+  background-color: var(--surface-color-primary-button-default);
+  color: var(--typography-color-primary-invert);
+}
+
+.btn-primary:hover,
+.btn-primary-bold:hover {
+  background-color: var(--surface-color-primary-button-hover);
+}
+
+.btn-primary-bold {
+  font-weight: var(--typography-font-weights-bold);
+}
+
+/* Secondary (outlined) */
+.btn-white,
+.btn-nav {
+  border: var(--layout-border-width-small) solid var(--surface-color-border-dark);
+  background: var(--surface-color-secondary-button-default);
+}
+
+.btn-nav:hover {
+  background: var(--surface-color-secondary-button-hover);
+}
+
+/* Danger */
+.btn-danger {
+  background-color: var(--surface-color-primary-danger-button-default);
+  color: var(--typography-color-primary-invert);
+}
+
+.btn-danger:hover {
+  background-color: var(--surface-color-primary-danger-button-hover);
+}
+
+/* Tertiary / text-style buttons */
+.btn-secondary {
+  background-color: var(--surface-color-tertiary-button-default);
+  color: var(--typography-color-link);
+  text-align: center;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: auto;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+}
+
+.btn-learnmore {
+  background-color: var(--surface-color-tertiary-button-default);
+  color: var(--typography-color-link);
+  text-align: center;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: auto;
+  text-underline-offset: var(--layout-padding-hair);
+  text-underline-position: from-font;
+}
+
+.btn-learnmore:hover {
+  color: var(--surface-color-primary-hover);
+}
+
+.btn-tertiary {
+  background-color: var(--surface-color-tertiary-button-default);
+  color: var(--typography-color-primary-invert);
+  border: var(--layout-border-width-medium) solid var(--surface-color-background-white);
+}
+
+.btn-section-header {
+  background-color: var(--surface-color-tertiary-button-default);
+  font-weight: var(--typography-font-weights-regular);
+  color: var(--typography-color-primary);
+  width: 200px;
+  text-align: right;
+  padding: 0;
+}
+
+.btn-section-header:hover {
+  background-color: var(--surface-color-tertiary-button-default);
+}
+
+/* Disabled / status looks */
+.btn-lowkey {
+  background: var(--surface-color-primary-button-disabled);
+  color: var(--typography-color-disabled);
+  text-align: center;
+}
+
+.btn-disabled {
+  background-color: var(--surface-color-tertiary-button-default);
+  font-weight: var(--typography-font-weights-regular);
+  color: var(--typography-color-disabled);
+  border: var(--layout-border-width-small) solid var(--surface-color-border-default);
+}
+
+.btn-inprogress {
+  background-color: var(--theme-primary-gold);
+  font-weight: var(--typography-font-weights-bold);
+  color: var(--surface-color-primary-default);
+  border: var(--layout-border-width-small) solid var(--surface-color-primary-default);
+}
+
+/* Breadcrumb "next" button */
+.btn-next {
+  gap: var(--layout-margin-xsmall);
+  color: var(--typography-color-primary-invert);
+  text-decoration: none;
+}
+
+.btn-next:hover {
+  background: var(--surface-color-primary-button-hover);
+}
+
+.breadcrumb-next-button svg {
+  width: var(--icons-size-small);
+  height: var(--icons-size-small);
+}

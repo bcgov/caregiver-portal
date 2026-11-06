@@ -75,19 +75,14 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
     }
     };
 
-    // Get icon color based on status
-    const getStatusColor = (status) => {
-        switch(status) {
-            case 'Error':
-                return '#d32f2f';
+    const getStatusClass = (status) => {
+        switch (status) {
+            case 'Error': return 'breadcrumb-status--error';
             case 'New':
-            case 'Draft':
-                return '#f57c00';
+            case 'Draft': return 'breadcrumb-status--pending';
             case 'Complete':
-            case 'Submitted':
-                return '#388e3c';
-            default:
-                return '#757575';
+            case 'Submitted': return 'breadcrumb-status--done';
+            default: return 'breadcrumb-status--unknown';
         }
     };
 
@@ -102,19 +97,13 @@ const BreadcrumbBar = ({home, next, applicationForm, label, iframeRef, message, 
         }
 
         const statusMessage = getStatusMessage(applicationForm.status);
-        const statusColor = getStatusColor(applicationForm.status);
-
+        
         return (
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <span className="breadcrumb-label">
                 {applicationForm.type}
                 <span 
                     title={statusMessage}
-                    style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center',
-                        cursor: 'help',
-                        color: statusColor
-                    }}
+                    className={`breadcrumb-status ${getStatusClass(applicationForm.status)}`}
                 >
                     {isFormComplete ? (
                         <AlertCircle size={16} />

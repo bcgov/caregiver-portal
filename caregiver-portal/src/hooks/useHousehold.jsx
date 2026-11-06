@@ -263,12 +263,13 @@ export const useHousehold = ({applicationPackageId}) => {
             const deleted = await deleteHouseholdMember(householdMemberId);
             if (!deleted) {
                 console.error('Failed to delete household member from backend');
-                return;
+                return false;
             }
         }
         setHouseholdMembers(prev =>
             prev.filter(member => member.householdMemberId !== householdMemberId)
         );
+        return true;
     }, [deleteHouseholdMember]);
   
     const removePartner = useCallback(async () => {

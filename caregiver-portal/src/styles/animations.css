@@ -1,0 +1,100 @@
+/* Animations: keyframes and prefers-reduced-motion overrides */
+
+@keyframes householdMessageFade {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }   /* quick fade in */
+  50%  { opacity: 1; }   /* hold for ~2.5s */
+  100% { opacity: 0; }   /* slow fade out over the second half */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .household-removed-message { animation: none; }
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+@keyframes modalBounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50px);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes iconPop {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes checkDraw {
+    0% {
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes sparkleFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-8px) rotate(180deg) scale(1.2);
+        opacity: 1;
+    }
+}
+
+@keyframes progressFill {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

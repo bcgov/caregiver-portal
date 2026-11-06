@@ -1,6 +1,6 @@
 import React from 'react';                                                                                                                                
 import { useParams } from 'react-router-dom';
-import "../DesignTokens.css";
+import "../styles/index.css";
 import Application from '../components/Application';
 
 const ReferralApplicationForm = () => {

@@ -1,5 +1,5 @@
 // src/pages/ContactUs.jsx
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 export default function Privacy() { 
 

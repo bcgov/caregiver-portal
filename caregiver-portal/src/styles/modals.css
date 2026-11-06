@@ -1,0 +1,238 @@
+/* Modals: confirmation, submission overlay, success animation */
+
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--surface-color-overlay-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000; /* High z-index to appear above everything */
+  }
+
+  .modal-content {
+    background: var(--surface-color-background-white);
+    border-radius: var(--layout-border-radius-large);
+    padding: 0;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: var(--surface-shadow-large);
+  }
+
+  .modal-small {
+    width: 400px;
+  }
+
+  .modal-medium {
+    width: 600px;
+  }
+
+  .modal-large {
+    width: 800px;
+  }
+
+  .modal-fullscreen {
+    width: 95vw;
+    height: 95vh;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--layout-padding-large);
+    border-bottom: solid var(--surface-color-border-default) 1px;
+  }
+
+  .modal-title {
+    margin: 0;
+    font-size: var(--typography-font-size-h4);
+    font-weight: var(--typography-font-weights-bold);
+    width: 100%;
+    line-height: var(--typography-line-heights-dense);
+  }
+
+  .modal-body {
+    padding: var(--layout-padding-large);
+  }
+
+  .confirmation-modal {
+    padding: 0;
+  }
+
+  .confirmation-message {
+    margin-bottom: var(--layout-margin-large);
+    color: var(--typography-color-primary);
+    font-size: var(--typography-font-size-body);
+    line-height: var(--typography-line-heights-xdense);
+  }
+
+  .confirmation-modal-text {
+    color: var(--typography-color-primary);
+    font: var(--typography-regular-body);
+  }
+
+  .confirmation-actions {
+    display: flex;
+    gap: var(--layout-margin-medium);
+    justify-content: flex-end;
+    flex-direction: column;
+  }
+
+  .submission-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--surface-color-overlay-default);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease-in-out;
+    animation: overlayFadeIn 0.3s ease-out;
+  }
+
+  .submission-overlay--success {
+    background-color: color-mix(in srgb, var(--icons-color-success) 5%, transparent);
+  }
+
+  .submission-modal {
+    background: var(--surface-color-background-white);
+    /* stylelint-disable-next-line declaration-property-unit-disallowed-list -- modal radius, no token */
+    border-radius: 16px;
+    /* stylelint-disable-next-line declaration-property-unit-disallowed-list -- modal-specific padding, no token */
+    padding: 3rem 2.5rem;
+    text-align: center;
+    box-shadow: var(--surface-shadow-large);
+    max-width: 400px;
+    animation: slideUp 0.3s ease-in-out;
+  }
+
+  .submission-spinner {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto var(--layout-margin-large);
+    color: var(--typography-color-link);
+    animation: spin 0.8s linear infinite;
+    /* stylelint-disable-next-line function-disallowed-list -- decorative glow, no token */
+    filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.3))
+  }
+
+  .submission-title {
+    font-size: var(--typography-font-size-h5);
+    font-weight: var(--typography-font-weights-bold);
+    color: var(--typography-color-primary);
+    margin-bottom: var(--layout-margin-small);
+  }
+
+  .submission-text {
+    font-size: var(--typography-font-size-body);
+    color: var(--typography-color-secondary);
+    line-height: var(--typography-line-heights-xdense);
+  }
+
+  .access-success-title {
+    color: var(--icons-color-success);
+    font-size: var(--typography-font-size-h3);
+    margin-top: var(--layout-margin-large);
+  }
+
+  .access-success-text {
+    color: var(--typography-color-secondary);
+    font-size: var(--typography-font-size-large-body);
+  }
+
+  .info-box {
+    background: var(--support-surface-color-info);
+    border: var(--layout-border-width-small) solid var(--support-border-color-info);
+    width: 790px;
+    height: 59px;
+    opacity: 1;
+    gap: var(--layout-margin-small);
+    margin-top: var(--layout-margin-medium);
+    padding-top: var(--layout-padding-small);
+    padding-right: var(--layout-padding-small);
+    padding-bottom: var(--layout-padding-small);
+    padding-left: var(--layout-padding-large);
+    border-radius: var(--layout-border-radius-large);
+    border-width: 1px;
+    align-items: center;
+    display: flex;
+
+  }
+
+  .info-box-success {
+    background: var(--support-surface-color-success);
+    border-color: var(--support-border-color-success);
+  }
+
+  .success-modal {
+    animation: modalBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Success Icon Wrapper */
+.success-icon-wrapper {
+    position: relative;
+    display: inline-block;
+    animation: iconPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s backwards;
+}
+
+/* Success Checkmark */
+.success-icon {
+    color: var(--icons-color-success);
+    /* stylelint-disable-next-line function-disallowed-list -- decorative glow, no token */
+    filter: drop-shadow(0 4px 12px rgba(46, 133, 64, 0.3));
+    animation: checkDraw 0.5s ease-in-out 0.3s backwards;
+}
+
+/* Sparkle Icons */
+.sparkle-icon {
+    position: absolute;
+    color: var(--theme-primary-gold);
+    animation: sparkleFloat 1.5s ease-in-out infinite;
+}
+
+.sparkle-1 {
+    top: -10px;
+    right: -10px;
+    animation-delay: 0s;
+}
+
+.sparkle-2 {
+    top: -5px;
+    left: -15px;
+    animation-delay: 0.3s;
+}
+
+.sparkle-3 {
+    bottom: 0;
+    right: -5px;
+    animation-delay: 0.6s;
+}
+
+/* Progress Bar */
+.success-progress-bar {
+    width: 200px;
+    height: 4px;
+    /* stylelint-disable-next-line function-disallowed-list -- success green tint, no token */
+    background-color: rgba(46, 133, 64, 0.2);
+    border-radius: var(--layout-border-radius-small);
+    margin-top: var(--layout-margin-large);
+    overflow: hidden;
+}
+
+.success-progress-fill {
+    height: 100%;
+    /* stylelint-disable-next-line color-no-hex -- decorative gradient end, no BCDS token */
+    background: linear-gradient(90deg, var(--icons-color-success), #43AA56);
+    border-radius: var(--layout-border-radius-small);
+    animation: progressFill 2s ease-in-out forwards;
+}

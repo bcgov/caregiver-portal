@@ -8,7 +8,7 @@ import { useAttachments } from '../hooks/useAttachments';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, FileCheck, X } from 'lucide-react';
 import { useUserProfile } from '../hooks/useUserProfile';
-import "../DesignTokens.css";
+import "../styles/index.css";
 
 const IN_SERVICE_TRAINING_TYPE = 'In-Service Training Certificate';
 
