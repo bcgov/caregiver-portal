@@ -1,4 +1,4 @@
-{{- if hasSuffix "-prod" .Release.Namespace }}
+{{- if or (hasSuffix "-prod" .Release.Namespace) (hasSuffix "-dev" .Release.Namespace) }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

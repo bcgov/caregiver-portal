@@ -6,7 +6,9 @@ metadata:
   labels:
     app: {{ .Values.portal.podlabel }}
 spec:
-  {{- if not (hasSuffix "-prod" .Release.Namespace) }}
+  {{- if hasSuffix "-dev" .Release.Namespace }}
+  replicas: {{ .Values.portal.dev.replicas }}
+  {{- else if not (hasSuffix "-prod" .Release.Namespace) }}
   replicas: {{ .Values.portal.replicas | default 1 }}
   {{- end }}
   selector:
@@ -23,13 +25,17 @@ spec:
           ports:
             - containerPort: {{ .Values.portal.port }}
               protocol: TCP
+          {{- $res := .Values.portal.resources }}
+          {{- if hasSuffix "-dev" .Release.Namespace }}
+          {{- $res = .Values.portal.dev.resources }}
+          {{- end }}
           resources:
             limits:
-              cpu: {{ .Values.portal.resources.limits.cpu | quote }}
-              memory: {{ .Values.portal.resources.limits.memory }}
+              cpu: {{ $res.limits.cpu | quote }}
+              memory: {{ $res.limits.memory }}
             requests:
-              cpu: {{ .Values.portal.resources.requests.cpu | quote }}
-              memory: {{ .Values.portal.resources.requests.memory }}
+              cpu: {{ $res.requests.cpu | quote }}
+              memory: {{ $res.requests.memory }}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           imagePullPolicy: Always
