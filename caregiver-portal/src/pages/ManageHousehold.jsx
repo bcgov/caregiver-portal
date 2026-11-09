@@ -12,7 +12,7 @@ const ManageHousehold = () => {
     const navigate = useNavigate();
     const { contacts, hasResourceCase, caseOpenDate, removeContact, loading, error } =
         useHouseholdContacts();
-    const { pending } = useAdditionalAdultMembers();
+    const { members: addedMembers } = useAdditionalAdultMembers();
     const [memberToRemove, setMemberToRemove] = useState(null);
 
     const breadcrumbItems = [
@@ -27,6 +27,16 @@ const ManageHousehold = () => {
         await removeContact(caseContactId, departureDate);
         setMemberToRemove(null);
     };
+
+    // Added members stay listed until ICM adds them as a case contact, which is when they
+    // arrive in `contacts`. Matching on name is the only link between the two.
+    const normalize = (s) => (s ?? "").trim().toLowerCase();
+    const contactNames = new Set(
+        contacts.map((c) => `${normalize(c.first_name)} ${normalize(c.last_name)}`),
+    );
+    const added = addedMembers.filter(
+        (m) => !contactNames.has(`${normalize(m.firstName)} ${normalize(m.lastName)}`),
+    );
 
     return (
         <div className="page">
@@ -52,7 +62,7 @@ const ManageHousehold = () => {
                             later.
                         </p>
                     )}
-                    {!error && contacts.length === 0 && pending.length === 0 && (
+                    {!error && contacts.length === 0 && added.length === 0 && (
                         <p>You have no other adults in your household.</p>
                     )}
                     {contacts.map((c) => {
@@ -84,7 +94,7 @@ const ManageHousehold = () => {
                                     </div>
                             );
                         })}
-                   {pending.map((p) => {
+                   {added.map((p) => {
                         const name = `${p.firstName} ${p.lastName}`;
                         return (
                             <div key={p.householdMemberId} className="householdSummaryItem">
@@ -95,7 +105,9 @@ const ManageHousehold = () => {
                                     </div>
                                 </div>
                                 <div className="householdSummaryActions">
-                                    <span className="householdRemovalStatus">Screening in progress</span>
+                                    <span className="householdRemovalStatus">
+                                        {p.submitted ? "Screening submitted" : "Information required"}
+                                        </span>
                                 </div>
                             </div>
                         );
