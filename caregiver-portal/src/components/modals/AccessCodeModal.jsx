@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "./Modal";
-import Button from "./Button";
+import Button from "../Button";
 
 const AccessCodeModal = ({
     isOpen,
@@ -26,7 +26,7 @@ const AccessCodeModal = ({
                     <h1>{accessCode}</h1>
                 </div>
             )
-        
+
         }
         </Modal>
     );

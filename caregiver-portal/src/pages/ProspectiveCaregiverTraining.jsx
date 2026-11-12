@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 import FileUpload from '../components/FileUpload';
-import Modal from '../components/Modal';
+import Modal from '../components/modals/Modal';
 import { useHousehold } from '../hooks/useHousehold';
 import { useAttachments } from '../hooks/useAttachments';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';

@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import "../styles/index.css";
 import Button from "../components/Button";
 import FosterApplicationStart from "../components/FosterApplicationStart";
-import WelcomeCard from "../components/WelcomeCard";
+import WelcomeCard from "../components/cards/WelcomeCard";
 import OOCApplicationStart from "../components/OOCApplicationStart";
-import AccessCard from "../components/AccessCard";
+import AccessCard from "../components/cards/AccessCard";
 import { Loader2 } from "lucide-react";
 
 
@@ -21,7 +21,7 @@ export default function Home() {
       navigate("/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -42,7 +42,7 @@ export default function Home() {
         </div>
       );
     }
-  
+
   return (
     <div className="page">
         <div className="task-frame-image">

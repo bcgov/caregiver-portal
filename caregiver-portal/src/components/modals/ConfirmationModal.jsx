@@ -1,7 +1,7 @@
 // src/components/ConfirmationModal.jsx
 import React from 'react';
 import Modal from './Modal';
-import Button from './Button';
+import Button from '../Button';
 
 const ConfirmationModal = ({
   isOpen,
@@ -13,7 +13,8 @@ const ConfirmationModal = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   confirmVariant = "danger",
-  isLoading = false
+  isLoading = false,
+  loadingText = 'Working...'
 }) => {
   const handleConfirm = () => {
     onConfirm();
@@ -30,7 +31,7 @@ const ConfirmationModal = ({
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, []);  
+  }, []);
 
   return (
     <Modal
@@ -47,17 +48,17 @@ const ConfirmationModal = ({
         ) : (
           <p className="confirmation-message">{message}</p>
         )}
-        
+
         <div className="confirmation-actions">
-        <Button 
-            variant={confirmVariant} 
+        <Button
+            variant={confirmVariant}
             onClick={handleConfirm}
             disabled={isLoading}
           >
-            {isLoading ? 'Deleting...' : confirmText}
+            {isLoading ? loadingText : confirmText}
           </Button>
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             onClick={handleClose}
             disabled={isLoading}
           >

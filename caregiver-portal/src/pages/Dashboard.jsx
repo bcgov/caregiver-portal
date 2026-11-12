@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
@@ -11,9 +11,10 @@ import TaskCard from '../components/cards/TaskCard';
 import GenericTaskCard from '../components/cards/GenericTaskCard';
 import TaskItem from '../components/TaskItem';
 import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
-import AccessCard from '../components/AccessCard';
-import WelcomeCard from '../components/WelcomeCard';
-import { Loader2, HandMetal, ShieldCheck } from 'lucide-react';
+import AccessCard from '../components/cards/AccessCard';
+import WelcomeCard from '../components/cards/WelcomeCard';
+import { useAdditionalAdultMembers } from '../hooks/useAdditionalAdultMembers';
+import { Loader2, HandMetal, ShieldCheck, CircleCheck } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -32,33 +33,33 @@ const Dashboard = () => {
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
   const [hasResourceCase, setHasResourceCase] = React.useState(false);
-  const { calculateAge } = useDates();
+  const { calculateAge, formatShortDate } = useDates();
+  const { submitted: submittedMembers } = useAdditionalAdultMembers();
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
+  const [additionalAdultPackages, setAdditionalAdultPackages] = React.useState([]);
   const [isApprovedFch, setIsApprovedFch] = React.useState(false);
   //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
-  // 
+  //
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
-  /*
-  const handleNavigateToOOCApplication = useCallback((applicationPackageId) => {
-    navigate(`/kinship-application/${applicationPackageId}`);
-  }, [navigate]);
-  */
 
   const loadApplicationPackages = useCallback(async () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
-      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved') 
-      setApplicationPackages(incompleteApps);
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved')
+      setApplicationPackages(incompleteApps.filter(app => app.subtype !== 'Additional Adult'));
+      setAdditionalAdultPackages(
+        incompleteApps.filter(app => app.subtype === 'Additional Adult' && app.status !== 'Withdrawn'),
+      );
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
       setIsApprovedFch(apps.some(app => app.subtype === 'FCH' && norm(app.srStage) === 'completed' && norm(app.srResolution) === 'approved'));
@@ -66,7 +67,7 @@ const Dashboard = () => {
 
       //const approvedFch = apps.some(app => app.subtype === 'FCH' && app.srStage === 'Completed' && app.srResolution === 'Approved');
       //const approvedKinship = apps.some(app => app.subtype === 'Kinship' && app.srStage === 'Completed' && app.srResolution === 'Approved');
-      //console.log('apps:', apps);
+      console.log('apps:', apps);
       //console.log('incompleteApps:', incompleteApps);
       //console.log('approvedFch:', approvedFch, 'approvedKinship:', approvedKinship);
     } catch (err) {
@@ -88,6 +89,12 @@ const Dashboard = () => {
   const loadApplicationForms = useCallback(() => {
     getApplicationForms();
   }, [getApplicationForms]);
+
+  // a submitted package is a completed activity, not an outstanding task
+  const submittedPackageIds = new Set(submittedMembers.map((m) => m.applicationPackageId));
+  const outstandingAdditionalAdults = additionalAdultPackages.filter(
+    (pkg) => !submittedPackageIds.has(pkg.applicationPackageId),
+  );
 
   const handleCreateFCHApplication = async () => {
     try {
@@ -126,7 +133,7 @@ const Dashboard = () => {
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms, getHouseholdMemberScreeningStatus]);
 
     if (auth.loading) {
-    return (            
+    return (
         <div className="submission-overlay">
           <div className="submission-modal">
             <Loader2 className="submission-spinner" />
@@ -139,8 +146,8 @@ const Dashboard = () => {
   return (
 
     <div className="page">
-      
-        {(isLoading || formsLoading) && 
+
+        {(isLoading || formsLoading) &&
           <div className="submission-overlay">
             <div className="submission-modal">
               <Loader2 className="submission-spinner" />
@@ -150,7 +157,7 @@ const Dashboard = () => {
           </div>
         }
 
- 
+
           <>
           <div className="task-frame-image">
             <div className="task-content">
@@ -167,8 +174,13 @@ const Dashboard = () => {
           <div className="task-frame-main-body">
             <div className="task-content-row">
               <div className="task-list">
-              
-                {(applicationPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
+                {hasResourceCase && (
+                    <div className="image-frame">
+                        <Link className="hyperlink" to="/manage-household">Manage my household</Link>
+                    </div>
+                )}
+
+                {(applicationPackages?.length > 0 || outstandingAdditionalAdults.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
@@ -178,16 +190,27 @@ const Dashboard = () => {
                 { hasResourceCase && training_on && (
                     <GenericTaskCard
                     title="In-service training"
-                    
+
                     buttonLabel="Continue"
                     onClick={() => navigate('/caregiver-training')}
                   />)}
 
 
                 {applicationPackages?.map((app) => (
-                  <>                 
+                  <>
                       <TaskCard subtype={app.subtype} applicationPackage={app} />
                   </>
+                ))}
+
+                {outstandingAdditionalAdults.map((pkg) => (
+                  <GenericTaskCard
+                    key={pkg.applicationPackageId}
+                    title="New Household Member Screening"
+                    buttonLabel="Continue"
+                    onClick={() =>
+                      navigate(`/additional-adult/application-package/${pkg.applicationPackageId}/consent-summary/`)
+                    }
+                  />
                 ))}
                 {householdMemberships?.map((membership) => {
                   const formGroup = screeningForms?.find(group =>
@@ -200,15 +223,20 @@ const Dashboard = () => {
                   );
                 })}
 
-                {(isApprovedFch) && (
+                {(isApprovedFch || submittedMembers.length > 0) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Completed tasks</h2>                   
-                      <TaskItem type={'FCH'}></TaskItem>                    
+                    <h2 className="page-heading">Completed tasks</h2>
+                    {isApprovedFch && <TaskItem type={'FCH'}></TaskItem>}
+                    {submittedMembers.map((m) => (
+                      <div key={m.householdMemberId} className="task-item">
+                        <CircleCheck size={20} className="approved-badge" />{'  '}
+                        Added new household member
+                        {m.moveInDate ? ` on ${formatShortDate(`${m.moveInDate}T00:00:00`)}` : ''}
+                      </div>
+                    ))}
                   </div>
-                  
-                )
-              }
+                )}
 
                 {(fosterApplications?.length === 0 && !isApprovedFch) && (
                   <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} startLink={calculateAge(userProfile?.date_of_birth) > 17} showImage={false}/>
@@ -218,7 +246,7 @@ const Dashboard = () => {
               </div>
               <AccessCard />
               </div>
-            
+
             </div>
           </>
     </div>

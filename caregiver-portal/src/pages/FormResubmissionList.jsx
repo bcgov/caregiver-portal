@@ -8,7 +8,7 @@ import { useHousehold } from '../hooks/useHousehold';
 import { useAttachments } from '../hooks/useAttachments';
 import { useDates } from '../hooks/useDates';
 import { FilePlus, File, FileText, ArrowRight, Download, FileCheck } from 'lucide-react';
-import Modal from '../components/Modal';
+import Modal from '../components/modals/Modal';
 
 const DOC_TYPES_BY_ROLE = {
   primary: [
@@ -45,13 +45,13 @@ const FormResubmissionList = () => {
     const { loadHousehold, partner, householdMembers, primaryApplicant } = useHousehold({ applicationPackageId });
     const { uploadAttachment, getAttachmentsByHouseholdId, getAttachmentsByApplicationPackageId, deleteAttachment, uploadDocuments } = useAttachments();
     const { formatShortDate } = useDates();
-    
+
 
     const [applicantForms, setApplicantForms] = React.useState([]);
     //const [householdForms, setHouseholdForms] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [cloningId, setCloningId] = React.useState(null);
-    
+
 
     // upload documents section states
     const [selectedMember, setSelectedMember] = React.useState(null);
@@ -64,7 +64,7 @@ const FormResubmissionList = () => {
     const [submittedAttachments, setSubmittedAttachments] = React.useState([]);
 
     const location = useLocation();
-    const basePath = location.pathname.replace(/\/resubmit$/, '');  
+    const basePath = location.pathname.replace(/\/resubmit$/, '');
     const isKinship = location.pathname.startsWith('/kinship-application');
 
     const EXCLUDED_TYPES = !isKinship ? ['Referral', 'Adults in my home', 'Indigenous Background and Preferences'] : ['Referral', 'Adults in my home'];
@@ -93,12 +93,12 @@ const FormResubmissionList = () => {
         for (const f of sectionFiles) {
           try {
             await deleteAttachment(f.attachmentId);
-          } catch (err) { 
+          } catch (err) {
             console.error('Failed to delete attachment on modal close:', err);
           }
         }
       }
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
       setSelectedMember(null);
       setSelectedDocType('');
       setSectionFiles([]);
@@ -141,15 +141,15 @@ const FormResubmissionList = () => {
 
     // Build member dropdown options
     const memberOptions = React.useMemo(() => {
-      const opts = [{ 
-        householdMemberId: primaryApplicant?.householdMemberId ?? null, 
-        role: 'primary', 
-        label: primaryApplicant?.firstName + " " + primaryApplicant?.lastName + " (You)", 
-        firstName: primaryApplicant?.firstName ?? '', 
-        lastName: primaryApplicant?.lastName ?? '', 
+      const opts = [{
+        householdMemberId: primaryApplicant?.householdMemberId ?? null,
+        role: 'primary',
+        label: primaryApplicant?.firstName + " " + primaryApplicant?.lastName + " (You)",
+        firstName: primaryApplicant?.firstName ?? '',
+        lastName: primaryApplicant?.lastName ?? '',
       }];
       if (partner?.householdMemberId) {
-        opts.push({   
+        opts.push({
           householdMemberId: partner.householdMemberId,
           role: 'spouse',
           label: `${partner.firstName} ${partner.lastName} (${partner.relationship})`,
@@ -158,7 +158,7 @@ const FormResubmissionList = () => {
         });
       }
       for (const m of householdMembers) {
-        if (m.householdMemberId) { 
+        if (m.householdMemberId) {
           opts.push({
             householdMemberId: m.householdMemberId,
             role: 'adult',
@@ -182,18 +182,18 @@ const FormResubmissionList = () => {
           let files;
           if (selectedMember.householdMemberId === null) {
             const all = await getAttachmentsByApplicationPackageId(applicationPackageId);
-            files = all.filter( 
+            files = all.filter(
               f => f.householdMemberId === null && f.attachmentType === selectedDocType,
             );
           } else {
             const all = await getAttachmentsByHouseholdId(selectedMember.householdMemberId);
             files = all.filter(f => f.attachmentType === selectedDocType);
-          } 
+          }
           setSectionFiles(files);
         } catch (err) {
           console.error('Failed to load attachments:', err);
         }
-      };    
+      };
       fetchFiles();
     }, [selectedMember, selectedDocType, fileRefreshKey]);
 
@@ -205,7 +205,7 @@ const FormResubmissionList = () => {
           setSubmittedAttachments(all.filter(a => a.icmAttachmentId));
         } catch (err) {
           console.error('Failed to load submitted attachments:', err);
-        } 
+        }
       };
       fetchSubmitted();
     }, [isLoading, fileRefreshKey]);
@@ -223,7 +223,7 @@ const FormResubmissionList = () => {
       });
       setFileRefreshKey(k => k + 1);
     };
-  
+
     const handleDocDelete = async (attachmentId) => {
       await deleteAttachment(attachmentId);
       setSectionFiles(prev => prev.filter(f => f.attachmentId !== attachmentId));
@@ -233,23 +233,23 @@ const FormResubmissionList = () => {
       setIsSubmittingToICM(true);
       try {
         await uploadDocuments(
-          applicationPackageId,   
+          applicationPackageId,
           selectedMember?.householdMemberId ?? null,
           selectedDocType,
-        );    
+        );
         setFileRefreshKey(k => k + 1);
         handleModalClose(true);
       } catch (err) {
         console.error('Failed to submit to ICM:', err);
       } finally {
-        setIsSubmittingToICM(false); 
+        setIsSubmittingToICM(false);
       }
     };
 
     const renderFormRow = (form) => {
       const isToday = form.submittedAt && new Date(form.submittedAt).toDateString() === new Date().toDateString();
 
-      return (  
+      return (
       <div key={form.applicationFormId} className="resubmission-form-row">
         <span className="resubmission-form-type"><FileText size="20" className="inline-icon" />{form.type}</span>
         <span className={`resubmission-form-date${isToday ? ' resubmission-form-date--today' : ''}`}>
@@ -284,13 +284,13 @@ const FormResubmissionList = () => {
             <h2 className="page-heading">Resubmit information from your application</h2>
             <div className="info-box">If you made a mistake or forgot something in your application, you can resubmit information here.</div>
           </div>
-  
+
           {isLoading ? (
             <p>Loading...</p>
           ) : (
             <>
               <div className="page-details-row-small">
-                
+
                 <div className="resubmission-group">
                   {applicantForms.map(renderFormRow)}
                 </div>
@@ -302,7 +302,7 @@ const FormResubmissionList = () => {
               </div>
 
               <div className="page-details-row-small">
-                
+
                 <div className="resubmission-group">
 
                 <div className="resubmission-form-row">
@@ -318,8 +318,8 @@ const FormResubmissionList = () => {
                   </span>
                 </div>
 
-                
-                
+
+
                 </div>
               </div>
 
@@ -330,7 +330,7 @@ const FormResubmissionList = () => {
                 <h2 className="page-heading">Upload Documents</h2>
               </div>
 
-              {/* Submit a document */} 
+              {/* Submit a document */}
               <div className="page-details-row-small">
                 <Button variant="primary" onClick={() => setIsModalOpen(true)}>
                   <FilePlus size="16" />
@@ -339,7 +339,7 @@ const FormResubmissionList = () => {
               </div>
 
               {submittedAttachments.length > 0 && (
-                
+
                 <div className="page-details-row-small">
                   <div className="resubmission-group">
                     {submittedAttachments.map(att => {
@@ -377,17 +377,17 @@ const FormResubmissionList = () => {
                       onChange={(e) => {
                         const opt = memberOptions.find(
                           o => (o.householdMemberId ?? '') === e.target.value,
-                        ); 
+                        );
                         setSelectedMember(opt ?? null);
                         setSelectedDocType('');
-                        //setSubmitResult(null); 
+                        //setSubmitResult(null);
                       }}
                     >
                       <option value="" disabled>Please select</option>
                       {memberOptions.map(opt => (
                         <option key={opt.householdMemberId ?? 'primary'} value={opt.householdMemberId ?? ''}>
                           {opt.label}
-                        </option> 
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -411,7 +411,7 @@ const FormResubmissionList = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {selectedMember && selectedDocType && (
                   <div className="upload-docs-section">
                     <FileUpload
@@ -439,12 +439,12 @@ const FormResubmissionList = () => {
                       {isSubmittingToICM ? 'Submitting...' : 'Submit File to MCFD'}
                     </Button>
                     </div>
-                    
+
 
                   </div>
                 )}
               </Modal>
-  
+
             </>
           )}
         </div>

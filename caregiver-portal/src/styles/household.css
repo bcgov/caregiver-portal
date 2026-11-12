@@ -71,16 +71,45 @@
   padding: 0 var(--layout-padding-xlarge);
 }
 
+.householdList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1120px;
+    margin: auto;
+}
+
 .household-content-inner {
   width: 100%;
   max-width: 1120px;
   padding: 0 var(--layout-padding-large);
 }
 
+.householdRemovalStatus {
+    font-size: var(--typography-font-size-label);
+    color: var(--typography-color-secondary);
+  }
+
   .household-member-form{
     border: solid 1px var(--surface-color-border-default);
     border-radius: var(--layout-border-radius-large);
     margin-bottom: var(--layout-margin-large);
+  }
+
+  /* Add New Household Member: a single centred column */
+.add-member-pane {
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .confirm-summary {
+    list-style: none;
+    margin: var(--layout-margin-small) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--layout-margin-tiny);
   }
 
   .member-header {
@@ -132,14 +161,14 @@
     background: var(--icons-color-warning);
     color: var(--typography-color-primary-invert);
     border-radius: 50%;
-  
+
   }
 
   .completed {
     display: inline-grid;
     place-items: center;
-    background: var(--icons-color-success); 
+    background: var(--icons-color-success);
     color: var(--typography-color-primary-invert);
     border-radius: 50%;
-  
+
   }

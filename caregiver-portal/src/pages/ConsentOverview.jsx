@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check, CircleDashed, CircleAlert, Flag, ExternalLink, BookText  } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDates } from '../hooks/useDates';
 import { useState } from 'react';
 import "../styles/index.css";
@@ -11,7 +11,7 @@ import { useAttachments } from '../hooks/useAttachments';
 import { useApplications } from '../hooks/useApplications';
 import Declaration from '../components/Declaration';
 import Button from '../components/Button';
-import Modal from '../components/Modal';
+import Modal from '../components/modals/Modal';
 import DateField from '../components/Date';
 import { EMAIL_REGEX } from '../constants/household';
 
@@ -32,7 +32,13 @@ const ConsentOverview = () => {
   const { formatSubmissionDate } = useDates();
   const { loadHouseholdMember, getAccessCode, updateHouseholdMemberInfo, resendMemberAccessCode } = useHousehold({ applicationPackageId });
   const { markScreeningDocumentsAttached } = useApplications();
-  const  back = `/foster-application/application-package/${applicationPackageId}/consent-summary`
+  const { pathname } = useLocation();
+  const base = pathname.startsWith('/additional-adult/')
+    ? '/additional-adult'
+    : pathname.startsWith('/kinship-application/')
+      ? '/kinship-application'
+      : '/foster-application';
+  const back = `${base}/application-package/${applicationPackageId}/consent-summary`;
 
   // edit/resend states
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -120,7 +126,7 @@ const ConsentOverview = () => {
         const existingSequences = uploadedFiles.filter(
           file => file.attachmentType === uploadData.attachmentType
         ).map(file => {
-          //extract sequence number from filename 
+          //extract sequence number from filename
           const match = file.fileName.match(/_(\d{3})\.[^.]+$/);
           return match ? parseInt(match[1], 10) : 0;
         });
@@ -139,13 +145,13 @@ const ConsentOverview = () => {
 
         await uploadAttachment(modifiedUploadData);
         loadAttachments();
-        
+
       } catch (error) {
-        
+
         console.error('Upload failed:', error.message);
       }
     };
-  
+
     const handleDeleteAttachment = async (attachmentId) => {
       try {
         await deleteAttachment(attachmentId);
@@ -154,18 +160,18 @@ const ConsentOverview = () => {
         console.error('Delete failed:', error.message);
       }
     }
-  
+
     const loadAttachments = async () => {
       try {
         const attachments = await getAttachmentsByHouseholdId(householdMemberId);
         setManualScreeningStatus(attachments.length > 0);
-        
+
         setUploadedFiles(attachments);
       } catch (error) {
         console.error('Failed to load attachments:', error);
       }
     }
-  
+
     React.useEffect(() => {
       if (applicationPackageId) {
         loadAttachments();
@@ -178,7 +184,7 @@ const ConsentOverview = () => {
           console.error('Missing required IDs');
           return;
         }
-        
+
         await markScreeningDocumentsAttached(applicationPackageId, householdMemberId);
         navigate(back)
       } catch (error) {
@@ -229,12 +235,12 @@ const ConsentOverview = () => {
     setIsSavingEdit(true);
     try {
       await updateHouseholdMemberInfo(householdMemberId, editFormData);
-      const result = await resendMemberAccessCode(householdMemberId);                                                                                         
+      const result = await resendMemberAccessCode(householdMemberId);
       setAccessCode({
-        accessCode: result.accessCode,                                                                                                                        
-        expiresAt: result.expiresAt,                                                                                                                          
-        isUsed: false,                                                                                                                                        
-        attemptCount: 0,                                                                                                                                      
+        accessCode: result.accessCode,
+        expiresAt: result.expiresAt,
+        isUsed: false,
+        attemptCount: 0,
       });
       setResendsRemainingToday(result.resendsRemainingToday);
       const updated = await loadHouseholdMember(householdMemberId);
@@ -274,7 +280,7 @@ const ConsentOverview = () => {
     <div className="page">
       <div className="page-details">
         <div className="page-details-row-breadcrumb">
-          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} /> 
+          <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
 
         <div className="page-details-row-small">
@@ -289,7 +295,7 @@ const ConsentOverview = () => {
                 <div className="task-list-item">
                   { householdMember?.householdMember?.userId  === null ? (
                     <CircleAlert className="task-list-item-missing"></CircleAlert> )
-                  : ( 
+                  : (
                     <Check className="task-list-item-check"></Check>
                   )}
                   <span className="task-list-item-supporting-text">Logged into portal and used Access Code</span>
@@ -297,7 +303,7 @@ const ConsentOverview = () => {
                 <div className="task-list-item">
                   { householdMember?.householdMember?.screeningInfoProvided === false ? (
                     <CircleAlert className="task-list-item-missing"></CircleAlert> )
-                    : ( 
+                    : (
                     <Check className="task-list-item-check"></Check>
                     )}
                     <span className="task-list-item-supporting-text">Completed Household Screening Form</span>
@@ -312,7 +318,7 @@ const ConsentOverview = () => {
                   <p>We sent an invitation to <strong>{householdMember?.householdMember?.email}</strong> on {householdMember?.householdMember?.invitationLastSent ?
   formatSubmissionDate(householdMember.householdMember.invitationLastSent) : 'an unknown date'}</p>
                   <p>{householdMember?.householdMember?.firstName} has not yet logged in to complete their application information.</p>
-                  <p>Note, {householdMember?.householdMember?.firstName}'s last name and date of birth must <strong>exactly</strong> match the information associated with their BC Services Card. 
+                  <p>Note, {householdMember?.householdMember?.firstName}'s last name and date of birth must <strong>exactly</strong> match the information associated with their BC Services Card.
                     If there is a difference you can <a href="#" onClick={handleOpenEditModal} className="hyperlink">update the household member's information</a>. Updating the information will automatically send a new Access Code email. </p>
                   { accessCodeIsInvalid() && (
                     <p><strong>The access code we sent has either expired or been used too many times by a user whose information did not exactly match the information you provided. You can send a new access code or update the information you provided so they can successfully continue.</strong> </p>
@@ -324,7 +330,7 @@ const ConsentOverview = () => {
 
                 { !householdMember?.householdMember?.screeningInfoProvided && (
                     <>
-                      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 
+                      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems:
                   'center' }}>
                         { accessCodeIsInvalid() && (
                           <Button variant={cooldownMinutesRemaining > 0 ? "disabled" : "primary"} onClick={handleResend} disabled={isResending || cooldownMinutesRemaining > 0}>
@@ -351,7 +357,7 @@ const ConsentOverview = () => {
                 <p>If {householdMember?.householdMember?.firstName} is unable to complete these tasks via the Portal (for example, if they don’t have a BC Services Card), have them complete and sign these forms on paper then upload them below.</p>
                 <p><a href="/Consent_for_Disclosure_of_Criminal_Record_Information.pdf" download className="bright">Consent for Disclosure of Criminal Record Information <ExternalLink size={16}/></a>.</p>
                 <p><a href="/Consent_for_Prior_Contact_Check.pdf" download className="bright">Consent for Prior Contact Check <ExternalLink size={16}/></a>.</p>
-                </>                
+                </>
               )}
               { householdMember?.householdMember?.userId !== null && (
                   <>
@@ -388,8 +394,8 @@ const ConsentOverview = () => {
 
     {!isSpouse && (
 
-       <div className="page-details-row-small">       
-        <div className="page-details-col">          
+       <div className="page-details-row-small">
+        <div className="page-details-col">
           <FileUpload
           attachmentType="_"
           onUpload={handleUpload}
@@ -402,12 +408,12 @@ const ConsentOverview = () => {
           acceptedTypes={['pdf', 'jpg', 'jpeg', 'png']}
           maxSizeMB={5}
           description="_"
-          />   
+          />
        </div>
       </div>
     )}
 
-       
+
        </div>
 
        <Modal
@@ -467,16 +473,16 @@ const ConsentOverview = () => {
         </label>
       )}
       <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-          <Button                                                                                                  
-            variant={isSavingEdit || cooldownMinutesRemaining > 0 ? 'disabled' : 'primary'}                      
+          <Button
+            variant={isSavingEdit || cooldownMinutesRemaining > 0 ? 'disabled' : 'primary'}
             onClick={handleSaveEdit}
             disabled={isSavingEdit || cooldownMinutesRemaining > 0}
-          > 
+          >
           {isSavingEdit
-            ? 'Saving...'                                                                                        
-            : cooldownMinutesRemaining > 0                                                                     
-              ? `Available in ${cooldownMinutesRemaining} min`                                                   
-              : 'Save Changes and Send New Access Code'} 
+            ? 'Saving...'
+            : cooldownMinutesRemaining > 0
+              ? `Available in ${cooldownMinutesRemaining} min`
+              : 'Save Changes and Send New Access Code'}
         </Button>
         <Button variant="white" onClick={() => setIsEditModalOpen(false)}>
           Cancel

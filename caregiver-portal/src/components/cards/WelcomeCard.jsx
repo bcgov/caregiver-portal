@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
-import Button from './Button';
-import { useCommon } from '../hooks/useCommon';
+import Button from '../Button';
+import { useCommon } from '../../hooks/useCommon';
 
 const WelcomeCard = ({login, user, children}) => {
 
@@ -14,7 +14,7 @@ const WelcomeCard = ({login, user, children}) => {
             </div>
             { login && (
             <>
-            <p className='welcome-card-content'>Become a foster or kinship care provider in British Columbia.</p>                
+            <p className='welcome-card-content'>Become a foster or kinship care provider in British Columbia.</p>
             <div className="welcome-card-element">
 
             <Button variant="nav" onClick={login}>Create Account / Log In</Button>
@@ -23,10 +23,10 @@ const WelcomeCard = ({login, user, children}) => {
             </>
             )}
             { !login && user && (
-            <p className='welcome-card-content'>Welcome, {toTitleCase(user.name)}!</p>    
+            <p className='welcome-card-content'>Welcome, {toTitleCase(user.name)}!</p>
             )}
             { children && (
-            <div className='welcome-card-content'>{children}</div>                    
+            <div className='welcome-card-content'>{children}</div>
             )}
 
         </div>

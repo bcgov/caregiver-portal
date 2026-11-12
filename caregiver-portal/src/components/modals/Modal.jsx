@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../Button';
 import { X } from 'lucide-react';
 //import { isJsxOpeningElement } from 'typescript';
 
@@ -32,7 +32,7 @@ const Modal = ({
         if(isOpen) {
             document.addEventListener('keydown', handleEscapeKey);
             document.body.style.overflow = 'hidden';
-  
+
             return () => {
                 document.removeEventListener('keydown', handleEscapeKey);
                 document.body.style.overflow = 'unset';
@@ -41,7 +41,7 @@ const Modal = ({
             // When modal closes, restore scrolling
             document.body.style.overflow = 'unset';
         }
-  
+
         // Cleanup function that always runs when component unmounts
         return () => {
             document.removeEventListener('keydown', handleEscapeKey);
