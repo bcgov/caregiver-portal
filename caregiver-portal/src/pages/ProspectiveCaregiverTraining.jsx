@@ -251,7 +251,7 @@ const ProspectiveCaregiverTraining = () => {
             <>
 
             <div className="page-details-row">
-              <p>Pre-Service training is required for all new prospective caregivers/care providers. Pre-Service is 35 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
+              <p>Pre-Service training is required for all new prospective caregivers/care providers. Pre-Service is 20 hours of online training, facilitated by a group of specialized virtual facilitators, and is completed over a 12-week period.</p>
 
               {TRAINING_LINK.length > 0 &&
                 <div className="section-description">

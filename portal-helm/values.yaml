@@ -15,3 +15,15 @@ portal:
     requests:
       cpu: "100m"
       memory: 128Mi
+  # Dev emulates prod's two-pod layout (prod: HPA min 2 + PDB) so rollouts and
+  # disruption behaviour are exercised before test/prod, but with a small CPU
+  # request: f6e00d-dev has a 500m request quota shared with social-middleware.
+  dev:
+    replicas: 2
+    resources:
+      limits:
+        cpu: "500m"
+        memory: 512Mi
+      requests:
+        cpu: "15m"
+        memory: 128Mi
