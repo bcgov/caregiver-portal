@@ -1,5 +1,5 @@
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
-import { MIN_ADULT_AGE } from '../constants/household';
+import { MIN_ADULT_AGE, MAX_AGE } from '../constants/household';
 
 // YYYY-MM-DD in local time, same as the server's toLocaleDateString('en-CA')
 export const toIsoLocal = (d) => d.toLocaleDateString('en-CA');
@@ -38,11 +38,14 @@ export const yearsAgo = (years, today = new Date()) => {
     return toIsoLocal(d);
 };
 
-export function validateAdultDob(value, today = new Date()) {
+export function validateAdultDob(value, today = new Date(), subject = 'household member') {
     if (!value) return 'Date of birth is required.';
     if (!isRealIsoDate(value)) return 'Enter a valid date.';
     if (value > yearsAgo(MIN_ADULT_AGE, today)) {
-        return `The household member must be at least ${MIN_ADULT_AGE} years old.`;
+        return `The ${subject} must be at least ${MIN_ADULT_AGE} years old.`;
+    }
+    if (value <= yearsAgo(MAX_AGE + 1, today)) {
+        return `Age cannot exceed ${MAX_AGE} years`;
     }
     return null;
 }
