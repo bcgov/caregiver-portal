@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import PropTypes from 'prop-types';
+import { MAX_AGE } from "../constants/household";
 
 function formatYmd(d) {
   const yyyy = d.getFullYear();
@@ -15,10 +16,10 @@ function date19YearsAgo(today = new Date()) {
 }
 
 function date18YearsAgo(today = new Date()) {
-  const d = new Date(today);                                                                                                                                
-  d.setFullYear(d.getFullYear() - 18);                                                                                                                    
-  return d;                                                                                                                                                 
-} 
+  const d = new Date(today);
+  d.setFullYear(d.getFullYear() - 18);
+  return d;
+}
 /*
 function isAtLeast19(isoDate, today = new Date()) {
   if (!isoDate) return false;
@@ -39,8 +40,12 @@ const DateField = ({variant = 'past', ...props }) => {
     switch(variant) {
         case 'adult':
             return { max: formatYmd(date19YearsAgo())};
-        case 'adult18':
-            return {max: formatYmd(date18YearsAgo())};
+        case 'adult18': {
+            const earliest = new Date();
+            earliest.setFullYear(earliest.getFullYear() - (MAX_AGE + 1));
+            earliest.setDate(earliest.getDate() + 1); // 123 years ago today is already too old
+            return { min: formatYmd(earliest), max: formatYmd(date18YearsAgo()) };
+        }
         case 'past':
             return { max: formatYmd(new Date())};
         case 'future':
