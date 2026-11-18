@@ -89,6 +89,11 @@ const ManageReliefProviders = () => {
                         </div>
                     </div>
                     <div className="page-details-row-small page-button-row">
+                    {!error && (
+                        <Button onClick={() => navigate("/manage-relief-providers/add")}>
+                            Invite Relief provider
+                        </Button>
+                    )}
                         <Button variant="secondary" onClick={() => navigate("/dashboard")}>
                             Back to dashboard
                         </Button>
