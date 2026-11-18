@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { CircleX } from "lucide-react";
+import { CircleQuestionMark, CircleX } from "lucide-react";
 import Breadcrumb from "../components/Breadcrumb";
 import Button from "../components/Button";
 import PersonRow from "../components/PersonRow";
@@ -74,6 +74,16 @@ const ManageReliefProviders = () => {
                                     detail={p.email}
                                 >
                                     {p.canEdit && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="householdActionButton householdActionView"
+                                                onClick={() => navigate(`/manage-relief-providers/${p.applicationPackageId}/${p.householdMemberId}`)
+                                            }
+                                            aria-label={`View invitation for ${name}`}
+                                        >
+                                            <CircleQuestionMark size={20} />
+                                        </button>
                                         <button
                                             type="button"
                                             className="householdActionButton householdActionRemove"
@@ -82,7 +92,8 @@ const ManageReliefProviders = () => {
                                         >
                                             <CircleX size={20} />
                                         </button>
-                                    )}
+                                    </>
+                                )}
                                 </PersonRow>
                             );
                         })}
