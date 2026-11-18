@@ -50,13 +50,14 @@ const Dashboard = () => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
+  const NOT_OWN_TASKS = ['Additional Adult', 'Relief Provider'];
 
   const loadApplicationPackages = useCallback(async () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
       const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved')
-      setApplicationPackages(incompleteApps.filter(app => app.subtype !== 'Additional Adult'));
+      setApplicationPackages(incompleteApps.filter(app => app.subtype !==  !NOT_OWN_TASKS.includes(app.subtype)));
       setAdditionalAdultPackages(
         incompleteApps.filter(app => app.subtype === 'Additional Adult' && app.status !== 'Withdrawn'),
       );
@@ -175,9 +176,14 @@ const Dashboard = () => {
             <div className="task-content-row">
               <div className="task-list">
                 {hasResourceCase && (
+                    <>
                     <div className="image-frame">
                         <Link className="hyperlink" to="/manage-household">Manage my household</Link>
                     </div>
+                        <div className="image-frame">
+                        <Link className="hyperlink" to="/manage-relief-providers">Manage relief providers</Link>
+                    </div>
+                    </>
                 )}
 
                 {(applicationPackages?.length > 0 || outstandingAdditionalAdults.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (

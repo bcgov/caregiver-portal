@@ -29,6 +29,7 @@ import ReferralForm from './pages/ReferralForm';
 import ConsentSummary from './pages/ConsentSummary';
 import ConsentOverview from './pages/ConsentOverview';
 import ManageHousehold from './pages/ManageHousehold';
+import ManageReliefProviders from './pages/ManageReliefProviders';
 import AddHouseholdMember from './pages/AddHouseholdMember';
 import MedicalForms from './pages/MedicalForms';
 import ProspectiveCaregiverTraining from './pages/ProspectiveCaregiverTraining';
@@ -111,6 +112,7 @@ const App = () => {
         {/* Manage Household */}
         <Route path="/manage-household" element={<ProtectedRoute><ManageHousehold /></ProtectedRoute>}/>
         <Route path="/manage-household/add" element={<ProtectedRoute><AddHouseholdMember /></ProtectedRoute>}/>
+        <Route path="/manage-relief-providers" element={<ProtectedRoute><ManageReliefProviders /></ProtectedRoute>}/>
 
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         {/* Screening Package */}
