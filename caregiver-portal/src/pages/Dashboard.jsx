@@ -23,6 +23,7 @@ const Dashboard = () => {
 
   const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
   const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
+  const NOT_OWN_TASKS = ['Additional Adult', 'Relief Provider'];
 
   const {
     createApplicationPackage,
@@ -50,14 +51,12 @@ const Dashboard = () => {
     navigate(`/foster-application/${applicationPackageId}`);
   }, [navigate]);
 
-  const NOT_OWN_TASKS = ['Additional Adult', 'Relief Provider'];
-
   const loadApplicationPackages = useCallback(async () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
       const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved')
-      setApplicationPackages(incompleteApps.filter(app => app.subtype !==  !NOT_OWN_TASKS.includes(app.subtype)));
+      setApplicationPackages(incompleteApps.filter(app => !NOT_OWN_TASKS.includes(app.subtype)));
       setAdditionalAdultPackages(
         incompleteApps.filter(app => app.subtype === 'Additional Adult' && app.status !== 'Withdrawn'),
       );
