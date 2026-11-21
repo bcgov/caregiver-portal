@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useApplications } from '../hooks/useApplications';
 import { useApplicationPackage } from '../hooks/useApplicationPackage';
+import { useReliefProviders } from '../hooks/useReliefProviders';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useDates } from '../hooks/useDates';
 import FosterApplicationStart from '../components/FosterApplicationStart';
@@ -10,11 +11,12 @@ import OOCApplicationStart from '../components/OOCApplicationStart';
 import TaskCard from '../components/cards/TaskCard';
 import GenericTaskCard from '../components/cards/GenericTaskCard';
 import TaskItem from '../components/TaskItem';
+import CompletedTaskItem from '../components/CompletedTaskItem';
 import ScreeningTaskCard from '../components/cards/ScreeningTaskCard';
 import AccessCard from '../components/cards/AccessCard';
 import WelcomeCard from '../components/cards/WelcomeCard';
 import { useAdditionalAdultMembers } from '../hooks/useAdditionalAdultMembers';
-import { Loader2, HandMetal, ShieldCheck, CircleCheck } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 
 const Dashboard = () => {
   const auth = useAuth();
@@ -36,6 +38,9 @@ const Dashboard = () => {
   const [hasResourceCase, setHasResourceCase] = React.useState(false);
   const { calculateAge, formatShortDate } = useDates();
   const { submitted: submittedMembers } = useAdditionalAdultMembers();
+
+  const { providers: reliefProviders } = useReliefProviders();
+  const submittedReliefProviders = reliefProviders.filter((p) => p.submitted);
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
   const [fosterApplications, setFosterApplications] = React.useState([]);
@@ -228,20 +233,25 @@ const Dashboard = () => {
                   );
                 })}
 
-                {(isApprovedFch || submittedMembers.length > 0) && (
+                {(isApprovedFch || submittedMembers.length > 0 || submittedReliefProviders.length > 0) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Completed tasks</h2>
                     {isApprovedFch && <TaskItem type={'FCH'}></TaskItem>}
                     {submittedMembers.map((m) => (
-                      <div key={m.householdMemberId} className="task-item">
-                        <CircleCheck size={20} className="approved-badge" />{'  '}
+                      <CompletedTaskItem key={m.householdMemberId}>
                         Added new household member
                         {m.moveInDate ? ` on ${formatShortDate(`${m.moveInDate}T00:00:00`)}` : ''}
-                      </div>
+                      </CompletedTaskItem>
+                    ))}
+                    {submittedReliefProviders.map((p) => (
+                      <CompletedTaskItem key={p.householdMemberId}>
+                        Relief provider {p.firstName} {p.lastName} submitted their application
+                      </CompletedTaskItem>
                     ))}
                   </div>
                 )}
+
 
                 {(fosterApplications?.length === 0 && !isApprovedFch) && (
                   <FosterApplicationStart onClick={handleCreateFCHApplication} disabled={calculateAge(userProfile?.date_of_birth) < 18} startLink={calculateAge(userProfile?.date_of_birth) > 17} showImage={false}/>
