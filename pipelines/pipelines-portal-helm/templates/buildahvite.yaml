@@ -122,6 +122,12 @@ spec:
             secretKeyRef:
               name: $(params.VITE_SECRET_NAME)
               key: VITE_USE_KONG_OIDC
+        - name: VITE_RELIEF_PROVIDERS_ON
+          valueFrom:
+            secretKeyRef:
+              name: $(params.VITE_SECRET_NAME)
+              key: VITE_RELIEF_PROVIDERS_ON
+              optional: true              
     - name: push
       image: $(params.BUILDAH_IMAGE)
       script: |

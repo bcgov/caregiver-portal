@@ -55,6 +55,8 @@ const ConditionalFooter = () => {
   return showFooter ? <Footer /> : null;
 };
 
+const RELIEF_ON = import.meta.env.VITE_RELIEF_PROVIDERS_ON === 'true' || false;
+
 const App = () => {
 
   return (
@@ -114,9 +116,13 @@ const App = () => {
         {/* Manage Household */}
         <Route path="/manage-household" element={<ProtectedRoute><ManageHousehold /></ProtectedRoute>}/>
         <Route path="/manage-household/add" element={<ProtectedRoute><AddHouseholdMember /></ProtectedRoute>}/>
-        <Route path="/manage-relief-providers" element={<ProtectedRoute><ManageReliefProviders /></ProtectedRoute>}/>
-        <Route path="/manage-relief-providers/add" element={<ProtectedRoute><AddReliefProvider /></ProtectedRoute>}/>
-        <Route path="/manage-relief-providers/:applicationPackageId/:householdMemberId" element={<ProtectedRoute><ReliefProviderOverview /></ProtectedRoute>}/>
+        {RELIEF_ON && (
+          <>
+            <Route path="/manage-relief-providers" element={<ProtectedRoute><ManageReliefProviders /></ProtectedRoute>}/>
+            <Route path="/manage-relief-providers/add" element={<ProtectedRoute><AddReliefProvider /></ProtectedRoute>}/>
+            <Route path="/manage-relief-providers/:applicationPackageId/:householdMemberId" element={<ProtectedRoute><ReliefProviderOverview /></ProtectedRoute>}/>
+          </>
+        )}
 
         <Route path="/foster-application/application-package/profile-form/:applicationFormId" element={<ProtectedRoute><ProfileForm /></ProtectedRoute>}/>
         {/* Screening Package */}

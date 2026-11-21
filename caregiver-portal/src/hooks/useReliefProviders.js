@@ -3,11 +3,12 @@ import { getJson } from '../utils/api';
 
 // The caregiver's relief providers, with each one's progress:
 // status is 'invited' | 'redeemed' | 'in_progress' | 'submitted', canEdit is true until they sign in.
-export const useReliefProviders = () => {
+export const useReliefProviders = ({ enabled = true } = {}) => {
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const refresh = useCallback(async () => {
+        if (!enabled) return;
         try {
             setProviders(
                 await getJson(
@@ -21,7 +22,7 @@ export const useReliefProviders = () => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [enabled]);
 
     useEffect(() => {
         refresh();

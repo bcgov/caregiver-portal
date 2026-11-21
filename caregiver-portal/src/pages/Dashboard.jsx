@@ -24,7 +24,8 @@ const Dashboard = () => {
   const [householdMemberships, setHouseholdMemberships] = React.useState([]);
 
   const KINSHIP_START_ON = import.meta.env.VITE_KINSHIP_START_ON === 'true' || false;
-  const training_on = import.meta.env.VITE_TRAINING_ON === 'true' || false;
+  const TRAINING_ON = import.meta.env.VITE_TRAINING_ON === 'true' || false;
+  const RELIEF_ON = import.meta.env.VITE_RELIEF_PROVIDERS_ON === 'true' || false;
   const NOT_OWN_TASKS = ['Additional Adult', 'Relief Provider'];
 
   const {
@@ -39,7 +40,7 @@ const Dashboard = () => {
   const { calculateAge, formatShortDate } = useDates();
   const { submitted: submittedMembers } = useAdditionalAdultMembers();
 
-  const { providers: reliefProviders } = useReliefProviders();
+  const { providers: reliefProviders } = useReliefProviders({ enabled: RELIEF_ON} );
   const submittedReliefProviders = reliefProviders.filter((p) => p.submitted);
 
   const [applicationPackages, setApplicationPackages] = React.useState([]);
@@ -184,20 +185,22 @@ const Dashboard = () => {
                     <div className="image-frame">
                         <Link className="hyperlink" to="/manage-household">Manage my household</Link>
                     </div>
-                        <div className="image-frame">
+                    {RELIEF_ON && (
+                    <div className="image-frame">
                         <Link className="hyperlink" to="/manage-relief-providers">Manage relief providers</Link>
                     </div>
+                    )}
                     </>
                 )}
 
-                {(applicationPackages?.length > 0 || outstandingAdditionalAdults.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
+                {(applicationPackages?.length > 0 || outstandingAdditionalAdults.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && TRAINING_ON)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
                     <h2 className="page-heading">Outstanding tasks</h2>
                   </div>
                 )}
 
-                { hasResourceCase && training_on && (
+                { hasResourceCase && TRAINING_ON && (
                     <GenericTaskCard
                     title="In-service training"
 
