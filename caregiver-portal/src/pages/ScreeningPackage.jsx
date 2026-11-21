@@ -6,22 +6,26 @@ import { useApplications } from '../hooks/useApplications';
 import Breadcrumb from '../components/Breadcrumb';
 import Button from '../components/Button';
 import Declaration from '../components/Declaration';
+import { useUserProfile } from '../hooks/useUserProfile';
 import { Loader2 } from 'lucide-react';
 
 
 const ScreeningPackage = () => {
-  const navigate = useNavigate();     
+  const navigate = useNavigate();
   const { householdMemberId } = useParams();
   const [forms, setForms] = React.useState([]);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSpouse, setIsSpouse] = React.useState(false);
   const [isDeclarationChecked, setIsDeclarationChecked] = React.useState(false);
   const { getApplicationFormsByHouseholdMember, confirmScreeningPackage } = useApplications();
+  const { getHouseholdMemberScreeningStatus } = useUserProfile();
+  const [isRelief, setIsRelief] = React.useState(false);
   const back = `/dashboard`
+  const title = isRelief ? 'Complete your relief provider application' : 'Complete your household screening';
 
     const breadcrumbItems = [
         { label: 'Dashboard', path: back },
-        { label: 'Complete your household screening', path: back },
+        { label: title, path: back },
       ];
 
       const handleBackClick = (item) => {
@@ -81,6 +85,16 @@ const ScreeningPackage = () => {
         loadForms();
       }, []);
 
+      React.useEffect(() => {
+        getHouseholdMemberScreeningStatus().then((memberships) =>
+          setIsRelief(
+            memberships.some((m) => m.householdMemberId === householdMemberId && m.isReliefProvider),
+          ),
+        );
+      }, [getHouseholdMemberScreeningStatus, householdMemberId]);
+
+
+
     return (
       <div className="page">
       <div className="page-details">
@@ -88,16 +102,17 @@ const ScreeningPackage = () => {
         <Breadcrumb items={breadcrumbItems} onBackClick={handleBackClick} />
         </div>
         <div className='page-details-row-small'>
-          <h1 className="page-title">Complete your household screening</h1>
+          <h1 className="page-title">{title}</h1>
         </div>
         <div className='page-details-row'>
           <div className="section-description">
-            { isSpouse ? 
-              (<>You have been named as the spouse/co-applicant on an application to provide care. In order to process that application, you must fill out the information below:</>) :
-              (<>You have been named as a household member on an application to provide care. In order to process that application, you must fill out the information below:</>)
-            }
-            
-              
+          { isRelief ? (
+              <>You have been named as a respite/relief provider by a caregiver. In order to process that request, you must fill out the information below:</>
+            ) : isSpouse ? (
+              <>You have been named as the spouse/co-applicant on an application to provide care. In order to process that application, you must fill out the information below:</>
+            ) : (
+              <>You have been named as a household member on an application to provide care. In order to process that application, you must fill out the information below:</>
+            )}
           </div>
         </div>
         <div className='page-details-row-small'>
@@ -112,12 +127,12 @@ const ScreeningPackage = () => {
             ))}
           </div>
         </div>
-        
+
         <div className="page-details-row-footer">
         {!isApplicationComplete() &&
           <p className="caption">Once all sections are complete, you'll be able to submit your application.</p>
         }
-        {isApplicationComplete() && 
+        {isApplicationComplete() &&
           <>
           <p className="caption">All sections are complete! Review the information you've provided then submit when ready.</p>
           <Declaration
@@ -129,7 +144,7 @@ const ScreeningPackage = () => {
           </Declaration>
 
 
-      
+
           </>
         }
 

@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { CircleX } from "lucide-react";
 import Breadcrumb from "../components/Breadcrumb";
 import Button from "../components/Button";
+import PersonRow from "../components/PersonRow";
 import RemoveHouseholdMemberModal from "../components/modals/RemoveHouseholdMemberModal";
 import { useHouseholdContacts } from "../hooks/useHouseholdContacts";
 import { useAdditionalAdultMembers } from "../hooks/useAdditionalAdultMembers";
@@ -65,53 +66,38 @@ const ManageHousehold = () => {
                     {!error && contacts.length === 0 && added.length === 0 && (
                         <p>You have no other adults in your household.</p>
                     )}
+
                     {contacts.map((c) => {
                         const name = `${c.first_name} ${c.last_name}`;
                         return (
-                            <div key={c.case_contact_id} className="householdSummaryItem">
-                                <div className="householdSummaryItemLeft">
-                                    <div className="topLabel">
-                                        <span className="nameLabel">{name} </span>
-                                        <span className="pill">{c.relationship}</span>
-                                    </div>
-                                </div>
-                                <div className="householdSummaryActions">
-                                        {c.removal_requested ? (
-                                            <span className="householdRemovalStatus">
-                                                Removal requested
-                                            </span>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                className="householdActionButton householdActionRemove"
-                                                onClick={() => setMemberToRemove(c)}
-                                                aria-label={`Remove ${name} from household`}
-                                            >
-                                                <CircleX size={20} />
-                                            </button>
-                                        )}
-                                    </div>
-                                    </div>
-                            );
-                        })}
-                   {added.map((p) => {
-                        const name = `${p.firstName} ${p.lastName}`;
-                        return (
-                            <div key={p.householdMemberId} className="householdSummaryItem">
-                                <div className="householdSummaryItemLeft">
-                                    <div className="topLabel">
-                                        <span className="nameLabel">{name} </span>
-                                        <span className="pill">{p.relationshipToPrimary}</span>
-                                    </div>
-                                </div>
-                                <div className="householdSummaryActions">
-                                    <span className="householdRemovalStatus">
-                                        {p.submitted ? "Screening submitted" : "Information required"}
-                                        </span>
-                                </div>
-                            </div>
+                            <PersonRow key={c.case_contact_id} name={name} tag={c.relationship}>
+                                {c.removal_requested ? (
+                                    <span className="householdRemovalStatus">Removal requested</span>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="householdActionButton householdActionRemove"
+                                        onClick={() => setMemberToRemove(c)}
+                                        aria-label={`Remove ${name} from household`}
+                                    >
+                                        <CircleX size={20} />
+                                    </button>
+                                )}
+                            </PersonRow>
                         );
                     })}
+
+                    {added.map((p) => (
+                        <PersonRow
+                            key={p.householdMemberId}
+                            name={`${p.firstName} ${p.lastName}`}
+                            tag={p.relationshipToPrimary}
+                        >
+                            <span className="householdRemovalStatus">
+                                {p.submitted ? "Screening submitted" : "Information required"}
+                            </span>
+                        </PersonRow>
+                    ))}
 
                     </div>
                 </div>

@@ -25,16 +25,22 @@ const ScreeningTaskCard = ({applicationFormSet, householdMembership}) => {
         }
     };
 
+    const isRelief = householdMembership?.isReliefProvider;
+
     return (
       <>
         {householdMembership?.screeningInfoProvided ? (
           <GenericTaskCard
-            title="Your household screening form was successfully submitted"
+          title={
+            isRelief
+              ? "Your respite/relief provider application was successfully submitted"
+              : "Your household screening form was successfully submitted"
+          }
             description={`Submitted on ${formattedDate}`}
           />
         ) : (
           <GenericTaskCard
-            title="Complete your household screening"
+            title={isRelief ? "Complete your respite/relief provider application" : "Complete your household screening"}
             buttonLabel="Continue"
             onClick={handleClick}
           />
