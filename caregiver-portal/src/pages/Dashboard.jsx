@@ -36,7 +36,7 @@ const Dashboard = () => {
   } = useApplicationPackage();
 
   const { userProfile, getHouseholdMemberScreeningStatus } = useUserProfile();
-  const [hasResourceCase, setHasResourceCase] = React.useState(false);
+
   const { calculateAge, formatShortDate } = useDates();
   const { submitted: submittedMembers } = useAdditionalAdultMembers();
 
@@ -48,7 +48,11 @@ const Dashboard = () => {
   const [kinshipApplications, setKinshipApplications] = React.useState([]);
   const [additionalAdultPackages, setAdditionalAdultPackages] = React.useState([]);
   const [isApprovedFch, setIsApprovedFch] = React.useState(false);
-  //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
+
+  const caseSubType = userProfile?.resource_case_sub_type ?? null;
+  const hasFchCase = caseSubType === 'FCH' || caseSubType === 'FCH/Out of Care';
+  const hasOutOfCareCase = caseSubType === 'Out of Care' || caseSubType === 'FCH/Out of Care';
+  const [hasResourceCase, setHasResourceCase] = React.useState(false);
 
 
   //
@@ -168,12 +172,18 @@ const Dashboard = () => {
           <div className="task-frame-image">
             <div className="task-content">
               <WelcomeCard user={auth.user}>
-              {isApprovedFch && (
+              {(hasFchCase) && (
                 <div className="welcome-badge-container">
-                  <ShieldCheck size={20} className="welcome-badge" />{' '}
-                  Approved Foster Caregiver
-                </div>
-              )}
+                    <ShieldCheck size={20} className="welcome-badge" />{' '}
+                        Approved Foster Caregiver
+                    </div>
+                )}
+                {hasOutOfCareCase && (
+                <div className="welcome-badge-container">
+                    <ShieldCheck size={20} className="welcome-badge" />{' '}
+                        Kinship Care Provider
+                    </div>
+                )}
               </WelcomeCard>
             </div>
           </div>
