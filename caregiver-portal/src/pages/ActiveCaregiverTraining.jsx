@@ -156,7 +156,8 @@ const ActiveCaregiverTraining = () => {
           <hr className="gold-underline-large" />
           <h2 className="page-heading">Upload in-service training certificates</h2>
           <div>
-            <p>Upload your in-service training certificates here. Once submitted, your social worker will be notified.</p>
+            <p>In-Service training is required to be completed within two years of your first contract. Your resource worker will refer you to this training.</p>
+            <p>Once you have completed the training you will be emailed a completion certificate. Upload the training certificate for yourself and any other co-applicants below and your worker will be notified.</p>
           </div>
         </div>
 
