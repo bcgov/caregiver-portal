@@ -249,7 +249,7 @@ const FosterApplicationProcess = () => {
 
         return {
           ...step,
-          description: 'Foster caregiver applicants are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 20 hours to complete and is self-paced over a 12-week period. Learners are supported by specialized facilitators. An assigned resource worker will register foster caregiver applicants for this training.',
+          description: 'Prospective caregivers are required to complete training before receiving approval as a foster caregiver. This online training takes approximately 20 hours to complete and is self-paced over a 12-week period. An assigned resource worker will register foster caregiver applicants for this training.',
           disabled: false,
           iconType: 'start',
 
