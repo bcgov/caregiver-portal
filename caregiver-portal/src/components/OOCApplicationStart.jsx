@@ -11,7 +11,7 @@ const OOCApplicationStart = ({onClick, disabled = false}) => {
         try {
             await onClick();
         } finally {
-            setIsStarting(false);      
+            setIsStarting(false);
         }
     };
 
@@ -27,7 +27,7 @@ const OOCApplicationStart = ({onClick, disabled = false}) => {
                 <div className="buttonGroup">
                     <Button onClick={() => {
                         window.open(
-                            "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/caringforchildrenandyouth/kinshipcare",
+                            "https://www2.gov.bc.ca/gov/content/family-social-supports/fostering/out-of-care-kinship-care-options-for-children-and-youth-in-bc",
                             "_blank",
                             "noopener,noreferrer"
                         )
