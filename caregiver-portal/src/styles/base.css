@@ -70,6 +70,8 @@ li {
     align-self: stretch;
     color: var(--typography-color-secondary);
     font-size: var(--typography-font-size-small-body);
+    font-weight: var(--typography-font-weights-regular);
+    line-height: var(--typography-line-heights-xxdense);
   }
 
     .gold-underline-large {
@@ -86,7 +88,7 @@ li {
 .buttonIcon {
     width: 15px;
     height: 15px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .buttonGroup {
@@ -94,7 +96,7 @@ li {
     flex-direction: column;
     gap: var(--layout-margin-medium);
     align-items: flex-start;
-    
+
 }
 
 iframe {
@@ -126,7 +128,7 @@ a {
   font-size: var(--typography-font-size-body);
   font-style: normal;
   font-weight: var(--typography-font-weights-regular);
-  line-height: var(--typography-line-heights-xxdense); 
+  line-height: var(--typography-line-heights-xxdense);
   text-decoration-line: underline;
   text-decoration-style: solid;
   text-decoration-skip-ink: none;
