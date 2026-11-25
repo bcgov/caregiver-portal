@@ -41,7 +41,7 @@ const Dashboard = () => {
   //const [isApprovedKinship, setIsApprovedKinship] = React.useState(false);
 
 
-  // 
+  //
 
   const handleNavigateToApplication = useCallback((applicationPackageId) => {
     navigate(`/foster-application/${applicationPackageId}`);
@@ -57,7 +57,7 @@ const Dashboard = () => {
     try {
       const norm = v => (v ?? '').trim().toLowerCase();
       const apps = (await getApplicationPackages()).filter(app => (app.subtype !== 'OOC')); //ooc is a legacy name, it will not be there in production but it's annoying in test data.
-      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved') 
+      const incompleteApps = apps.filter(app => norm(app.srStage) !== 'completed' && norm(app.srResolution) !== 'not approved')
       setApplicationPackages(incompleteApps);
       setFosterApplications(incompleteApps.filter(app => app.subtype === 'FCH'));
       setKinshipApplications(incompleteApps.filter(app => app.subtype === 'Kinship'));
@@ -126,7 +126,7 @@ const Dashboard = () => {
   }, [auth.loading, auth.user, loadApplicationPackages, loadApplicationForms, getHouseholdMemberScreeningStatus]);
 
     if (auth.loading) {
-    return (            
+    return (
         <div className="submission-overlay">
           <div className="submission-modal">
             <Loader2 className="submission-spinner" />
@@ -139,8 +139,8 @@ const Dashboard = () => {
   return (
 
     <div className="page">
-      
-        {(isLoading || formsLoading) && 
+
+        {(isLoading || formsLoading) &&
           <div className="submission-overlay">
             <div className="submission-modal">
               <Loader2 className="submission-spinner" />
@@ -150,7 +150,7 @@ const Dashboard = () => {
           </div>
         }
 
- 
+
           <>
           <div className="task-frame-image">
             <div className="task-content">
@@ -167,7 +167,7 @@ const Dashboard = () => {
           <div className="task-frame-main-body">
             <div className="task-content-row">
               <div className="task-list">
-              
+
                 {(applicationPackages?.length > 0 || householdMemberships?.length > 0 || (hasResourceCase && training_on)) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
@@ -178,14 +178,15 @@ const Dashboard = () => {
                 { hasResourceCase && training_on && (
                     <GenericTaskCard
                     title="In-service training"
-                    
+                    description="In-Service training is required to be completed within two years of your first contract. Your resource worker will refer you to this training.
+                                 Once you have completed the training you will be emailed a completion certificate. Upload the training certificate for yourself and any other co-applicants below and your worker will be notified."
                     buttonLabel="Continue"
                     onClick={() => navigate('/caregiver-training')}
                   />)}
 
 
                 {applicationPackages?.map((app) => (
-                  <>                 
+                  <>
                       <TaskCard subtype={app.subtype} applicationPackage={app} />
                   </>
                 ))}
@@ -203,10 +204,10 @@ const Dashboard = () => {
                 {(isApprovedFch) && (
                   <div className="image-frame">
                     <hr className="gold-underline-large" />
-                    <h2 className="page-heading">Completed tasks</h2>                   
-                      <TaskItem type={'FCH'}></TaskItem>                    
+                    <h2 className="page-heading">Completed tasks</h2>
+                      <TaskItem type={'FCH'}></TaskItem>
                   </div>
-                  
+
                 )
               }
 
@@ -218,7 +219,7 @@ const Dashboard = () => {
               </div>
               <AccessCard />
               </div>
-            
+
             </div>
           </>
     </div>
